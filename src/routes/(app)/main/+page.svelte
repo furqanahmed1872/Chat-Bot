@@ -7,7 +7,7 @@
 
 <!-- Header -->
 
-<nav class="bg-slate-100 w-full h-fit py-5 grid grid-cols-12 items-center">
+<nav class="bg-slate-50 w-full h-fit py-5 grid grid-cols-12 items-center">
     <ul class="col-span-3 flex items-center justify-end">
       <img src="./icon.png" alt="Logo" class="w-14 h-14">
       <li class="text-3xl font-light ml-2 relative z-0  no-underline px-2 py-2 text-black cursor-pointer pullRightLeft">
@@ -111,7 +111,7 @@
 </div>
 
 
-<!-- Explore -->
+<!-- Explore --> 
 
 
 <div class="grid justify-center items-center text-center bg-slate-300 h-fit p-20 gap-3 ">

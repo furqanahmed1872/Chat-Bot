@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Checkbox } from '$lib/components/ui/checkbox';
@@ -8,39 +9,49 @@
 
 <!-- Header -->
 
-<nav class="bg-slate-100 w-full h-fit py-5 grid grid-cols-12 items-center">
-    <ul class="col-span-3 flex items-center justify-end">
-      <img src="./icon.png" alt="Logo" class="w-14 h-14">
-      <li class="text-3xl font-light ml-2 relative z-0  no-underline px-2 py-2 text-black cursor-pointer pullRightLeft">
-        DivineBot
-      </li>
-    </ul>
-  
-    <ul class="col-span-7 flex items-center justify-end space-x-4">
-      <li class="relative z-0 text-3xl no-underline px-2 py-2 text-black font-semibold cursor-pointer pullRightLeft">
-        Chat
-      </li>
+<nav
+  class="bg-slate-100 w-full h-fit py-5 grid grid-cols-3 justify-items-center"
+>
+  <ul class="flex items-center">
+    <img
+      src="./icon.png"
+      alt="Logo"
+      class="hidden sm:block sm:w-12 sm:h-12 lg:w-14 lg:h-14"
+    />
+    <li
+      class="text-2xl sm:text-3xl font-light ml-2 no-underline px-2 py-2 text-black cursor-pointer pullRightLeft"
+    >
+      DivineBot
+    </li>
+  </ul>
+  <div></div>
+  <ul class="flex items-center space-x-4">
+    <button
+      on:click="{() => goto('/chat')}"
+      class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-black font-semibold cursor-pointer pullRightLeft"
+    >
+      Chat
+    </button>
+  </ul>
+</nav>
 
-    </ul>
-  </nav>
-  
+
 <!-- Front page -->
 
 <div
-  class="relative h-screen bg-cover flex justify-center"
+  class="relative h-screen bg-cover grid place-content-around"
   style="background-image: url('./front.jpg')"
 >
-  <div class="text-center">
+  <div class=" text-center">
     <!-- Logo with subtle pulsing animation -->
     <img
       src="./largeicon.png"
       alt="Logo"
-      class="w-96 h-96 mx-auto mt-28 animate-pulse-slow"
+      class="w-60 h-60 sm:w-40 sm:h-40 md:w-60 md:h-60 lg:w-72 lg:h-72 xl:w-96 xl:h-96 mx-auto animate-pulse-slow"
     />
-
     <!-- Text with continuous floating effect -->
     <p
-      class="text-white text-7xl font-bold mt-10 animate-float animate-once animate-duration-1000"
+      class="text-white text-3xl sm:text-5xl lg:text-5xl xl:text-7xl font-bold mt-6 sm:mt-10 animate-float animate-once animate-duration-1000"
     >
       Empowering humanity,<br />word by word
     </p>
@@ -49,70 +60,78 @@
 
 <!-- IMP-info -->
 
-<!-- for without animation -->
-
-<!-- <div class="grid bg-slate-300 w-screen h-fit text-center items-center justify-center p-36 ">
-  <div class="text-center text-4xl font-bold mb-4">Meet ZeroBot</div>
-  <div id="typing-effect" class="w-1/2 mx-auto text-left text-xl text-gray-700 font-medium mt-9">
-    Meet ZeroBot, the Internet's #1 voice-enabled chatbot! Imagine having a conversation with a computer friend who talks with you just like a real person. With ZeroBot, it's not just typing – it's talking! Get ready to chat in a whole new way.<br><br>
-    Now with the Groq LPU™ Inference Engine for the world's fastest inference speed for LLMs via the alpha version of Groq API, your chats are instant and effortlessly smooth.
-  </div>
-</div> -->
-
-<!-- with animation -->
-
 <div
-  class="grid bg-slate-300 h-fit text-center items-center justify-center p-36"
+  class="grid bg-slate-300 text-center items-center justify-center p-8 sm:p-36"
 >
-  <div class="text-center text-4xl font-bold mb-4">Meet DivineBot</div>
+  <div class="text-2xl sm:text-4xl font-bold mb-4">Meet DivineBot</div>
   <div
-    class="w-1/2 mx-auto text-left text-xl text-gray-700 font-medium typewriter-wrapper"
+    class="w-full xl:w-11/12 2xl:w-1/2 mx-auto text-center text-lg sm:text-xl text-gray-700 font-medium"
   >
-    Meet DivineBot, the Internet's #1 voice-enabled chatbot! Imagine having
-    <br />
-    a conversation with a computer friend who talks with you just like a
-    <br />
-    real person. With DivineBot, it's not just typing – it's talking! Get
-    <br />
-    ready to chat in a whole new way. Now with the Groq LPU™ Inference
-    <br />
-    Engine for the world's fastest inference speed for LLMs via the
-    <br />
-    alpha version of Groq API, your chats are instant and effortlessly
-    <br />
-    smooth.
+    Meet DivineBot, the Internet's #1 voice-enabled chatbot! Imagine having a
+    conversation with a computer friend who talks with you just like a real
+    person. With DivineBot, it's not just typing – it's talking! Get ready to
+    chat in a whole new way. Now with the Groq LPU™ Inference Engine for the
+    world's fastest inference speed for LLMs via the alpha version of Groq API,
+    your chats are instant and effortlessly smooth.
   </div>
 </div>
 
 <!-- Agent -->
 
-<div class=" bg-black flex flex-col h-fit justify-center items-center p-20">
-  <div class="text-white font-light text-5xl text-center">Agents</div>
-
-  <div class="text-gray-600 font-light text-xl text-center my-5">
+<div
+  class="bg-black flex flex-col h-fit justify-center items-center p-10 sm:p-20"
+>
+  <div class="text-white font-light text-3xl sm:text-5xl text-center">
+    Agents
+  </div>
+  <div
+    class="text-gray-600 font-light text-lg sm:text-xl text-center my-4 sm:my-5"
+  >
     Create and speak with AI agents anywhere, anytime.
   </div>
 
-  <div class="flex justify-center items-center my-24 gap-10">
+  <div
+    class="flex flex-wrap justify-center items-center my-12 sm:my-24 gap-5 sm:gap-10"
+  >
     <div>
-      <img src="./duck.png" alt="" class="rounded-full w-64 h-64" />
-
-      <div class="text-white font-medium text-2xl text-center mt-4">Tutor</div>
+      <img
+        src="./duck.png"
+        alt="Tutor"
+        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
+      />
+      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+        Tutor
+      </div>
     </div>
     <div>
-      <img src="./bird.png" alt="" class="rounded-full w-64 h-64" />
-      <div class="text-white font-medium text-2xl text-center mt-4">
+      <img
+        src="./bird.png"
+        alt="Counselor"
+        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
+      />
+      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Counselor
       </div>
     </div>
     <div>
-      <img src="./chick.png" alt="" class="rounded-full w-64 h-64" />
-      <div class="text-white font-medium text-2xl text-center mt-4">Buddy</div>
+      <img
+        src="./chick.png"
+        alt="Buddy"
+        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
+      />
+      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+        Buddy
+      </div>
     </div>
-
     <div>
-      <img src="./doc.png" alt="" class="rounded-full w-64 h-64" />
-      <div class="text-white font-medium text-2xl text-center mt-4">Doctor</div>
+      <img
+        src="./doc.png"
+        alt="Doctor"
+        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
+      />
+      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+        Doctor
+      </div>
     </div>
   </div>
 </div>
@@ -120,16 +139,16 @@
 <!-- Explore --> 
 
 <div
-  class="grid justify-center items-center text-center bg-slate-300 h-fit p-20 gap-3"
+  class="grid justify-center items-center text-center bg-slate-300 h-fit p-10 sm:p-20 gap-3"
 >
-  <div class=" font-semibold text-3xl text-center">
+  <div class="font-semibold text-xl sm:text-3xl lg:text-4xl">
     Explore our AI agent store
   </div>
-  <div class="text-gray-600 font-light text-xl text-center my-5">
+  <div class="text-gray-600 font-light text-lg sm:text-xl my-5">
     Discover a diverse range of AI agents tailored to meet your unique needs.
   </div>
   <button
-    class="bg-orange-600 w-fit mx-auto rounded-3xl px-20 py-4 text-lg font-normal"
+    class="bg-orange-600 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-lg font-normal"
   >
     Visit the Agent store.
   </button>
@@ -137,34 +156,24 @@
 
 <!-- Sign In -->
 
-<div class="w-full grid justify-items-center text-white bg-black">
-  <div class="flex items-center w-full justify-center py-12">
+<div class="w-full grid justify-items-center text-white bg-black py-12">
+  <div class="flex items-center w-full px-4 justify-center">
     <div class="mx-auto grid gap-6">
       <div class="grid gap-2 text-center">
-        <h1 class="text-3xl font-bold">Create Account</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>
         <p class="text-muted-foreground text-balance">
           Enter your email below to create your account
         </p>
       </div>
       <div class="grid gap-4">
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="grid gap-2">
-            <Label for="email">First Name</Label>
-            <Input
-              id="email"
-              type="text"
-              placeholder="m@example.com"
-              required
-            />
+            <Label for="first-name">First Name</Label>
+            <Input id="first-name" type="text" placeholder="Max" required />
           </div>
           <div class="grid gap-2">
-            <Label for="email">Last Name</Label>
-            <Input
-              id="email"
-              type="text"
-              placeholder="m@example.com"
-              required
-            />
+            <Label for="last-name">Last Name</Label>
+            <Input id="last-name" type="text" placeholder="Robinson" required />
           </div>
         </div>
         <div class="grid gap-2">
@@ -188,7 +197,6 @@
         </div>
         <Button type="submit" class="w-full bg-slate-700">Create Account</Button
         >
-        <!-- <Button variant="outline" class="w-full">Login with Google</Button> -->
       </div>
     </div>
   </div>
@@ -196,6 +204,6 @@
 
 <!-- Footer -->
 
-<div class="bg-white grid justify-center items-end p-28">
+<div class="bg-white grid justify-center items-end py-12 sm:p-28">
   <div>info@divinebot.ai | DivineBot © 2024</div>
 </div>

@@ -35,7 +35,6 @@
   </ul>
 </nav>
 
-
 <!-- Front page -->
 
 <div
@@ -136,7 +135,7 @@
   </div>
 </div>
 
-<!-- Explore --> 
+<!-- Explore -->
 
 <div
   class="grid justify-center items-center text-center bg-slate-300 h-fit p-10 sm:p-20 gap-3"
@@ -148,6 +147,7 @@
     Discover a diverse range of AI agents tailored to meet your unique needs.
   </div>
   <button
+    on:click="{() => goto('/store')}"
     class="bg-orange-600 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-lg font-normal"
   >
     Visit the Agent store.

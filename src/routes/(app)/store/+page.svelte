@@ -8,9 +8,9 @@
       <li class="mb-4">
         <a
           href="#"
-          class="flex items-center py-2 px-4 text-black text-lg font-medium text-white bg-neutral-900 rounded"
+          class="flex items-center py-2 px-4 text-white text-lg font-medium bg-neutral-900 rounded"
         >
-          <img src="./star.png" class="w-6 h-6 mx-3 my-auto" />
+          <img alt="" src="./star.png" class="w-6 h-6 mx-3 my-auto" />
           <!-- Icon for Featured -->
 
           Featured
@@ -21,7 +21,7 @@
           href="#"
           class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded"
         >
-          <img src="./clock.png" class="w-6 h-6 mx-3 my-auto" />
+          <img alt="" src="./clock.png" class="w-6 h-6 mx-3 my-auto" />
           Recent
         </a>
       </li>
@@ -30,7 +30,7 @@
           href="#"
           class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded"
         >
-          <img src="./fire.png" class="w-6 h-6 mx-3 my-auto" />
+          <img alt="" src="./fire.png" class="w-6 h-6 mx-3 my-auto" />
           Popular
         </a>
       </li>         
@@ -39,7 +39,7 @@
           href="#"
           class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded"
         >
-          <img src="./heart-beat.png" class="w-6 h-6 mx-3 my-auto" />
+          <img alt="" src="./heart-beat.png" class="w-6 h-6 mx-3 my-auto" />
           Health
         </a>
       </li>
@@ -48,7 +48,7 @@
           href="#"
           class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded"
         >
-          <img src="./cap.png" class="w-6 h-6 mx-3 my-auto" />
+          <img alt="" src="./cap.png" class="w-6 h-6 mx-3 my-auto" />
           Education
         </a>
       </li>

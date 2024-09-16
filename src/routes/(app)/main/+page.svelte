@@ -92,7 +92,11 @@
   <div
     class="flex flex-wrap justify-center items-center my-12 sm:my-24 gap-5 sm:gap-10"
   >
-    <div>
+    <button
+      on:click="{() => {
+        goto('/chat?role=tutor');
+      }}"
+    >
       <img
         src="./duck.png"
         alt="Tutor"
@@ -101,8 +105,12 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Tutor
       </div>
-    </div>
-    <div>
+    </button>
+    <button
+      on:click="{() => {
+        goto('/chat?role=counselor');
+      }}"
+    >
       <img
         src="./bird.png"
         alt="Counselor"
@@ -111,8 +119,12 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Counselor
       </div>
-    </div>
-    <div>
+    </button>
+    <button
+      on:click="{() => {
+        goto('/chat?role=buddy');
+      }}"
+    >
       <img
         src="./chick.png"
         alt="Buddy"
@@ -121,8 +133,12 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Buddy
       </div>
-    </div>
-    <div>
+    </button>
+    <button
+      on:click="{() => {
+        goto('/chat?role=doctor');
+      }}"
+    >
       <img
         src="./doc.png"
         alt="Doctor"
@@ -131,7 +147,7 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Doctor
       </div>
-    </div>
+    </button>
   </div>
 </div>
 

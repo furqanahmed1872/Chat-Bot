@@ -8,10 +8,7 @@
 </script>
 
 <!-- Header -->
-
-<nav
-  class="bg-slate-100 w-full h-fit py-5 grid grid-cols-3 justify-items-center"
->
+<nav class="bg-slate-100 w-full h-fit py-5 grid grid-cols-3 justify-items-center">
   <ul class="flex items-center">
     <img
       src="./icon.png"
@@ -19,21 +16,26 @@
       class="hidden sm:block sm:w-12 sm:h-12 lg:w-14 lg:h-14"
     />
     <li
-      class="text-2xl sm:text-3xl font-light ml-2 no-underline px-2 py-2 text-black cursor-pointer pullRightLeft"
+      class="text-2xl sm:text-3xl font-light ml-2 no-underline px-2 py-2 text-black cursor-pointer pullRightLeft relative group"
     >
       DivineBot
+      <!-- Darkened background overlay on hover -->
+      <span class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
     </li>
   </ul>
   <div></div>
   <ul class="flex items-center space-x-4">
     <button
       on:click="{() => goto('/chat')}"
-      class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-black font-semibold cursor-pointer pullRightLeft"
+      class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-black font-semibold cursor-pointer pullRightLeft relative group"
     >
       Chat
+      <!-- Darkened background overlay on hover -->
+      <span class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
     </button>
   </ul>
 </nav>
+
 
 
 <!-- Front page -->

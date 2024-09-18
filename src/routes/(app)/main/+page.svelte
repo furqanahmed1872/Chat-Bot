@@ -36,8 +36,6 @@
   </ul>
 </nav>
 
-
-
 <!-- Front page -->
 
 <div
@@ -95,7 +93,11 @@
   <div
     class="flex flex-wrap justify-center items-center my-12 sm:my-24 gap-5 sm:gap-10"
   >
-    <div>
+    <button
+      on:click="{() => {
+        goto('/chat?role=tutor');
+      }}"
+    >
       <img
         src="./duck.png"
         alt="Tutor"
@@ -104,8 +106,12 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Tutor
       </div>
-    </div>
-    <div>
+    </button>
+    <button
+      on:click="{() => {
+        goto('/chat?role=counselor');
+      }}"
+    >
       <img
         src="./bird.png"
         alt="Counselor"
@@ -114,8 +120,12 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Counselor
       </div>
-    </div>
-    <div>
+    </button>
+    <button
+      on:click="{() => {
+        goto('/chat?role=buddy');
+      }}"
+    >
       <img
         src="./chick.png"
         alt="Buddy"
@@ -124,8 +134,12 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Buddy
       </div>
-    </div>
-    <div>
+    </button>
+    <button
+      on:click="{() => {
+        goto('/chat?role=doctor');
+      }}"
+    >
       <img
         src="./doc.png"
         alt="Doctor"
@@ -134,11 +148,11 @@
       <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
         Doctor
       </div>
-    </div>
+    </button>
   </div>
 </div>
 
-<!-- Explore --> 
+<!-- Explore -->
 
 <div
   class="grid justify-center items-center text-center bg-slate-300 h-fit p-10 sm:p-20 gap-3"
@@ -150,6 +164,7 @@
     Discover a diverse range of AI agents tailored to meet your unique needs.
   </div>
   <button
+    on:click="{() => goto('/store')}"
     class="bg-orange-600 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-lg font-normal"
   >
     Visit the Agent store.

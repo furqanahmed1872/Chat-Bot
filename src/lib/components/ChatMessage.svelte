@@ -6,7 +6,7 @@
 <div class="mb-4">
   {#if role === 'assistant'}
     <div class="flex items-start">
-      <div class=" text-white p-3 max-w-xs">
+      <div class=" text-white p-3 max-w-xl">
         {content}
       </div>
     </div>

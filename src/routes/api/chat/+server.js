@@ -68,7 +68,7 @@ export async function POST({ request }) {
     });
 
     const data = await response.json();
-    console.log('API Response:', data.choices[0].message.content);
+    console.log('API Response:', 'ok');
 
     if (data?.choices?.length > 0) {
       return json({ message: data.choices[0].message.content });

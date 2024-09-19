@@ -15,17 +15,17 @@
 </script>
 
 <div class="flex flex-row justify-center gap-2 w-full">
-  <div class="bg-neutral-700 px-2 py-1.5 rounded-full w-3/5">
+  <div class="bg-neutral-700 w-fit px-2 py-1 sm:py-1 lg:py-1.5 rounded-full sm:w-3/5">
     <div class="flex w-full">
       <input
         type="text"
-        class="flex-grow p-2 bg-neutral-700 text-neutral-200 rounded-l-full focus:outline-none"
+        class="flex-grow sm:p-2 bg-neutral-700 text-neutral-200 rounded-l-full focus:outline-none"
         bind:value="{userMessage}"
-        placeholder="Type a message..."
+        placeholder=" Type a message..."
         on:keypress="{(e) => e.key === 'Enter' && send()}"
       />
       <button
-        class="bg-neutral-600 text-white p-1 rounded-full hover:bg-blue-700"
+        class="bg-neutral-600 text-white sm:p-1 rounded-full hover:bg-blue-700"
         on:click="{send}"
       >
         <svg
@@ -46,7 +46,7 @@
     </div>
   </div>
   <button
-    class="w-fit bg-neutral-600 text-white p-2 rounded-full hover:bg-green-700"
+    class=" bg-neutral-600 text-white px-1.5 sm:p-2 sm:px-2.5  text-sm sm:text-base rounded-full hover:bg-green-700"
     on:click="{addChat}"
   >
     Save

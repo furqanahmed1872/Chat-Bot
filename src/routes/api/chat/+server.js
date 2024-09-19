@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { supabase } from '$lib/supabaseClient';
 
 const characterDescription = [
   {
@@ -20,6 +21,10 @@ const characterDescription = [
     role: 'doctor',
     content:
       "You are a doctor. Answer the patient's questions about their symptoms in a friendly and helpful manner. Provide treatment suggestions but always recommend they consult a professional.",
+  },
+  {
+    role: 'zerobot',
+    content: 'you are chatgpt bot',
   },
 ];
 
@@ -63,7 +68,7 @@ export async function POST({ request }) {
     });
 
     const data = await response.json();
-    console.log('API Response:', data);
+    console.log('API Response:', 'ok');
 
     if (data?.choices?.length > 0) {
       return json({ message: data.choices[0].message.content });
@@ -78,4 +83,5 @@ export async function POST({ request }) {
     console.error('Error fetching from OpenAI:', error);
     return json({ message: 'Error fetching from AI' }, { status: 500 });
   }
+
 }

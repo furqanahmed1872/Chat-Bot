@@ -24,7 +24,7 @@
       </svg>
     </button>
     <button
-      on:click="{() => goto('/main')}"
+      on:click="{() => goto('/')}"
       class="hidden lg:flex items-center justify-center w-full mb-6"
     >
       <img src="./largeicon.png" alt="Logo" class="w-16 h-16" />

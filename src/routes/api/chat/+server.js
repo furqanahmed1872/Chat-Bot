@@ -83,5 +83,5 @@ export async function POST({ request }) {
     console.error('Error fetching from OpenAI:', error);
     return json({ message: 'Error fetching from AI' }, { status: 500 });
   }
-  // Save the user message
+
 }

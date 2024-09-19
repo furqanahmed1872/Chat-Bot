@@ -7,7 +7,7 @@
     content: string;
   };
   type Chat = {
-    chatId: string;
+    chatId: string | null;
     messages: Message[];
   };
 

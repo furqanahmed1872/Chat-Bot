@@ -31,14 +31,16 @@
     content: string;
   };
   type Chat = {
-    chatId: string;
+    chatId: string | null;
     messages: Message[];
   };
 
-  let chats: Chat[] | undefined = data.chat?.map((item) => ({
-    chatId: item.chatId,
-    messages: item.message,
-  }));
+  let chats: Chat[] | undefined = data.chat
+    ?.filter((item) => item.chatId) // Ensure chatId is not null or undefined
+    .map((item) => ({
+      chatId: item.chatId as string, // Assert that chatId is a string
+      messages: item.message,
+    }));
 
   async function sendMessage(): Promise<void> {
     if (userMessage.trim() === '') return;
@@ -236,6 +238,7 @@
         bind:userMessage="{userMessage}"
         on:sendMessage="{sendMessage}"
         on:addChat="{addChatToHistory}"
+        on:audioMessage="{sendMessage}"
       />
     </div>
   </div>

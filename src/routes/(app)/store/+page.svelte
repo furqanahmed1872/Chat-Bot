@@ -31,46 +31,48 @@
     </button>
 
     <ul class="space-y-4 overflow-auto">
-      <li class="mb-4">
-        <button
-          class="flex items-center py-2 px-4 text-lg font-medium bg-neutral-900 rounded w-full"
-        >
-          <img alt="" src="./star.png" class="w-6 h-6 mx-3 my-auto" />
-          Featured
-        </button>
-      </li>
-      <li class="mb-4">
-        <button
-          class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full"
-        >
-          <img alt="" src="./clock.png" class="w-6 h-6 mx-3 my-auto" />
-          Recent
-        </button>
-      </li>
-      <li class="mb-4">
-        <button
-          class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full"
-        >
-          <img alt="" src="./fire.png" class="w-6 h-6 mx-3 my-auto" />
-          Popular
-        </button>
-      </li>
-      <li class="mb-4">
-        <button
-          class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full"
-        >
-          <img alt="" src="./heart-beat.png" class="w-6 h-6 mx-3 my-auto" />
-          Health
-        </button>
-      </li>
-      <li>
-        <button
-          class="flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full"
-        >
-          <img alt="" src="./cap.png" class="w-6 h-6 mx-3 my-auto" />
-          Education
-        </button>
-      </li>
+      
+        <li class="mb-4">
+          <button
+            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+          >
+            <img alt="" src="./star.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
+            Featured
+          </button>
+        </li>
+        <li class="mb-4">
+          <button
+            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+          >
+            <img alt="" src="./time.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
+            Recent
+          </button>
+        </li>
+        <li class="mb-4">
+          <button
+            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+          >
+            <img alt="" src="./fire.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
+            Popular
+          </button>
+        </li>
+        <li class="mb-4">
+          <button
+            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+          >
+            <img alt="" src="./heart-beat.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
+            Health
+          </button>
+        </li>
+        <li>
+          <button
+            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+          >
+            <img alt="" src="./cap.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
+            Education
+          </button>
+        </li>
+        
     </ul>
   </nav>
 

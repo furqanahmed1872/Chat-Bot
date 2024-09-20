@@ -1,99 +1,128 @@
-<script>
-    let email = '';
-    let password = '';
-  </script>
-  
+<script lang="ts">
+  import { Input } from '$lib/components/ui/input';
+  import { Button } from '$lib/components/ui/button';
+  import { Checkbox } from '$lib/components/ui/checkbox';
+  import { Label } from '$lib/components/ui/label';
+  import { formSchema } from './schema';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
 
-<nav class="bg-slate-100 w-full h-fit py-5 grid grid-cols-3 justify-items-center">
-    <ul class="flex items-center">
-      <img
-        src="./icon.png"
-        alt="Logo"
-        class="hidden sm:block sm:w-12 sm:h-12 lg:w-14 lg:h-14"
-      />
-      <li
-        class="text-2xl sm:text-3xl font-light ml-2 no-underline px-2 py-2 text-black cursor-pointer pullRightLeft relative group"
-      >
-        DivineBot
-        <!-- Darkened background overlay on hover -->
-        <span class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
-      </li>
-    </ul>
-    <div></div>
-    <ul class="flex items-center space-x-4">
-      <button
-        on:click="{() => goto('/chat')}"
-        class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-black font-semibold cursor-pointer pullRightLeft relative group"
-      >
-        Chat
-        <!-- Darkened background overlay on hover -->
-        <span class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
-      </button>
-    </ul>
-  </nav>
- 
-  <!-- Main Container -->
-  <div class="min-h-screen bg-black flex flex-col justify-center items-center">
-    <!-- Login Form -->
-    <div class="bg-transparent p-8 rounded-lg shadow-md w-full max-w-md text-center">
-      <h2 class="text-white text-3xl font-semibold mb-6">Login</h2>
-  
-      <!-- Email Input -->
-      <input
-        bind:value={email}
-        type="text"
-        placeholder="phone or email"
-        class="w-full p-3 mb-4 bg-black text-white border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-  
-      <!-- Password Input -->
-      <input
-        bind:value={password}
-        type="password"
-        placeholder="password"
-        class="w-full p-3 mb-6 bg-black text-white border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-  
-      <!-- Buttons -->
-      <div class="flex justify-center items-center space-x-2 mb-4">
-        <button
-          class="px-8 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-300"
-        >
-          SIGN UP
-        </button>
-        <span class="text-white text-lg font-light">or</span>
-        <button
-          class="px-8 py-2 bg-gray-700 text-white rounded-full hover:bg-gray-800 transition-all duration-300"
-        >
-          LOG IN
-        </button>
+  export let data;
+
+  const {
+    form: formData,
+    errors,
+    validate,
+  } = superForm(data.form, {
+    validators: zodClient(formSchema),
+  });
+
+  function validateInput(field: any) {
+    validate(field);
+  }
+  // $: console.log($formData);
+</script>
+
+<div class="w-full grid justify-items-center text-white bg-black py-12">
+  <div class="flex items-center w-full px-4 justify-center">
+    <div class="mx-auto grid gap-6">
+      <!-- Title -->
+      <div class="grid gap-2 text-center">
+        <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>
+        <p class="text-muted-foreground text-balance">
+          Enter your email below to create your account
+        </p>
       </div>
-  
-      <!-- Forgot Password -->
-      <div class="text-center">
-        <a href="#" class="text-gray-400 hover:text-white text-sm">Forgot password</a>
-      </div>
+
+      <!-- Form -->
+      <form method="POST" class="grid gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- First Name Field -->
+          <div class="grid gap-2">
+            <Label for="firstname">First Name</Label>
+            <Input
+              id="firstname"
+              name="firstname"
+              type="text"
+              placeholder="Max"
+              bind:value="{$formData.firstname}"
+              on:input="{() => validateInput('firstname')}"
+            />
+            {#if $errors.firstname}
+              <p class="text-red-500">{$errors.firstname}</p>
+            {/if}
+          </div>
+
+          <!-- Last Name Field -->
+          <div class="grid gap-2">
+            <Label for="lastname">Last Name</Label>
+            <Input
+              id="lastname"
+              name="lastname"
+              type="text"
+              placeholder="Robinson"
+              bind:value="{$formData.lastname}"
+              on:input="{() => validateInput('lastname')}"
+            />
+            {#if $errors.lastname}
+              <p class="text-red-500">{$errors.lastname}</p>
+            {/if}
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="grid gap-2">
+          <Label for="email">Email</Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="m@example.com"
+            bind:value="{$formData.email}"
+            on:input="{() => validateInput('email')}"
+          />
+          {#if $errors.email}
+            <p class="text-red-500">{$errors.email}</p>
+          {/if}
+        </div>
+
+        <!-- Password Field -->
+        <div class="grid gap-2">
+          <Label for="password">Password</Label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            bind:value="{$formData.password}"
+            on:input="{() => validateInput('password')}"
+            class="text-slate-700"
+          />
+          {#if $errors.password}
+            <p class="text-red-500">{$errors.password}</p>
+          {/if}
+        </div>
+
+        <!-- Terms and Conditions Checkbox -->
+        <div class="flex items-center space-x-2">
+          <input
+            id="include"
+            name="include"
+            type="checkbox"
+            bind:group={$formData.include}
+          />
+          <Label for="include" class="text-sm font-medium leading-none">
+            Agree to the terms of service
+          </Label>
+          {#if $errors.password}
+            <p class="text-red-500">{$errors.include}</p>
+          {/if}
+        </div>
+
+        <!-- Submit Button -->
+        <Button type="submit" class="w-full bg-slate-700">Create Account</Button
+        >
+      </form>
     </div>
-  
-    <!-- Footer -->
-    <footer class="mt-16 text-center text-white text-sm">
-      <div class="flex justify-center space-x-4 mb-4">
-        <a href="#" class="text-white hover:text-gray-400">
-          <i class="fab fa-instagram"></i>
-        </a>
-        <a href="#" class="text-white hover:text-gray-400">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="#" class="text-white hover:text-gray-400">
-          <i class="fab fa-youtube"></i>
-        </a>
-      </div>
-  
-      <p class="text-gray-400">info@zerobot.ai | ZeroBot © 2024</p>
-    </footer>
   </div>
-  
-  <style>
-    /* Add FontAwesome for the social media icons */
-  </style>
-  
+</div>

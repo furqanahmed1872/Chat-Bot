@@ -3,32 +3,35 @@ import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
 
-
 // Define the character descriptions
 const characterDescription = [
   {
     role: 'tutor',
-    content:
-    'You are a tutor. Help the user understand difficult concepts in a simple and clear way. Provide examples where necessary and ensure your explanations are easy to follow.',
+    content: 'You are a tutor...',
+    welcomeNote:
+      'Hello! I am your tutor. Let’s dive into your learning journey!',
   },
   {
     role: 'buddy',
-    content:
-    'You are a friendly buddy. Engage in casual conversation with the user, offering encouragement, support, and positive reinforcement. Keep the tone light and fun.',
+    content: 'You are a friendly buddy...',
+    welcomeNote: 'Hey buddy! How’s it going? I’m here to chat and have fun!',
   },
   {
     role: 'counselor',
-    content:
-    "You are a counselor. Listen to the user's concerns and offer thoughtful, empathetic advice. Focus on providing emotional support and helping the user explore solutions to their problems.",
+    content: 'You are a counselor...',
+    welcomeNote:
+      'Hi there! I’m your counselor, ready to listen and offer support.',
   },
   {
     role: 'doctor',
-    content:
-    "You are a doctor. Answer the patient's questions about their symptoms in a friendly and helpful manner. Provide treatment suggestions but always recommend they consult a professional.",
+    content: 'You are a doctor...',
+    welcomeNote:
+      'Hello! I’m your doctor. Let’s discuss your health and well-being.',
   },
   {
     role: 'zerobot',
-    content: 'you are chatgpt bot',
+    content: 'You are ChatGPT...',
+    welcomeNote: 'Hi! I’m ChatGPT. How can I assist you today?',
   },
 ];
 
@@ -36,12 +39,17 @@ const characterDescription = [
 export async function POST({ request }) {
   const { message, character } = await request.json();
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-  
-  const openai = new OpenAI({apiKey});
+
+  const openai = new OpenAI({ apiKey });
   // Find the corresponding character description
   const filterCharacter = characterDescription.find(
     (value) => value.role === character,
   );
+
+  // Use the respective welcome note or a default one
+  const welcomeNote = filterCharacter
+    ? filterCharacter.welcomeNote
+    : 'Hello! I am your helpful assistant. How can I assist you today?';
 
   const systemMessage = filterCharacter
     ? {
@@ -80,7 +88,7 @@ export async function POST({ request }) {
 
       const mp3 = await openai.audio.speech.create({
         model: 'tts-1',
-        voice: 'alloy',
+        voice: 'echo',
         input: aiResponseText,
       });
 
@@ -92,7 +100,6 @@ export async function POST({ request }) {
         message: aiResponseText,
         audio: '/speech.mp3',
       });
-
     } else {
       console.error('No choices found in the API response');
       return json(

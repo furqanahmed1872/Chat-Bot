@@ -16,58 +16,6 @@
   function addChat() {
     dispatch('addChat');
   }
-
-  async function startRecording() {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-
-    mediaRecorder.start();
-    recording = true;
-
-    mediaRecorder.ondataavailable = (event: BlobEvent) => {
-      audioChunks.push(event.data);
-    };
-
-    mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-      sendToWhisper(audioBlob);
-      audioChunks = [];
-    };
-  }
-
-  function stopRecording() {
-    mediaRecorder.stop();
-    recording = false;
-  }
-
-  function toggleRecording() {
-    if (recording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  }
-
-  async function sendToWhisper(audioBlob: any) {
-    const formData = new FormData();
-    formData.append('file', audioBlob, 'speech.wav');
-    formData.append('model', 'whisper-1');
-    formData.append('language', 'en');
-
-    const response = await fetch('/api/whisper', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await response.json();
-    userMessage = data.transcription;
-    audioMessage()
-    console.log(userMessage);
-  }
-
-  function audioMessage() {
-    dispatch('audioMessage', userMessage);
-  }
 </script>
 
 <div class="flex flex-row justify-center gap-2 w-full">
@@ -75,12 +23,6 @@
     class="bg-neutral-700 w-fit px-2 py-1 sm:py-1 lg:py-1.5 rounded-full sm:w-3/5"
   >
     <div class="flex w-full">
-      <button
-        class="bg-neutral-600 text-white sm:p-1 rounded-full hover:bg-red-700"
-        on:click="{toggleRecording}"
-      >
-        {recording ? 'Stop Recording🔇' : 'Start Recording🎙️'}
-      </button>
       <input
         type="text"
         class="flex-grow sm:p-2 bg-neutral-700 text-neutral-200 rounded-l-full focus:outline-none"
@@ -117,4 +59,3 @@
     Save
   </button>
 </div>
-

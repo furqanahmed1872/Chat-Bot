@@ -14,8 +14,14 @@
   let isLoading: boolean = false;
   let isSidebarOpen = false;
   let selectedChat: string | null = null;
+  let audioUrl: any;
   export let data;
 
+  onMount(() => {
+    // Add a greeting message from the character on load
+    const greetingMessage = `Hello! I'm ${capitalizeFirstLetter(character)}. How can I assist you today?`;
+    messages = [...messages, { role: 'assistant', content: greetingMessage }];
+  });
   // Scroll to bottom function
   function scrollToBottom() {
     if (chatContainer) {
@@ -36,9 +42,9 @@
   };
 
   let chats: Chat[] | undefined = data.chat
-    ?.filter((item) => item.chatId) // Ensure chatId is not null or undefined
+    ?.filter((item) => item.chatId)
     .map((item) => ({
-      chatId: item.chatId as string, // Assert that chatId is a string
+      chatId: item.chatId as string,
       messages: item.message,
     }));
 
@@ -63,8 +69,13 @@
       if (response.ok) {
         // Append assistant message
         messages = [...messages, { role: 'assistant', content: data.message }];
+        audioUrl = data.audio;
       } else {
         console.error('Error:', data.error);
+      }
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.play();
       }
     } catch (error) {
       console.error('Error:', error);
@@ -231,7 +242,9 @@
         <div class="text-center text-gray-500">Loading...</div>
       {/if}
     </div>
-
+    {#if audioUrl}
+      <audio controls src="{audioUrl}"></audio>
+    {/if}
     <!-- Input Area -->
     <div class="pb-6">
       <ChatInput

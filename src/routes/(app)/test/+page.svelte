@@ -1,206 +1,100 @@
-<div class="waveContainer">
-  <div class="wave wave1"></div>
-  <div class="wave wave2"></div>
-  <div class="wave wave3"></div>
-  <div class="wave wave4"></div>
-  <div class="wave wave5"></div> 
-  <div class="wave wave2"></div>
-  <div class="wave wave4"></div>
+<script>
+  let bars = Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    height: 20 + Math.random() * 60, // Increased height range
+  }));
 
+  // Continuously update bar heights
+  const updateHeights = () => {
+    bars = bars.map(bar => ({
+      ...bar,
+      height: 20 + Math.random() * 60, // Generate new random height
+    }));
+
+    // Update heights every 500ms for smooth transitions
+    setTimeout(updateHeights, 500);
+  };
+
+  // Start the height update loop
+  updateHeights();
+</script>
+
+<div class="visualizerContainer">
+  <div class="circle">
+    <!-- Speaker icon inside the circle -->
+    
+  <img src="icon.png" class="speaker-icon" alt="">
+  </div>
+  <div class="bar-container">
+    {#each bars as bar}
+      <div
+        class="bar"
+        style="--i: {bar.id}; height: {bar.height}px;"
+      ></div>
+    {/each}
+  </div>
 </div>
 
 <style>
+  /* Main container for the visualizer */
+  .visualizerContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px; /* Increased size */
+    height: 100px; /* Increased size */
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-body {
-background: #222;
-}
+  /* Inner circle */
+  .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px; /* Increased size */
+    height: 150px; /* Increased size */
+    background: #e7e7e7;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.waveContainer {
-position: fixed;
-left: 0;
-right: 0;
-top: 50%;
-transform: translate3d(0, -50%, 0);
--webkit-transform: translate3d(0, -50%, 0);
--moz-transform: translate3d(0, -50%, 0);
-margin: 0 auto;
-display: flex;
-justify-content: space-between;
-height: 68px;
---boxSize: 9px;
---gutter: 4px;
-width: calc((var(--boxSize) + var(--gutter)) * 7);
-align-items: center;
-}
+  /* Speaker icon */
+  .speaker-icon {
+    width: 60px;  /* Adjust size of the icon */
+    height: 60px; /* Adjust size of the icon */
+    fill: none;   /* Make fill transparent */
+  }
 
-.wave {
--webkit-transform: scaleY(1);
-transform: scaleY(1);
-height: 50%;
-width: var(--boxSize);
-background: #fff; /* Make all waves white */
--webkit-animation-duration: 0.8s;
-animation-duration: 0.8s;
--webkit-animation-timing-function: ease-in-out;
-animation-timing-function: ease-in-out;
--webkit-animation-iteration-count: infinite;
-animation-iteration-count: infinite;
-border-radius: 80px;
-}
+  /* Bar container */
+  .bar-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%; /* Adjusted size to fit the container */
+    height: 90%; /* Adjusted size to fit the container */
+    transform: translate(-50%, -50%);
+  }
 
-.wave1 {
--webkit-animation-name: random1;
-animation-name: random1;
-}
+  /* Bars around the circle */
+  .bar {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    width: 3px; /* Increased width */
+    background: #000;
+    transform-origin: bottom center;
+    border-radius: 2px; /* Adjusted border radius */
+    transition: height 0.5s ease-in-out; /* Smooth height transition */
+  }
 
-.wave2 {
--webkit-animation-name: random2;
-animation-name: random2;
--webkit-animation-delay: 0.2s;
-animation-delay: 0.2s;
-}
-
-.wave3 {
--webkit-animation-name: random3;
-animation-name: random3;
--webkit-animation-delay: 0.3s;
-animation-delay: 0.3s;
-}
-
-.wave4 {
--webkit-animation-name: random4;
-animation-name: random4;
--webkit-animation-delay: 0.4s;
-animation-delay: 0.4s;
-}
-
-.wave5 {
--webkit-animation-name: random5;
-animation-name: random5;
--webkit-animation-delay: 0.2s;
-animation-delay: 0.2s;
-}
-
-@-webkit-keyframes random1 {
-0% {
-  height: 25%;
-}
-50% {
-  height: 100%;
-}
-100% {
-  height: 25%;
-}
-}
-
-@keyframes random1 {
-0% {
-  height: 25%;
-}
-50% {
-  height: 100%;
-}
-100% {
-  height: 25%;
-}
-}
-
-@-webkit-keyframes random2 {
-0% {
-  height: 22%;
-}
-50% {
-  height: 65%;
-}
-100% {
-  height: 22%;
-}
-}
-
-@keyframes random2 {
-0% {
-  height: 22%;
-}
-50% {
-  height: 65%;
-}
-100% {
-  height: 22%;
-}
-}
-
-@-webkit-keyframes random3 {
-0% {
-  height: 65%;
-}
-50% {
-  height: 20%;
-}
-100% {
-  height: 65%;
-}
-}
-
-@keyframes random3 {
-0% {
-  height: 65%;
-}
-50% {
-  height: 20%;
-}
-100% {
-  height: 65%;
-}
-}
-
-@-webkit-keyframes random4 {
-0% {
-  height: 20%;
-}
-50% {
-  height: 80%;
-}
-100% {
-  height: 20%;
-}
-}
-
-@keyframes random4 {
-0% {
-  height: 20%;
-}
-50% {
-  height: 80%;
-}
-100% {
-  height: 20%;
-}
-}
-
-@-webkit-keyframes random5 {
-0% {
-  height: 100%;
-}
-50% {
-  height: 35%;
-}
-100% {
-  height: 100%;
-}
-}
-
-@keyframes random5 {
-0% {
-  height: 100%;
-}
-50% {
-  height: 35%;
-}
-100% {
-  height: 100%;
-}
-}
-
-
-
+  /* Rotating bars around the circle */
+  .bar:nth-child(n) {
+    transform: rotate(calc(var(--i) * 7.2deg)) translateY(-85px); /* Adjusted translateY for larger size */
+  }
 </style>

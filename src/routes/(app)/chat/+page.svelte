@@ -206,9 +206,7 @@
   <!-- Chat Area -->
   <div class="flex flex-col w-full bg-black lg:ml-64">
     <div class="flex justify-center flex-row m-2 bg-black">
-      <div
-        class="flex flex-row justify-center transition delay-300 duration-300 hover:ease-in-out"
-      >
+      <div class="flex flex-row justify-center">
         <button
           on:click="{conversationMedium}"
           class=" bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-l-3xl text-black p-2 pl-4 hover:text-slate-300"

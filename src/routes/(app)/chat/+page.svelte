@@ -6,6 +6,7 @@
   import { page } from '$app/stores';
   import { onMount, afterUpdate } from 'svelte';
   import Voiceinput from '$lib/components/voiceinput.svelte';
+  import Bot from '$lib/components/anime/bot.svelte';
 
   let character = $page.url.searchParams.get('role') || 'zerobot';
   let chatContainer: HTMLDivElement;
@@ -16,7 +17,7 @@
   let isSidebarOpen = false;
   let selectedChat: string | null = null;
   let audioUrl: any;
-  let showAnimation = false;
+  $: showAnimation = false;
   export let data;
 
   onMount(() => {
@@ -52,7 +53,7 @@
 
   async function sendMessage(): Promise<void> {
     if (userMessage.trim() === '') return;
-
+    showAnimation = false
     // Append user message to the current messages
     messages = [...messages, { role: 'user', content: userMessage }];
     isLoading = true;
@@ -72,12 +73,12 @@
         // Append assistant message
         messages = [...messages, { role: 'assistant', content: data.message }];
         audioUrl = data.audio;
+        showAnimation = true;
       } else {
         console.error('Error:', data.error);
       }
       if (audioUrl && showVoice) {
         const audioresponse = new Audio(audioUrl);
-        showAnimation = true;
         audioresponse.play();
       }
     } catch (error) {
@@ -190,11 +191,6 @@
     showchat = !showchat;
     showVoice = !showVoice;
   }
-
-  // if (audioUrl) {
-  //   const audioresponse = new Audio(audioUrl);
-  //   audioresponse.play();
-  // }
 </script>
 
 <div class="flex h-dvh relative">
@@ -329,7 +325,7 @@
     {:else}
       <!-- voice Area -->
       <div class="flex flex-col justify-evenly items-center h-full">
-        <div class="pb-6 pt-2 mx-10 chat-container">
+        <div class="pb-6 pt-2 mx-10 chat-container relative">
           <div class=" flex flex-row justify-between items-center gap-1">
             <button
               on:click="{addChatToHistory}"
@@ -361,20 +357,8 @@
                 ></path>
               </svg>
             </button>
-            <button
-              class="sound-wave-container"
-              on:click="{() => (showAnimation = false)}"
-            >
-              <div class="sound-circle">
-                {capitalizeFirstLetter(character)}
-              </div>
-              {#if showAnimation}
-                <div class="sound-wave"></div>
-                <div class="sound-wave"></div>
-                <div class="sound-wave"></div>
-              {/if}
-            </button>
           </div>
+          <Bot bind:character="{character}" showAnimation="{showAnimation}" />
         </div>
         {#if isLoading}
           <div
@@ -403,48 +387,6 @@
 
   .chat-container::-webkit-scrollbar {
     display: none;
-  }
-  .sound-wave-container {
-    position: relative;
-    display: inline-block;
-  }
-
-  /* Base circle */
-  .sound-circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: 2px solid gray;
-    padding: 4rem;
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #cbd5e1; /* slate-300 */
-    background-color: transparent;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Sound waves animation */
-  .sound-wave {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    border: 2px solid rgba(156, 163, 175, 0.7); /* gray-600 */
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    animation: wave 2s infinite;
-  }
-
-  .sound-wave:nth-child(2) {
-    animation-delay: 0.3s;
-  }
-
-  .sound-wave:nth-child(3) {
-    animation-delay: 0.6s;
   }
 
   /* Animation keyframes */

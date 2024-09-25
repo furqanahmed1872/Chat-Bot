@@ -20,6 +20,11 @@ const config = {
         ring: 'hsl(var(--ring) / <alpha-value>)',
         background: 'hsl(var(--background) / <alpha-value>)',
         foreground: 'hsl(var(--foreground) / <alpha-value>)',
+        primary: '#0D1B2A',
+        secondary: '#E0E1DD',
+        darkBlue: '#1B263B',
+        mediumBlue: '#415A77',
+        lightBlue: '#778DA9',
         primary: {
           DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
           foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',

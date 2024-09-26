@@ -21,6 +21,7 @@ export const load: PageServerLoad = async () => {
       return {
         chatId: v.chat_id,
         message: v.chat,
+        character: v.character
       };
     }),
   };

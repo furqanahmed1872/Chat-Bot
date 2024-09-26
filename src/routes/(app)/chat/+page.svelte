@@ -42,18 +42,20 @@
   type Chat = {
     chatId: string | null;
     messages: Message[];
+    character: string;
   };
 
   let chats: Chat[] | undefined = data.chat
     ?.filter((item) => item.chatId)
     .map((item) => ({
+      character: item.character as string,
       chatId: item.chatId as string,
       messages: item.message,
     }));
 
   async function sendMessage(): Promise<void> {
     if (userMessage.trim() === '') return;
-    showAnimation = false
+    showAnimation = false;
     // Append user message to the current messages
     messages = [...messages, { role: 'user', content: userMessage }];
     isLoading = true;
@@ -129,6 +131,7 @@
     selectedChat = index;
     const chat = chats?.find((v) => v.chatId === selectedChat);
     messages = chat?.messages || [];
+    character = chat?.character || 'ME';
     update = true;
     console.log(selectedChat);
   }
@@ -168,8 +171,8 @@
         } else {
           // If it's a new chat, add it to the chats array
           chats = chats
-            ? [...chats, { chatId, messages: [...messages] }]
-            : [{ chatId, messages: [...messages] }];
+            ? [...chats, { chatId, messages: [...messages], character }]
+            : [{ chatId, messages: [...messages], character }];
         }
 
         // Reset the form

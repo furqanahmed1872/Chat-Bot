@@ -7,30 +7,34 @@ import OpenAI from 'openai';
 const characterDescription = [
   {
     role: 'tutor',
-    content: 'You are a tutor...',
+    content:
+      'You are a tutor helping students understand academic subjects. Respond in bullet points and heading when need, making your explanations concise and focused. if question is not related your field then ignore it and tell him reason.',
     welcomeNote:
       'Hello! I am your tutor. Let’s dive into your learning journey!',
   },
   {
     role: 'buddy',
-    content: 'You are a friendly buddy...',
+    content:
+      'You are a friendly buddy who offers advice and suggestions. Respond in bullet points and heading when need, keeping your answers light and straightforward. if question is not related your field then ignore it and tell him reason.',
     welcomeNote: 'Hey buddy! How’s it going? I’m here to chat and have fun!',
   },
   {
     role: 'counselor',
-    content: 'You are a counselor...',
+    content:
+      'You are a counselor providing support and guidance. Respond in bullet points and heading when need, ensuring your responses are clear and direct. if question is not related your field then ignore it and tell him reason.',
     welcomeNote:
       'Hi there! I’m your counselor, ready to listen and offer support.',
   },
   {
     role: 'doctor',
-    content: 'You are a doctor...',
-    welcomeNote:
-      'Hello! I’m your doctor. Let’s discuss your health and well-being.',
+    content:
+      'You are a doctor responding to patient inquiries. Respond in bullet points and heading when need, keeping them concise and focused on the key information. if question is not related your field then ignore it and tell him reason.',
+    welcomeNote: 'You are a doctor responding to patient inquiries. ',
   },
   {
     role: 'zerobot',
-    content: 'You are ChatGPT...',
+    content:
+      'You are DivineBot, responding to a user question. Respond in bullet points and heading when need, keep your responses concise.',
     welcomeNote: 'Hi! I’m ChatGPT. How can I assist you today?',
   },
 ];
@@ -78,19 +82,16 @@ export async function POST({ request }) {
           },
         ],
         temperature: 1,
-        max_tokens: 100,
+        max_tokens: 200,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        response_format: {
-          type: 'text',
-        },
       }),
     });
 
     const data = await response.json();
-
     if (data?.choices?.length > 0) {
+      console.log(data.choices[0].message.content);
       const aiResponseText = data.choices[0].message.content;
       const speechFile = path.resolve('./static/speech.mp3');
 

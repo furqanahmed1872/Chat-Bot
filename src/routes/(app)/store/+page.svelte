@@ -81,7 +81,7 @@
     <div class="flex flex-row gap-4 justify-between items-center mb-8">
       <button
         on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-        class="lg:hidden p-2 bg-primary text-secondary hover:bg-mediumBlue  flex items-center justify-center rounded-md transition-colors duration-200"
+        class="lg:hidden p-2 bg-primary text-secondary hover:bg-lightBlue  flex items-center justify-center rounded-md transition-colors duration-200"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -98,10 +98,10 @@
       <input
         type="text"
         placeholder="Search"
-        class="bg-lightBlue rounded p-2 w-full placeholder-primary text-darkBlue"
+        class="bg-mediumBlue rounded p-2 w-full placeholder-primary text-darkBlue"
       />
       <button
-        class="bg-secondary text-primary px-4 py-2 rounded min-w-max hover:bg-mediumBlue"
+        class="bg-secondary text-primary px-4 py-2 rounded min-w-max hover:bg-lightBlue"
       >
         Create Agent
       </button>
@@ -112,7 +112,7 @@
     <!-- Agents Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
       <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
       >
         <img
           src="./bird.png"
@@ -129,7 +129,7 @@
       </div>
 
       <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
       >
         <img
           src="./chick.png"
@@ -147,7 +147,7 @@
 
       <!-- Continue with more agents -->
       <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
       >
         <img
           src="./doc.png"
@@ -163,7 +163,7 @@
       </div>
 
       <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
       >
         <img
           src="./duck.png"

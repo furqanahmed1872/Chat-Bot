@@ -65,7 +65,7 @@
 >
   <div class="text-2xl sm:text-4xl font-bold mb-4 text-darkBlue">Meet DivineBot</div>
   <div
-    class="w-full xl:w-11/12 2xl:w-1/2 mx-auto text-center text-lg sm:text-xl text-mediumBlue font-medium"
+    class="w-full xl:w-11/12 2xl:w-1/2 mx-auto text-center text-lg sm:text-xl text-primary font-medium"
   >
     Meet DivineBot, the Internet's #1 voice-enabled chatbot! Imagine having a
     conversation with a computer friend who talks with you just like a real
@@ -165,7 +165,7 @@
   </div>
   <button
     on:click="{() => goto('/store')}"
-    class="bg-darkBlue text-secondary hover:bg-lightBlue  border-mediumBlue border-4 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-lg font-normal"
+    class="bg-lightBlue text-primary font-normal hover:bg-mediumBlue  border-mediumBlue border-4 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-xl "
   >
     Visit the Agent store.
   </button>

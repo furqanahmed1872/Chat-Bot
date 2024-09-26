@@ -33,14 +33,16 @@ const config = {
           DEFAULT: 'hsl(var(--darkBlue) / <alpha-value>)',
           foreground: 'hsl(var(--darkBlue-foreground) / <alpha-value>)',
         },
-        mediumBlue: {
-          DEFAULT: 'hsl(var(--mediumBlue) / <alpha-value>)',
-          foreground: 'hsl(var(--mediumBlue-foreground) / <alpha-value>)',
-        },
         lightBlue: {
           DEFAULT: 'hsl(var(--lightBlue) / <alpha-value>)',
           foreground: 'hsl(var(--lightBlue-foreground) / <alpha-value>)',
         },
+        mediumBlue: {
+          DEFAULT: 'hsl(var(--mediumBlue) / <alpha-value>)',
+          foreground: 'hsl(var(--mediumBlue-foreground) / <alpha-value>)',
+        },
+
+
         destructive: {
           DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
           foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)',

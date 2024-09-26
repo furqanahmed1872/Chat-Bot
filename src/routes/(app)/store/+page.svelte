@@ -3,14 +3,14 @@
   let isSidebarOpen = false;
 </script>
 
-<div class="flex flex-row h-dvh bg-black text-white">
+<div class="flex flex-row h-dvh bg-primary text-secondary">
   <!-- Sidebar -->
   <nav
-    class="{`fixed top-0 left-0 h-full bg-slate-300 p-4 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-64`}"
+    class="{`fixed top-0 left-0 h-full bg-secondary p-4 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-64`}"
   >
     <button
       on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-      class="md:flex lg:hidden mb-2 p-2 bg-slate-300 text-black hover:bg-black hover:text-slate-300 flex items-center justify-center rounded-md transition-colors duration-200"
+      class="md:flex lg:hidden mb-2 p-2 bg-secondary text-primary hover:bg-primary hover:text-secondary flex items-center justify-center rounded-md transition-colors duration-200"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,7 @@
       
         <li class="mb-4">
           <button
-            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
           >
             <img alt="" src="./star.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
             Featured
@@ -42,7 +42,7 @@
         </li>
         <li class="mb-4">
           <button
-            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
           >
             <img alt="" src="./time.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
             Recent
@@ -50,7 +50,7 @@
         </li>
         <li class="mb-4">
           <button
-            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
           >
             <img alt="" src="./fire.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
             Popular
@@ -58,7 +58,7 @@
         </li>
         <li class="mb-4">
           <button
-            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
           >
             <img alt="" src="./heart-beat.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
             Health
@@ -66,7 +66,7 @@
         </li>
         <li>
           <button
-            class="group flex items-center py-2 px-4 text-black text-lg font-medium hover:text-white hover:bg-neutral-900 rounded w-full transition duration-300"
+            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
           >
             <img alt="" src="./cap.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
             Education
@@ -81,7 +81,7 @@
     <div class="flex flex-row gap-4 justify-between items-center mb-8">
       <button
         on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-        class="lg:hidden p-2 bg-black text-slate-300 hover:bg-slate-300 hover:text-black flex items-center justify-center rounded-md transition-colors duration-200"
+        class="lg:hidden p-2 bg-primary text-secondary hover:bg-mediumBlue  flex items-center justify-center rounded-md transition-colors duration-200"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -98,10 +98,10 @@
       <input
         type="text"
         placeholder="Search"
-        class="bg-neutral-900 text-white rounded p-2 w-full placeholder-gray-500"
+        class="bg-lightBlue rounded p-2 w-full placeholder-primary text-darkBlue"
       />
       <button
-        class="bg-slate-300 text-black px-4 py-2 rounded min-w-max hover:bg-slate-400"
+        class="bg-secondary text-primary px-4 py-2 rounded min-w-max hover:bg-mediumBlue"
       >
         Create Agent
       </button>
@@ -112,7 +112,7 @@
     <!-- Agents Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
       <div
-        class="bg-neutral-900 rounded-lg p-4 flex items-center hover:bg-neutral-700"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
       >
         <img
           src="./bird.png"
@@ -120,8 +120,8 @@
           class="w-16 h-16 rounded-full mr-4 bg-slate-300"
         />
         <div>
-          <h2 class="text-xl font-bold">Tutor</h2>
-          <p class="text-gray-400">
+          <h2 class="text-xl font-bold text-secondary">Tutor</h2>
+          <p class="text-secondary">
             A supportive tutor skilled in various subjects, encouraging learning
             and understanding.
           </p>
@@ -129,7 +129,7 @@
       </div>
 
       <div
-        class="bg-neutral-900 rounded-lg p-4 flex items-center hover:bg-neutral-700"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
       >
         <img
           src="./chick.png"
@@ -137,8 +137,8 @@
           class="w-16 h-16 rounded-full mr-4 bg-slate-300"
         />
         <div>
-          <h2 class="text-xl font-bold">Buddy</h2>
-          <p class="text-gray-400">
+          <h2 class="text-xl font-bold text-secondary">Buddy</h2>
+          <p class="text-secondary">
             Your friendly and supportive buddy for light-hearted chats and
             encouragement.
           </p>
@@ -147,7 +147,7 @@
 
       <!-- Continue with more agents -->
       <div
-        class="bg-neutral-900 rounded-lg p-4 flex items-center hover:bg-neutral-700"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
       >
         <img
           src="./doc.png"
@@ -155,15 +155,15 @@
           class="w-16 h-16 rounded-full mr-4 bg-slate-300"
         />
         <div>
-          <h2 class="text-xl font-bold">Counselor</h2>
-          <p class="text-gray-400">
+          <h2 class="text-xl font-bold text-secondary">Counselor</h2>
+          <p class="text-secondary">
             I am a counselor, here to provide support and advice.
           </p>
         </div>
       </div>
 
       <div
-        class="bg-neutral-900 rounded-lg p-4 flex items-center hover:bg-neutral-700"
+        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-mediumBlue text-primary"
       >
         <img
           src="./duck.png"
@@ -171,8 +171,8 @@
           class="w-16 h-16 rounded-full mr-4 bg-slate-300"
         />
         <div>
-          <h2 class="text-xl font-bold">Doctor</h2>
-          <p class="text-gray-400">
+          <h2 class="text-xl font-bold text-secondary">Doctor</h2>
+          <p class="text-secondary">
             A dedicated healthcare professional offering guidance and care.
           </p>
         </div>

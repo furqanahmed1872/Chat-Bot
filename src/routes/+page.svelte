@@ -8,7 +8,7 @@
 </script>
 
 <!-- Header -->
-<nav class="bg-slate-100 w-full h-fit py-5 grid grid-cols-3 justify-items-center">
+<nav class="bg-secondary w-full h-fit py-5 grid grid-cols-3 justify-items-center">
   <ul class="flex items-center">
     <img
       src="./icon.png"
@@ -16,22 +16,22 @@
       class="hidden sm:block sm:w-12 sm:h-12 lg:w-14 lg:h-14"
     />
     <li
-      class="text-2xl sm:text-3xl font-light ml-2 no-underline px-2 py-2 text-black cursor-pointer pullRightLeft relative group"
+      class="text-2xl sm:text-3xl font-light ml-2 no-underline px-2 py-2 text-primary cursor-pointer pullRightLeft relative group"
     >
       DivineBot
       <!-- Darkened background overlay on hover -->
-      <span class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
+      <span class="absolute inset-0 bg-primary  opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
     </li>
   </ul>
   <div></div>
   <ul class="flex items-center space-x-4">
     <button
       on:click="{() => goto('/chat')}"
-      class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-black font-semibold cursor-pointer pullRightLeft relative group"
+      class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-primary font-semibold cursor-pointer pullRightLeft relative group"
     >
       Chat
       <!-- Darkened background overlay on hover -->
-      <span class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
+      <span class="absolute inset-0 bg-primary  opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
     </button>
   </ul>
 </nav>
@@ -51,7 +51,7 @@
     />
     <!-- Text with continuous floating effect -->
     <p
-      class="text-white text-3xl sm:text-5xl lg:text-5xl xl:text-7xl font-bold mt-6 sm:mt-10 animate-float animate-once animate-duration-1000"
+      class="text-secondary text-3xl sm:text-5xl lg:text-5xl xl:text-7xl font-bold mt-6 sm:mt-10 animate-float animate-once animate-duration-1000"
     >
       Empowering humanity,<br />word by word
     </p>
@@ -61,11 +61,11 @@
 <!-- IMP-info -->
 
 <div
-  class="grid bg-slate-300 text-center items-center justify-center p-8 sm:p-36"
+  class="grid bg-secondary text-center items-center justify-center p-8 sm:p-36"
 >
-  <div class="text-2xl sm:text-4xl font-bold mb-4">Meet DivineBot</div>
+  <div class="text-2xl sm:text-4xl font-bold mb-4 text-darkBlue">Meet DivineBot</div>
   <div
-    class="w-full xl:w-11/12 2xl:w-1/2 mx-auto text-center text-lg sm:text-xl text-gray-700 font-medium"
+    class="w-full xl:w-11/12 2xl:w-1/2 mx-auto text-center text-lg sm:text-xl text-mediumBlue font-medium"
   >
     Meet DivineBot, the Internet's #1 voice-enabled chatbot! Imagine having a
     conversation with a computer friend who talks with you just like a real
@@ -79,13 +79,13 @@
 <!-- Agent -->
 
 <div
-  class="bg-black flex flex-col h-fit justify-center items-center p-10 sm:p-20"
+  class="bg-primary flex flex-col h-fit justify-center items-center p-10 sm:p-20"
 >
-  <div class="text-white font-light text-3xl sm:text-5xl text-center">
+  <div class="text-secondary font-light text-3xl sm:text-5xl text-center">
     Agents
   </div>
   <div
-    class="text-gray-600 font-light text-lg sm:text-xl text-center my-4 sm:my-5"
+    class="text-mediumBlue font-light text-lg sm:text-xl text-center my-4 sm:my-5"
   >
     Create and speak with AI agents anywhere, anytime.
   </div>
@@ -103,7 +103,7 @@
         alt="Tutor"
         class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
       />
-      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
         Tutor
       </div>
     </button>
@@ -117,7 +117,7 @@
         alt="Counselor"
         class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
       />
-      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
         Counselor
       </div>
     </button>
@@ -131,7 +131,7 @@
         alt="Buddy"
         class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
       />
-      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
         Buddy
       </div>
     </button>
@@ -145,7 +145,7 @@
         alt="Doctor"
         class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
       />
-      <div class="text-white font-medium text-xl sm:text-2xl text-center mt-4">
+      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
         Doctor
       </div>
     </button>
@@ -155,17 +155,17 @@
 <!-- Explore -->
 
 <div
-  class="grid justify-center items-center text-center bg-slate-300 h-fit p-10 sm:p-20 gap-3"
+  class="grid justify-center items-center text-center bg-secondary h-fit p-10 sm:p-20 gap-3"
 >
-  <div class="font-semibold text-xl sm:text-3xl lg:text-4xl">
+  <div class="font-semibold text-xl sm:text-3xl lg:text-4xl text-primary">
     Explore our AI agent store
   </div>
-  <div class="text-gray-600 font-light text-lg sm:text-xl my-5">
+  <div class="text-darkBlue font-light text-lg sm:text-xl my-5">
     Discover a diverse range of AI agents tailored to meet your unique needs.
   </div>
   <button
     on:click="{() => goto('/store')}"
-    class="bg-orange-600 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-lg font-normal"
+    class="bg-darkBlue text-secondary hover:bg-lightBlue  border-mediumBlue border-4 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-lg font-normal"
   >
     Visit the Agent store.
   </button>
@@ -173,7 +173,7 @@
 
 <!-- Sign In -->
 
-<div class="w-full grid justify-items-center text-white bg-black py-12">
+<div class="w-full grid justify-items-center text-secondary bg-primary py-12">
   <div class="flex items-center w-full px-4 justify-center">
     <div class="mx-auto grid gap-6">
       <div class="grid gap-2 text-center">
@@ -185,26 +185,26 @@
       <div class="grid gap-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="grid gap-2">
-            <Label for="first-name">First Name</Label>
-            <Input id="first-name" type="text" placeholder="Max" required />
+            <Label for="first-name"  >First Name</Label>
+            <Input class ="text-primary" id="first-name"  type="text" placeholder="Max" required />
           </div>
           <div class="grid gap-2">
             <Label for="last-name">Last Name</Label>
-            <Input id="last-name" type="text" placeholder="Robinson" required />
+            <Input class ="text-primary" id="last-name" type="text" placeholder="Robinson" required />
           </div>
         </div>
         <div class="grid gap-2">
           <Label for="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input class ="text-primary" id="email" type="email" placeholder="m@example.com" required />
         </div>
         <div class="grid gap-2">
           <div class="flex items-center">
             <Label for="password">Password</Label>
           </div>
-          <Input id="password" type="password" required />
+          <Input class ="text-primary" id="password" type="password" required />
         </div>
         <div class="flex items-center space-x-2">
-          <Checkbox id="include" checked="{true}" />
+          <Checkbox class ="text-primary" id="include" checked="{false}" />
           <label
             for="include"
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -212,7 +212,7 @@
             Agree to the terms of service
           </label>
         </div>
-        <Button type="submit" class="w-full bg-slate-700">Create Account</Button
+        <Button type="submit" class="w-full bg-lightBlue hover:bg-mediumBlue">Create Account</Button
         >
       </div>
     </div>
@@ -221,6 +221,6 @@
 
 <!-- Footer -->
 
-<div class="bg-white grid justify-center items-end py-12 sm:p-28">
-  <div>info@divinebot.ai | DivineBot © 2024</div>
+<div class="bg-secondary grid justify-center items-end py-12 sm:p-28">
+  <div class="text-primary ">info@divinebot.ai | DivineBot © 2024</div>
 </div>

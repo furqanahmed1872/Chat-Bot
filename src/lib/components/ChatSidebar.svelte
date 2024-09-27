@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
   import { createEventDispatcher } from 'svelte';
 
   type Message = {
@@ -11,15 +11,16 @@
     messages: Message[];
     character: string;
   };
-
   export let chats: Chat[] = [];
+  export let characterList: any = []
+  export let character;
   export let selectedChat: number | null = null;
-
-  let val = chats.map((chat) => {
-    return chat.messages[1].content;
-  });
-  console.log(val);
+  export let isSidebarOpen = false;
   const dispatch = createEventDispatcher();
+
+  function capitalizeFirstLetter(name: string | null) {
+    return name ? name.charAt(0).toUpperCase() + name.slice(1) : 'Zerobot';
+  }
 
   function condenseQuestion(question: string): string {
     // Remove punctuation and tokenize the question into words
@@ -90,39 +91,51 @@
     dispatch('selectChat', index.chatId);
   }
 
+  function selectCharacter(index: any): void {
+    character = index.character
+    dispatch('selectCharacter', index.character);
+  }
+
   function addChat() {
     dispatch('addChat');
   }
-  export let isSidebarOpen = false;
+
+  const checkScreenSize = () => {
+    isSidebarOpen = window.matchMedia('(min-width: 1024px)').matches;
+  };
+
+  onMount(() => {
+    checkScreenSize(); 
+    window.addEventListener('resize', checkScreenSize);
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  });
 </script>
 
 <div
-  class="{`fixed top-0 left-0 h-full bg-slate-300 p-4 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-64`}"
+  class="{`fixed top-0 left-0 h-full bg-slate-300 p-4 transition-transform lg:${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}  w-64`}"
 >
   <div class="flex flex-row justify-between items-center my-2">
     <button
       on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-      class="md:flex lg:hidden p-2 bg-slate-300 text-black hover:bg-black hover:text-slate-300 flex items-center justify-center rounded-md transition-colors duration-200"
+      class="md:flex p-1 bg-slate-300 text-black hover:bg-black hover:text-slate-300 flex items-center justify-center rounded-md transition-colors duration-200"
     >
       <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 448 512"
-        class="w-4 h-4"
-        fill="currentColor"
+        class="icon-xl-heavy max-md:hidden"
+        ><path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M8.85719 3H15.1428C16.2266 2.99999 17.1007 2.99998 17.8086 3.05782C18.5375 3.11737 19.1777 3.24318 19.77 3.54497C20.7108 4.02433 21.4757 4.78924 21.955 5.73005C22.2568 6.32234 22.3826 6.96253 22.4422 7.69138C22.5 8.39925 22.5 9.27339 22.5 10.3572V13.6428C22.5 14.7266 22.5 15.6008 22.4422 16.3086C22.3826 17.0375 22.2568 17.6777 21.955 18.27C21.4757 19.2108 20.7108 19.9757 19.77 20.455C19.1777 20.7568 18.5375 20.8826 17.8086 20.9422C17.1008 21 16.2266 21 15.1428 21H8.85717C7.77339 21 6.89925 21 6.19138 20.9422C5.46253 20.8826 4.82234 20.7568 4.23005 20.455C3.28924 19.9757 2.52433 19.2108 2.04497 18.27C1.74318 17.6777 1.61737 17.0375 1.55782 16.3086C1.49998 15.6007 1.49999 14.7266 1.5 13.6428V10.3572C1.49999 9.27341 1.49998 8.39926 1.55782 7.69138C1.61737 6.96253 1.74318 6.32234 2.04497 5.73005C2.52433 4.78924 3.28924 4.02433 4.23005 3.54497C4.82234 3.24318 5.46253 3.11737 6.19138 3.05782C6.89926 2.99998 7.77341 2.99999 8.85719 3ZM6.35424 5.05118C5.74907 5.10062 5.40138 5.19279 5.13803 5.32698C4.57354 5.6146 4.1146 6.07354 3.82698 6.63803C3.69279 6.90138 3.60062 7.24907 3.55118 7.85424C3.50078 8.47108 3.5 9.26339 3.5 10.4V13.6C3.5 14.7366 3.50078 15.5289 3.55118 16.1458C3.60062 16.7509 3.69279 17.0986 3.82698 17.362C4.1146 17.9265 4.57354 18.3854 5.13803 18.673C5.40138 18.8072 5.74907 18.8994 6.35424 18.9488C6.97108 18.9992 7.76339 19 8.9 19H9.5V5H8.9C7.76339 5 6.97108 5.00078 6.35424 5.05118ZM11.5 5V19H15.1C16.2366 19 17.0289 18.9992 17.6458 18.9488C18.2509 18.8994 18.5986 18.8072 18.862 18.673C19.4265 18.3854 19.8854 17.9265 20.173 17.362C20.3072 17.0986 20.3994 16.7509 20.4488 16.1458C20.4992 15.5289 20.5 14.7366 20.5 13.6V10.4C20.5 9.26339 20.4992 8.47108 20.4488 7.85424C20.3994 7.24907 20.3072 6.90138 20.173 6.63803C19.8854 6.07354 19.4265 5.6146 18.862 5.32698C18.5986 5.19279 18.2509 5.10062 17.6458 5.05118C17.0289 5.00078 16.2366 5 15.1 5H11.5ZM5 8.5C5 7.94772 5.44772 7.5 6 7.5H7C7.55229 7.5 8 7.94772 8 8.5C8 9.05229 7.55229 9.5 7 9.5H6C5.44772 9.5 5 9.05229 5 8.5ZM5 12C5 11.4477 5.44772 11 6 11H7C7.55229 11 8 11.4477 8 12C8 12.5523 7.55229 13 7 13H6C5.44772 13 5 12.5523 5 12Z"
+          fill="currentColor"
+        ></path></svg
       >
-        <path
-          d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"
-        ></path>
-      </svg>
     </button>
-    <!-- <button
-    on:click="{() => {
-      goto('/');
-    }}"
-    class="hidden lg:flex items-center justify-center w-full mb-6"
-  >
-    <img src="./largeicon.png" alt="Logo" class="w-16 h-16" />
-  </button> -->
     <button
       on:click="{addChat}"
       class="p-1 bg-slate-300 text-black hover:bg-black hover:text-slate-300 rounded-lg"
@@ -139,6 +152,33 @@
       >
     </button>
   </div>
+  <h2 class="text-xl font-bold">Characters</h2>
+  <ul class="my-2">
+    {#each characterList as character, index}
+      <li
+        class="p-2 hover:bg-black hover:text-slate-300 font-bold cursor-pointer rounded-lg flex justify-between items-center"
+      >
+        <button
+          on:click="{() => selectCharacter(character)}"
+        >
+          {capitalizeFirstLetter(character.character)}
+        </button>
+        <!-- <button class="text-red-500 ml-2" on:click="{() => deleteChat(chat)}">
+          <svg
+            width="20px"
+            height="20px"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+          >
+            <path
+              fill="#b30539"
+              d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"
+            ></path>
+          </svg>
+        </button> -->
+      </li>
+    {/each}
+  </ul>
   <h2 class="text-xl font-bold">Chat History</h2>
   <ul class="my-2">
     {#each chats as chat, index}

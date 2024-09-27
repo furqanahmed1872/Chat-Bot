@@ -8,23 +8,27 @@
   import Voiceinput from '$lib/components/voiceinput.svelte';
   import Bot from '$lib/components/anime/bot.svelte';
 
+  export let data;
   let character = $page.url.searchParams.get('role') || 'zerobot';
+  let characterList = data.characterList;
   let chatContainer: HTMLDivElement;
   let update: boolean = false;
   let messages: Message[] = [];
   let userMessage: string = '';
   let isLoading: boolean = false;
-  let isSidebarOpen = false;
+  $: isSidebarOpen = false;
   let selectedChat: string | null = null;
   let audioUrl: any;
   $: showAnimation = false;
-  export let data;
+  let save = messages.find((m) => m.role === 'user');
 
-  onMount(() => {
-    // Add a greeting message from the character on load
-    const greetingMessage = `Hello! I'm ${capitalizeFirstLetter(character)}. How can I assist you today?`;
+  const greetingMessage = (data.characterList?.find(
+    (c) => c.character === character,
+  )).greeting_note;
+  $: {
     messages = [...messages, { role: 'assistant', content: greetingMessage }];
-  });
+  }
+
   // Scroll to bottom function
   function scrollToBottom() {
     if (chatContainer) {
@@ -141,74 +145,83 @@
   }
 
   async function addChatToHistory(): Promise<void> {
-    let chatId;
-    if (update) {
-      chatId = selectedChat;
-    } else {
-      chatId = uuidv4();
-    }
-
-    try {
-      const response = await fetch('/api/addchat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ messages, character, chatId }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // If the chat is being updated
-        if (update) {
-          // Find the existing chat in the chats array and update it
-          chats = chats?.map((chat) =>
-            chat.chatId === chatId
-              ? { ...chat, messages: [...messages] }
-              : chat,
-          );
-        } else {
-          // If it's a new chat, add it to the chats array
-          chats = chats
-            ? [...chats, { chatId, messages: [...messages], character }]
-            : [{ chatId, messages: [...messages], character }];
-        }
-
-        // Reset the form
-        messages = [];
-        update = false;
+    if (save) {
+      let chatId;
+      if (update) {
+        chatId = selectedChat;
       } else {
-        console.error('Error:', data.error);
+        chatId = uuidv4();
       }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      isLoading = false;
-      userMessage = '';
+
+      try {
+        const response = await fetch('/api/addchat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ messages, character, chatId }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // If the chat is being updated
+          if (update) {
+            // Find the existing chat in the chats array and update it
+            chats = chats?.map((chat) =>
+              chat.chatId === chatId
+                ? { ...chat, messages: [...messages] }
+                : chat,
+            );
+          } else {
+            // If it's a new chat, add it to the chats array
+            chats = chats
+              ? [...chats, { chatId, messages: [...messages], character }]
+              : [{ chatId, messages: [...messages], character }];
+          }
+
+          // Reset the form
+          messages = [];
+          update = false;
+        } else {
+          console.error('Error:', data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        isLoading = false;
+        userMessage = '';
+      }
     }
+    messages = [];
   }
+
   let showchat = true;
   let showVoice = false;
   function conversationMedium() {
     showchat = !showchat;
     showVoice = !showVoice;
   }
+
+  // $: console.log('main', isSidebarOpen);
 </script>
 
-<div class="flex h-dvh relative">
-  <!-- Sidebar -->
+<div class="flex h-dvh relative bg-slate-300">
   <ChatSidebar
     chats="{chats}"
+    characterList="{characterList}"
     bind:isSidebarOpen="{isSidebarOpen}"
+    bind:character="{character}"
     on:addChat="{addChatToHistory}"
     on:selectChat="{(e) => selectChat(e.detail)}"
     on:deleteChat="{(e) => handleDeleteChat(e.detail)}"
   />
 
   <!-- Chat Area -->
-  <div class="flex flex-col w-full bg-black lg:ml-64">
-    <div class="flex justify-center flex-row m-2 bg-black">
+  <div
+    class="flex flex-col w-full bg-black lg:{isSidebarOpen ? 'ml-64' : 'm-0'} "
+  >
+    <div class="hidden lg:flex justify-center flex-row m-2 bg-black">
       <div class="flex flex-row justify-center">
         <button
           on:click="{conversationMedium}"
@@ -268,7 +281,9 @@
         bind:this="{chatContainer}"
         class="flex-grow overflow-y-auto pb-6 pt-2 mx-10 chat-container"
       >
-        <div class="flex flex-row justify-between items-center gap-1">
+        <div
+          class="flex flex-row lg:justify-start justify-between items-center gap-1"
+        >
           <button
             on:click="{addChatToHistory}"
             class="lg:hidden order-3 p-1.5 bg-black text-slate-300 hover:bg-slate-300 hover:text-black rounded-lg"
@@ -286,18 +301,24 @@
           </button>
           <button
             on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-            class="lg:hidden p-2 bg-black text-slate-300 hover:bg-slate-300 hover:text-black flex items-center justify-center rounded-md transition-colors duration-200"
+            class="{isSidebarOpen
+              ? 'lg:hidden'
+              : 'block'} p-2 bg-black text-slate-300 hover:bg-slate-300 hover:text-black flex items-center justify-center rounded-md transition-colors duration-200"
           >
             <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 448 512"
-              class="w-4 h-4"
-              fill="currentColor"
+              class="icon-xl-heavy max-md:hidden"
+              ><path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M8.85719 3H15.1428C16.2266 2.99999 17.1007 2.99998 17.8086 3.05782C18.5375 3.11737 19.1777 3.24318 19.77 3.54497C20.7108 4.02433 21.4757 4.78924 21.955 5.73005C22.2568 6.32234 22.3826 6.96253 22.4422 7.69138C22.5 8.39925 22.5 9.27339 22.5 10.3572V13.6428C22.5 14.7266 22.5 15.6008 22.4422 16.3086C22.3826 17.0375 22.2568 17.6777 21.955 18.27C21.4757 19.2108 20.7108 19.9757 19.77 20.455C19.1777 20.7568 18.5375 20.8826 17.8086 20.9422C17.1008 21 16.2266 21 15.1428 21H8.85717C7.77339 21 6.89925 21 6.19138 20.9422C5.46253 20.8826 4.82234 20.7568 4.23005 20.455C3.28924 19.9757 2.52433 19.2108 2.04497 18.27C1.74318 17.6777 1.61737 17.0375 1.55782 16.3086C1.49998 15.6007 1.49999 14.7266 1.5 13.6428V10.3572C1.49999 9.27341 1.49998 8.39926 1.55782 7.69138C1.61737 6.96253 1.74318 6.32234 2.04497 5.73005C2.52433 4.78924 3.28924 4.02433 4.23005 3.54497C4.82234 3.24318 5.46253 3.11737 6.19138 3.05782C6.89926 2.99998 7.77341 2.99999 8.85719 3ZM6.35424 5.05118C5.74907 5.10062 5.40138 5.19279 5.13803 5.32698C4.57354 5.6146 4.1146 6.07354 3.82698 6.63803C3.69279 6.90138 3.60062 7.24907 3.55118 7.85424C3.50078 8.47108 3.5 9.26339 3.5 10.4V13.6C3.5 14.7366 3.50078 15.5289 3.55118 16.1458C3.60062 16.7509 3.69279 17.0986 3.82698 17.362C4.1146 17.9265 4.57354 18.3854 5.13803 18.673C5.40138 18.8072 5.74907 18.8994 6.35424 18.9488C6.97108 18.9992 7.76339 19 8.9 19H9.5V5H8.9C7.76339 5 6.97108 5.00078 6.35424 5.05118ZM11.5 5V19H15.1C16.2366 19 17.0289 18.9992 17.6458 18.9488C18.2509 18.8994 18.5986 18.8072 18.862 18.673C19.4265 18.3854 19.8854 17.9265 20.173 17.362C20.3072 17.0986 20.3994 16.7509 20.4488 16.1458C20.4992 15.5289 20.5 14.7366 20.5 13.6V10.4C20.5 9.26339 20.4992 8.47108 20.4488 7.85424C20.3994 7.24907 20.3072 6.90138 20.173 6.63803C19.8854 6.07354 19.4265 5.6146 18.862 5.32698C18.5986 5.19279 18.2509 5.10062 17.6458 5.05118C17.0289 5.00078 16.2366 5 15.1 5H11.5ZM5 8.5C5 7.94772 5.44772 7.5 6 7.5H7C7.55229 7.5 8 7.94772 8 8.5C8 9.05229 7.55229 9.5 7 9.5H6C5.44772 9.5 5 9.05229 5 8.5ZM5 12C5 11.4477 5.44772 11 6 11H7C7.55229 11 8 11.4477 8 12C8 12.5523 7.55229 13 7 13H6C5.44772 13 5 12.5523 5 12Z"
+                fill="currentColor"
+              ></path></svg
             >
-              <path
-                d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32-14.3 32 32z"
-              ></path>
-            </svg>
           </button>
           <div class="text-xl font-bold p-2 text-slate-300">
             {capitalizeFirstLetter(character)}
@@ -320,7 +341,9 @@
       <!-- chat Area -->
       <div class="pb-6">
         <ChatInput
+          conversationMedium="{conversationMedium}"
           bind:userMessage="{userMessage}"
+          bind:save="{save}"
           on:sendMessage="{sendMessage}"
           on:addChat="{addChatToHistory}"
         />

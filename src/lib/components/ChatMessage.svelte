@@ -20,7 +20,7 @@
     .render(content)
     .replace(/:/g, ':<br>')
     .replace(/<(ul|ol)>/g, '<ul style="list-style-type: square; margin-left: 20px;">');
-  console.log(htmlContent);
+  // console.log(htmlContent);
 </script>
 
 <div class="mb-4">

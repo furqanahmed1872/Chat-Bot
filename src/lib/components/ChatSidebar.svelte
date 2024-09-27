@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { createEventDispatcher } from 'svelte';
 
@@ -12,10 +13,10 @@
     character: string;
   };
   export let chats: Chat[] = [];
-  export let characterList: any = []
-  export let character;
+  export let characterList: any = [];
   export let selectedChat: number | null = null;
   export let isSidebarOpen = false;
+  let selectedCharacter: null = null;
   const dispatch = createEventDispatcher();
 
   function capitalizeFirstLetter(name: string | null) {
@@ -92,8 +93,8 @@
   }
 
   function selectCharacter(index: any): void {
-    character = index.character
-    dispatch('selectCharacter', index.character);
+    selectedCharacter = index;
+    goto(`/chat?role=${index.character}`);
   }
 
   function addChat() {
@@ -105,7 +106,7 @@
   };
 
   onMount(() => {
-    checkScreenSize(); 
+    checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => {
       window.removeEventListener('resize', checkScreenSize);
@@ -119,7 +120,7 @@
   <div class="flex flex-row justify-between items-center my-2">
     <button
       on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-      class="md:flex p-1 bg-slate-300 text-black hover:bg-black hover:text-slate-300 flex items-center justify-center rounded-md transition-colors duration-200"
+      class="rounded-lg p-1.5 bg-slate-300 text-black hover:bg-black hover:text-slate-300 flex"
     >
       <svg
         width="24"
@@ -127,7 +128,7 @@
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class="icon-xl-heavy max-md:hidden"
+        class="icon-xl-heavy"
         ><path
           fill-rule="evenodd"
           clip-rule="evenodd"
@@ -138,7 +139,7 @@
     </button>
     <button
       on:click="{addChat}"
-      class="p-1 bg-slate-300 text-black hover:bg-black hover:text-slate-300 rounded-lg"
+      class="p-1.5 bg-slate-300 text-black hover:bg-black hover:text-slate-300 rounded-lg"
     >
       <svg
         viewBox="0 0 24 24"
@@ -155,11 +156,11 @@
   <h2 class="text-xl font-bold">Characters</h2>
   <ul class="my-2">
     {#each characterList as character, index}
-      <li
-        class="p-2 hover:bg-black hover:text-slate-300 font-bold cursor-pointer rounded-lg flex justify-between items-center"
-      >
+      <li>
         <button
           on:click="{() => selectCharacter(character)}"
+          class="p-1 bg-slate-300 text-black hover:bg-black hover:text-slate-300 active:scale-95 flex items-center justify-start w-full rounded-md transition-transform duration-150
+          {selectedCharacter === character ? 'bg-black text-slate-300' : 'bg-slate-300'}"
         >
           {capitalizeFirstLetter(character.character)}
         </button>
@@ -182,10 +183,9 @@
   <h2 class="text-xl font-bold">Chat History</h2>
   <ul class="my-2">
     {#each chats as chat, index}
-      <li
-        class="p-2 hover:bg-black hover:text-slate-300 font-bold cursor-pointer rounded-lg flex justify-between items-center"
-      >
+      <li class="flex flex-row items-center justify-between">
         <button
+          class="p-1 bg-slate-300 text-black w-full hover:bg-black hover:text-slate-300 active:scale-95 flex justify-start rounded-md transition-transform duration-150"
           class:selected="{index === selectedChat}"
           on:click="{() => selectChat(chat)}"
         >

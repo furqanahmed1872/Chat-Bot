@@ -2,7 +2,6 @@
   import { createEventDispatcher } from 'svelte';
   export let userMessage = '';
   export let save: any;
-  export let conversationMedium;
   const dispatch = createEventDispatcher();
 
   function send() {
@@ -14,13 +13,17 @@
   function addChat() {
     dispatch('addChat');
   }
+
+  function medium() {
+    dispatch('addChat');
+  }
 </script>
 
 <div class="flex flex-row justify-center items-center gap-2 w-full">
   <div class="lg:hidden flex justify-center flex-row bg-black">
     <div class="flex flex-row justify-center">
       <button
-        on:click="{conversationMedium}"
+        on:click="{medium}"
         class=" bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-l-3xl text-black p-1 sm:p-1.5 pl-2 sm:pl-4 hover:text-slate-300"
       >
         <svg
@@ -50,7 +53,7 @@
       </button>
       <div class="bg-black h-0.5 w-0.5"></div>
       <button
-        on:click="{conversationMedium}"
+        on:click="{medium}"
         class="bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-r-3xl text-black hover:text-slate-300 p-1 pr-2 sm:p-1.5 sm:pr-4"
       >
         <svg

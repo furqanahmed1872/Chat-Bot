@@ -34,8 +34,8 @@ const characterDescription = [
   {
     role: 'zerobot',
     content:
-      'You are DivineBot, responding to a user question. Respond in bullet points and heading when need, keep your responses concise.',
-    welcomeNote: 'Hi! I’m ChatGPT. How can I assist you today?',
+      'You are chatgpt, responding to a user question. Respond in bullet points and heading when need, keep your responses concise.',
+    welcomeNote: 'Hi! I’m DivineBot. How can I assist you today?',
   },
 ];
 

@@ -7,22 +7,26 @@ export const load: PageServerLoad = async () => {
     .from('conversations')
     .select('*')
     .order('created_at', { ascending: true });
+  const { data: characterList, error: characterListError } = await supabase
+    .from('characters')
+    .select('*')
+    .order('created_at', { ascending: true });
 
-  if (error) {
+  if (error && characterListError) {
     console.error('Error loading messages:', error);
     return {
       messages: [],
       error: 'Failed to load messages',
     };
   }
-
   return {
-    chat: saveChatRecord.map((v) => {
+    chat: saveChatRecord?.map((v) => {
       return {
         chatId: v.chat_id,
         message: v.chat,
-        character: v.character
+        character: v.character,
       };
     }),
+    characterList,
   };
 };

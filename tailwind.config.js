@@ -37,7 +37,7 @@ const config = {
           DEFAULT: 'hsl(var(--lightBlue) / <alpha-value>)',
           foreground: 'hsl(var(--lightBlue-foreground) / <alpha-value>)',
         },
-        mediumBlue: {
+        C: {
           DEFAULT: 'hsl(var(--mediumBlue) / <alpha-value>)',
           foreground: 'hsl(var(--mediumBlue-foreground) / <alpha-value>)',
         },

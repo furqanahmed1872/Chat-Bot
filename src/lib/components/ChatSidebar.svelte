@@ -14,7 +14,7 @@
   };
   export let chats: Chat[] = [];
   export let characterList: any = [];
-  export let selectedChat: number | null = null;
+  let selectedChat: number | null = null;
   export let isSidebarOpen = false;
   let selectedCharacter: null = null;
   const dispatch = createEventDispatcher();
@@ -89,12 +89,16 @@
   }
 
   function selectChat(index: any): void {
+    selectedChat = index.chatId;
+    selectedCharacter = null;
+    console.log(selectedChat, index.chatId);
     dispatch('selectChat', index.chatId);
   }
 
   function selectCharacter(index: any): void {
-    selectedCharacter = index;
-    goto(`/chat?role=${index.character}`);
+    selectedCharacter = index.character;
+    dispatch('selectCharacter', index.character);
+    // goto(`/chat?role=${index.character}`);
   }
 
   function addChat() {
@@ -154,16 +158,20 @@
     </button>
   </div>
   <h2 class="text-xl font-bold">Characters</h2>
-  <ul class="my-2">
+  <ul class="my-2 flex flex-col gap-1">
     {#each characterList as character, index}
       <li>
         <button
           on:click="{() => selectCharacter(character)}"
-          class="p-1 bg-slate-300 text-black hover:bg-black hover:text-slate-300 active:scale-95 flex items-center justify-start w-full rounded-md transition-transform duration-150
-          {selectedCharacter === character ? 'bg-black text-slate-300' : 'bg-slate-300'}"
+          class="{`p-1 text-black hover:bg-black hover:text-slate-300 active:scale-95 flex items-center justify-start w-full rounded-md transition-transform duration-150 ${
+            selectedCharacter === character.character
+              ? 'bg-black text-slate-300'
+              : 'bg-slate-300 text-black'
+          }`}"
         >
           {capitalizeFirstLetter(character.character)}
         </button>
+
         <!-- <button class="text-red-500 ml-2" on:click="{() => deleteChat(chat)}">
           <svg
             width="20px"
@@ -181,13 +189,16 @@
     {/each}
   </ul>
   <h2 class="text-xl font-bold">Chat History</h2>
-  <ul class="my-2">
+  <ul class="my-2 flex flex-col gap-1">
     {#each chats as chat, index}
       <li class="flex flex-row items-center justify-between">
         <button
-          class="p-1 bg-slate-300 text-black w-full hover:bg-black hover:text-slate-300 active:scale-95 flex justify-start rounded-md transition-transform duration-150"
-          class:selected="{index === selectedChat}"
           on:click="{() => selectChat(chat)}"
+          class="{`p-1 text-black hover:bg-black hover:text-slate-300 active:scale-95 flex items-center justify-start w-full rounded-md transition-transform duration-150 ${
+            selectedChat === index
+              ? 'bg-black text-slate-300'
+              : 'bg-slate-300 text-black'
+          }`}"
         >
           {condenseQuestion(chat.messages[1].content)}
         </button>

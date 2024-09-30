@@ -9,13 +9,10 @@
   import Bot from '$lib/components/anime/bot.svelte';
 
   export let data;
-  let character = 'doctor'
-  
-  $:{
-  character= $page.url.searchParams.get('role') || 'divinebot';
-  }
-    
-  $: console.log(character);
+  let character = 'doctor';
+
+  $: character = $page.url.searchParams.get('role') || 'divinebot';
+
   let characterList = data.characterList;
   let chatContainer: HTMLDivElement;
   let update: boolean = false;
@@ -27,22 +24,7 @@
   let audioUrl: any;
   $: showAnimation = false;
   let save = messages.find((m) => m.role === 'user');
-  $: console.log(character);
-  let greetingMessage = data.characterList?.find(
-    (c) => c.character === character,
-  )?.greeting_note;
-
-  messages = [...messages, { role: 'assistant', content: greetingMessage }];
-
-  // Scroll to bottom function
-  function scrollToBottom() {
-    if (chatContainer) {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-  }
-  afterUpdate(() => {
-    scrollToBottom();
-  });
+  let greetingMessage = 'Hello! How can I assist you today?';
 
   type Message = {
     role: 'user' | 'assistant';
@@ -61,6 +43,25 @@
       chatId: item.chatId as string,
       messages: item.message,
     }));
+
+  $: greetingMessage =
+    data.characterList?.find((c) => c.character === character)?.greeting_note ||
+    'Hello! How can I assist you today?';
+
+  $: if (messages[0]?.content !== greetingMessage && !update) {
+    messages = [{ role: 'assistant', content: greetingMessage }];
+  }
+
+  // $: console.log(character, messages);
+
+  function scrollToBottom() {
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }
+  afterUpdate(() => {
+    scrollToBottom();
+  });
 
   async function sendMessage(): Promise<void> {
     if (userMessage.trim() === '') return;
@@ -138,13 +139,18 @@
 
   function selectChat(index: string): void {
     selectedChat = index;
+    update = true;
     const chat = chats?.find((v) => v.chatId === selectedChat);
     messages = chat?.messages || [];
     character = chat?.character || 'ME';
-    update = true;
-    console.log(selectedChat);
+    console.log(messages);
   }
+  $: console.log(messages);
 
+  function selectCharacter(name: string) {
+    update = false;
+    character = name;
+  }
   function capitalizeFirstLetter(name: string | null) {
     return name ? name.charAt(0).toUpperCase() + name.slice(1) : 'Zerobot';
   }
@@ -207,8 +213,6 @@
     showchat = !showchat;
     showVoice = !showVoice;
   }
-
-  // $: console.log('main', isSidebarOpen);
 </script>
 
 <div class="flex h-dvh relative bg-slate-300">
@@ -218,6 +222,7 @@
     bind:isSidebarOpen="{isSidebarOpen}"
     on:addChat="{addChatToHistory}"
     on:selectChat="{(e) => selectChat(e.detail)}"
+    on:selectCharacter="{(e) => selectCharacter(e.detail)}"
     on:deleteChat="{(e) => handleDeleteChat(e.detail)}"
   />
 
@@ -328,7 +333,7 @@
             {capitalizeFirstLetter(character)}
           </div>
         </div>
-        {#each messages as { content, role }, i (i)}
+        {#each messages as { content, role }, i (content)}
           <ChatMessage content="{content}" role="{role}" />
         {/each}
 

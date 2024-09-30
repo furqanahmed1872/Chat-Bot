@@ -9,7 +9,13 @@
   import Bot from '$lib/components/anime/bot.svelte';
 
   export let data;
-  let character = $page.url.searchParams.get('role') || 'divinebot';
+  let character = 'doctor'
+  
+  $:{
+  character= $page.url.searchParams.get('role') || 'divinebot';
+  }
+    
+  $: console.log(character);
   let characterList = data.characterList;
   let chatContainer: HTMLDivElement;
   let update: boolean = false;
@@ -22,9 +28,9 @@
   $: showAnimation = false;
   let save = messages.find((m) => m.role === 'user');
   $: console.log(character);
-  const greetingMessage = (data.characterList?.find(
+  let greetingMessage = data.characterList?.find(
     (c) => c.character === character,
-  )).greeting_note;
+  )?.greeting_note;
 
   messages = [...messages, { role: 'assistant', content: greetingMessage }];
 

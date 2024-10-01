@@ -1,10 +1,10 @@
 <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-70">
-  <div class="bg-primary rounded-lg w-fit ">
+  <div class="bg-primary rounded-lg w-fit text-center">
     <div class="text-white text-xl font-semibold p-4">Create Agent</div>
     <hr class="border-t-8 border-secondary " />
 
 
-    <div class="grid grid-cols-10 items-center p-2 my-2">
+    <div class="grid grid-cols-10 items-center p-2 my-2 text-left">
       <div class="col-span-7 gap-2 mx-2">
         <div class="grid grid-cols-7 items-center py-2">
           <label for="" class="text-secondary col-span-3 text-lg font-light">Name</label>
@@ -35,7 +35,8 @@
     
     </div>
   
-    <!-- <div class="grid grid-cols-10 items-center  mx-2">
+   
+    <!-- <div class="grid grid-cols-10 items-center  mx-2 text-left mb-4">
       <label for="" class="text-secondary col-span-3 text-lg font-light mx-2">Action</label>
       <select class="text-lg col-span-7 font-light text-secondary mr-2 h-10 w-full bg-lightBlue rounded leading-tight" id="grid-state">
         <option>New Mexico</option>
@@ -43,9 +44,10 @@
         <option>Texas</option>
       </select>
     </div>
+  
    -->
   
-   <div class="grid grid-cols-10 items-center mx-2">
+   <div class="grid grid-cols-10 items-center mx-2 text-left">
     <label for="description1" class="text-secondary col-span-3 text-lg font-light mx-2">Description</label>
     <textarea 
       id="description1"
@@ -55,7 +57,7 @@
     </textarea>
   </div>
   
-  <div class="grid grid-cols-10 items-center my-4 mx-2">
+  <div class="grid grid-cols-10 items-center my-4 mx-2 text-left">
     <label for="description2" class="text-secondary col-span-3 text-lg font-light mx-2">Instruction</label>
     <textarea 
       id="description2"
@@ -63,6 +65,10 @@
       placeholder="In just a few words, how would you describe this agent?"
       class="text-lg col-span-7 font-light text-secondary mr-2 h-40 w-full bg-lightBlue rounded leading-tight">
     </textarea>
+  </div>
+  <div class="flex justify-end gap-2 p-4">
+    <button class="bg-lightBlue text-white py-2 px-4 rounded-lg ">Cancel</button>
+    <button class="bg-secondary  py-2 px-4 rounded-lg">Accept</button>
   </div>
   
 

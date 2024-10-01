@@ -1,11 +1,11 @@
 <script lang="ts">
-  import ChatSidebar from '$lib/components/ChatSidebar.svelte';
-  import ChatMessage from '$lib/components/ChatMessage.svelte';
-  import ChatInput from '$lib/components/ChatInput.svelte';
+  import ChatSidebar from '$lib/components/chatpage/ChatSidebar.svelte';
+  import ChatMessage from '$lib/components/chatpage/ChatMessage.svelte';
+  import ChatInput from '$lib/components/chatpage/ChatInput.svelte';
   import { v4 as uuidv4 } from 'uuid';
   import { page } from '$app/stores';
   import { onMount, afterUpdate } from 'svelte';
-  import Voiceinput from '$lib/components/voiceinput.svelte';
+  import Voiceinput from '$lib/components/chatpage/voiceinput.svelte';
   import Bot from '$lib/components/anime/bot.svelte';
 
   export let data;

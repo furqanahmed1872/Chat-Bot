@@ -1,6 +1,11 @@
-<script>
+<script lang="ts">
   import { goto } from '$app/navigation';
   let isSidebarOpen = false;
+
+  export let data;
+  let characterList: any = data.characterList;
+
+  let images = ['./bird.png', './chick.png', './doc.png', './duck.png'];
 </script>
 
 <div class="flex flex-row h-dvh bg-primary text-secondary">
@@ -31,48 +36,66 @@
     </button>
 
     <ul class="space-y-4 overflow-auto">
-      
-        <li class="mb-4">
-          <button
-            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
-          >
-            <img alt="" src="./star.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
-            Featured
-          </button>
-        </li>
-        <li class="mb-4">
-          <button
-            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
-          >
-            <img alt="" src="./time.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
-            Recent
-          </button>
-        </li>
-        <li class="mb-4">
-          <button
-            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
-          >
-            <img alt="" src="./fire.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
-            Popular
-          </button>
-        </li>
-        <li class="mb-4">
-          <button
-            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
-          >
-            <img alt="" src="./heart-beat.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
-            Health
-          </button>
-        </li>
-        <li>
-          <button
-            class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
-          >
-            <img alt="" src="./cap.png" class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert" />
-            Education
-          </button>
-        </li>
-        
+      <li class="mb-4">
+        <button
+          class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
+        >
+          <img
+            alt=""
+            src="./star.png"
+            class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
+          />
+          Featured
+        </button>
+      </li>
+      <li class="mb-4">
+        <button
+          class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
+        >
+          <img
+            alt=""
+            src="./time.png"
+            class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
+          />
+          Recent
+        </button>
+      </li>
+      <li class="mb-4">
+        <button
+          class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
+        >
+          <img
+            alt=""
+            src="./fire.png"
+            class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
+          />
+          Popular
+        </button>
+      </li>
+      <li class="mb-4">
+        <button
+          class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
+        >
+          <img
+            alt=""
+            src="./heart-beat.png"
+            class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
+          />
+          Health
+        </button>
+      </li>
+      <li>
+        <button
+          class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
+        >
+          <img
+            alt=""
+            src="./cap.png"
+            class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
+          />
+          Education
+        </button>
+      </li>
     </ul>
   </nav>
 
@@ -81,7 +104,7 @@
     <div class="flex flex-row gap-4 justify-between items-center mb-8">
       <button
         on:click="{() => (isSidebarOpen = !isSidebarOpen)}"
-        class="lg:hidden p-2 bg-primary text-secondary hover:bg-lightBlue  flex items-center justify-center rounded-md transition-colors duration-200"
+        class="lg:hidden p-2 bg-primary text-secondary hover:bg-lightBlue flex items-center justify-center rounded-md transition-colors duration-200"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -111,72 +134,25 @@
 
     <!-- Agents Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-      <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
-      >
-        <img
-          src="./bird.png"
-          alt="Avatar"
-          class="w-16 h-16 rounded-full mr-4 bg-slate-300"
-        />
-        <div>
-          <h2 class="text-xl font-bold text-secondary">Tutor</h2>
-          <p class="text-secondary">
-            A supportive tutor skilled in various subjects, encouraging learning
-            and understanding.
-          </p>
+      {#each characterList as character, i}
+        <div
+          class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
+        >
+          <img
+            src="{images[i % 4]}"
+            alt="Avatar"
+            class="w-16 h-16 rounded-full mr-4 bg-slate-300"
+          />
+          <div>
+            <h2 class="text-xl font-bold text-secondary">
+              {character.character}
+            </h2>
+            <p class="text-secondary">
+              {character.description}
+            </p>
+          </div>
         </div>
-      </div>
-
-      <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
-      >
-        <img
-          src="./chick.png"
-          alt="Avatar"
-          class="w-16 h-16 rounded-full mr-4 bg-slate-300"
-        />
-        <div>
-          <h2 class="text-xl font-bold text-secondary">Buddy</h2>
-          <p class="text-secondary">
-            Your friendly and supportive buddy for light-hearted chats and
-            encouragement.
-          </p>
-        </div>
-      </div>
-
-      <!-- Continue with more agents -->
-      <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
-      >
-        <img
-          src="./doc.png"
-          alt="Avatar"
-          class="w-16 h-16 rounded-full mr-4 bg-slate-300"
-        />
-        <div>
-          <h2 class="text-xl font-bold text-secondary">Counselor</h2>
-          <p class="text-secondary">
-            I am a counselor, here to provide support and advice.
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
-      >
-        <img
-          src="./duck.png"
-          alt="Avatar"
-          class="w-16 h-16 rounded-full mr-4 bg-slate-300"
-        />
-        <div>
-          <h2 class="text-xl font-bold text-secondary">Doctor</h2>
-          <p class="text-secondary">
-            A dedicated healthcare professional offering guidance and care.
-          </p>
-        </div>
-      </div>
+      {/each}
     </div>
   </div>
 </div>

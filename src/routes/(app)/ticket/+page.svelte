@@ -4,7 +4,7 @@
     <hr class="border-t-8 border-secondary " />
 
 
-    <div class="grid grid-cols-10 items-center p-2">
+    <div class="grid grid-cols-10 items-center p-2 my-2">
       <div class="col-span-7 gap-2 mx-2">
         <div class="grid grid-cols-7 items-center py-2">
           <label for="" class="text-secondary col-span-3 text-lg font-light">Name</label>
@@ -13,7 +13,7 @@
 
         <div class="grid grid-cols-7 items-center py-2">
           <label for="" class="text-secondary col-span-3 text-lg font-light">Voice</label>
-          <select class="text-lg col-span-4 font-light text-secondary h-10 w-full bg-lightBlue rounded leading-tight" id="grid-state">
+          <select class="text-lg col-span-4 font-light appearance-none text-center text-secondary h-10 w-full bg-lightBlue rounded leading-tight" id="grid-state">
             <option>Avatar Default</option>
            
           </select>
@@ -21,7 +21,7 @@
 
         <div class="grid grid-cols-7 items-center py-2">
           <label for="" class="text-secondary col-span-3 text-lg font-light">Visibility</label>
-          <select class="text-lg col-span-4 font-light text-secondary h-10 w-full bg-lightBlue rounded leading-tight" id="grid-state">
+          <select class="text-lg col-span-4 font-light appearance-none text-center text-secondary h-10 w-full bg-lightBlue rounded leading-tight" id="grid-state">
             <option>Public</option>
             <option>Private</option>
       

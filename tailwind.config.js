@@ -20,6 +20,7 @@ const config = {
         ring: 'hsl(var(--ring) / <alpha-value>)',
         background: 'hsl(var(--background) / <alpha-value>)',
         foreground: 'hsl(var(--foreground) / <alpha-value>)',
+       
         primary: {
           DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
           foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
@@ -28,6 +29,20 @@ const config = {
           DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
           foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)',
         },
+        darkBlue: {
+          DEFAULT: 'hsl(var(--darkBlue) / <alpha-value>)',
+          foreground: 'hsl(var(--darkBlue-foreground) / <alpha-value>)',
+        },
+        lightBlue: {
+          DEFAULT: 'hsl(var(--lightBlue) / <alpha-value>)',
+          foreground: 'hsl(var(--lightBlue-foreground) / <alpha-value>)',
+        },
+        C: {
+          DEFAULT: 'hsl(var(--mediumBlue) / <alpha-value>)',
+          foreground: 'hsl(var(--mediumBlue-foreground) / <alpha-value>)',
+        },
+
+
         destructive: {
           DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
           foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)',

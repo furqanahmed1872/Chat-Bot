@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import AddCharacter from '$lib/components/storepage/addCharacter.svelte';
-  import {isDialogOpen} from '$lib/store/store'
+  import { isDialogOpen } from '$lib/store/store';
   let isSidebarOpen = false;
 
   export let data;
@@ -127,7 +127,7 @@
         class="bg-mediumBlue rounded p-2 w-full placeholder-primary text-darkBlue"
       />
       <button
-        on:click="{() => (isDialogOpen.set(true))}"
+        on:click="{() => isDialogOpen.set(true)}"
         class="bg-secondary text-primary px-4 py-2 rounded min-w-max hover:bg-lightBlue"
       >
         Create Agent
@@ -139,8 +139,11 @@
     {#if characterList}
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {#each characterList as character, i}
-          <div
-            class="bg-darkBlue rounded-lg p-4 flex items-center hover:bg-lightBlue text-primary"
+          <button
+            on:click="{() => {
+              goto(`/chat?role=${character.character}`);
+            }}"
+            class="bg-darkBlue rounded-lg cursor-pointer p-4 flex flex-row hover:bg-lightBlue text-primary"
           >
             <img
               src="{character.image}"
@@ -148,12 +151,12 @@
               class="w-16 h-16 rounded-full mr-4 bg-slate-300"
             />
             <div>
-              <h2 class="text-xl font-bold text-secondary">
+              <h2 class="text-xl font-bold text-secondary text-start">
                 {character.character}
               </h2>
-              <p class="text-secondary">{character.description}</p>
+              <p class="text-secondary text-start">{character.description}</p>
             </div>
-          </div>
+          </button>
         {/each}
       </div>
     {/if}

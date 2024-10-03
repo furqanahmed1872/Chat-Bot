@@ -1,5 +1,0 @@
-let images = [ {
-    char : '',
-    url : ''
-
-}  ];

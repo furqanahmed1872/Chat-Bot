@@ -1,12 +1,7 @@
-import type { PageServerLoad, Actions } from './$types.js';
-import { fail } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
-import { supabase } from '$lib/supabaseClient.js';
-import { z } from 'zod';
+import { z } from "zod";
 
-const characterSchema = z.object({
-  name: z
+export const characterSchema = z.object({
+  character: z
     .string()
     .min(1, { message: 'Name is required.' })
     .max(50, { message: 'Name must be at most 50 characters long.' }),
@@ -33,21 +28,3 @@ const characterSchema = z.object({
 
   image: z.string().min(3, { message: 'Image is required.' }),
 });
-
-export const load: PageServerLoad = async () => {
-  return {
-    form: await superValidate(zod(characterSchema)),
-  };
-};
-
-export const actions: Actions = {
-  default: async (event) => {
-    const form = await superValidate(event, zod(characterSchema));
-
-    if (!form.valid) {
-      return fail(400, { form });
-    }
-    console.log(form);
-    return { form };
-  },
-};

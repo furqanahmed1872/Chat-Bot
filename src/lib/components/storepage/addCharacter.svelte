@@ -5,42 +5,11 @@
   import { Label } from '$lib/components/ui/label';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import { z } from 'zod';
   import { writable } from 'svelte/store';
+  import { isDialogOpen } from '$lib/store/store';
+  import { characterSchema } from '$lib/schema/characterSchema';
 
   export let data;
-  let type: 'button' | 'reset' | 'submit' | null = 'button';
-  const characterSchema = z.object({
-    name: z
-      .string()
-      .min(1, { message: 'Name is required.' })
-      .max(50, { message: 'Name must be at most 50 characters long.' }),
-
-    voice: z
-      .string()
-      .min(1, { message: 'Voice is required.' })
-      .max(30, { message: 'Voice must be at most 30 characters long.' }),
-
-    visibility: z
-      .string()
-      .min(1, { message: 'Visibility is required.' })
-      .max(20, { message: 'Visibility must be at most 20 characters long.' }),
-
-    description: z
-      .string()
-      .min(10, { message: 'Description must be at least 10 characters long.' })
-      .max(200, {
-        message: 'Description must be at most 200 characters long.',
-      }),
-
-    prompt: z
-      .string()
-      .min(5, { message: 'Prompt must be at least 5 characters long.' })
-      .max(150, { message: 'Prompt must be at most 150 characters long.' }),
-
-    image: z.string().min(3, { message: 'Image is required.' }),
-  });
-
   const {
     form: formData,
     errors,
@@ -54,25 +23,25 @@
     validate(field);
   }
 
-  const images = ['/p1.png', '/p2.png', '/p3.png'];
+  const images = ['/p1.png', '/p2.png', '/p3.png', '/p1.png'];
 
   let showImageModal = writable(false);
   let selectedImage = writable('');
 
   function handleImageClick(imageUrl: string) {
     selectedImage.set(imageUrl);
+    formData.update((current) => {
+      current.image = imageUrl;
+      return current;
+    });
     showImageModal.set(false);
   }
-
   const toggleImageModal = () => showImageModal.update((value) => !value);
 
-  $: if (Object.keys($errors).length === 0) {
-    type = 'submit';
-  }
-  $: console.log($formData, $errors);
+  // $: console.log($formData, $errors);
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open="{$isDialogOpen}">
   <Dialog.Trigger class="{buttonVariants({ variant: 'outline' })}">
     Edit Profile
   </Dialog.Trigger>
@@ -81,25 +50,35 @@
       <Dialog.Title>Create Character</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" class="grid border-t-2 border-slate-700" use:enhance>
+    <form
+      method="POST"
+      class="grid border-t-2 border-slate-700"
+      use:enhance
+      on:submit="{(event) => {
+        event.preventDefault(); // Prevent the default form submission
+        if (!Object.values($errors).some((error) => error)) {
+          isDialogOpen.set(false); // Close the dialog if no errors
+        }
+      }}"
+    >
       <div class="grid grid-cols-5 gap-4 py-4">
         <!-- Left Form Section -->
         <div class="grid col-span-3 gap-4">
-          <!-- Name Input -->
+          <!-- character Input -->
           <div class="grid grid-cols-3 items-center gap-4">
-            <Label for="name">Name :</Label>
+            <Label for="character">Character :</Label>
             <Input
-              id="name"
-              name="name"
+              id="character"
+              name="character"
               type="text"
               placeholder="Max"
               class="col-span-2"
-              bind:value="{$formData.name}"
-              on:input="{() => validateInput('name')}"
+              bind:value="{$formData.character}"
+              on:input="{() => validateInput('character')}"
             />
 
-            {#if $errors.name}
-              <p class="text-red-500 col-span-4">{$errors.name}</p>
+            {#if $errors.character}
+              <p class="text-red-500 col-span-4">{$errors.character}</p>
             {/if}
           </div>
 
@@ -154,11 +133,6 @@
             on:click="{toggleImageModal}"
           >
             {#if $selectedImage}
-              <input
-                type="hidden"
-                name="selectedImage"
-                bind:value="{$formData.image}"
-              />
               <!-- svelte-ignore a11y-img-redundant-alt -->
               <img
                 src="{$selectedImage}"
@@ -178,7 +152,7 @@
           {/if}
         </div>
       </div>
-
+      <input type="hidden" name="image" value="{$formData.image}" />
       <!-- Textarea 1 -->
       <div class="grid grid-cols-5 items-center gap-4">
         <Label for="description">Description :</Label>
@@ -215,18 +189,12 @@
 
       <Dialog.Footer class="flex flex-row justify-center">
         <Button
+          on:click="{() => isDialogOpen.set(false)}"
           type="button"
-          class="bg-slate-700"
-          on:click="{() => {
-            if (Object.keys($errors).length === 0) {
-              toggleImageModal();
-            }
-          }}"
+          class="bg-slate-700">Cancel</Button
         >
-          Cancel
-        </Button>
 
-        <Button type="{type}" class="bg-slate-700">Save</Button>
+        <Button type="submit" class="bg-slate-700">Save</Button>
       </Dialog.Footer>
     </form>
   </Dialog.Content>
@@ -235,21 +203,15 @@
 <!-- Nested Image Selection Dialog -->
 <Dialog.Root bind:open="{$showImageModal}">
   <Dialog.Trigger />
-
-  <Dialog.Content class="bg-white w-[600px]">
+  <Dialog.Content class="bg-white sm:max-w-[425px]">
     <Dialog.Header>
       <Dialog.Title class="text-lg font-semibold">Select an Image</Dialog.Title>
     </Dialog.Header>
-
-    <div class="grid grid-cols-3 gap-4 p-4">
+    <div class="flex flex-wrap gap-4">
       {#each images as image}
         <button
-          class="focus:outline-none cursor-pointer border rounded p-2 hover:border-blue-500 focus:ring-1 focus:ring-green-800"
-          on:click="{() => {
-            $selectedImage = image;
-            handleImageClick(image);
-            toggleImageModal();
-          }}"
+          class="focus:outline-none w-fit cursor-pointer border rounded p-2 hover:border-blue-500"
+          on:click="{() => handleImageClick(image)}"
         >
           <!-- svelte-ignore a11y-img-redundant-alt -->
           <img
@@ -260,15 +222,12 @@
         </button>
       {/each}
     </div>
-
     <div class="flex justify-end mt-4">
       <Button
         type="button"
         class="bg-red-500 text-white"
-        on:click="{toggleImageModal}"
+        on:click="{toggleImageModal}">Close</Button
       >
-        Close
-      </Button>
     </div>
   </Dialog.Content>
 </Dialog.Root>

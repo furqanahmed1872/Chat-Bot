@@ -28,6 +28,10 @@
   let showImageModal = writable(false);
   let selectedImage = writable('');
 
+  function capitalizeFirstLetter(name: string | null) {
+    return name ? name.charAt(0).toUpperCase() + name.slice(1) : 'Zerobot';
+  }
+
   function handleImageClick(imageUrl: string) {
     selectedImage.set(imageUrl);
     formData.update((current) => {
@@ -38,7 +42,7 @@
   }
   const toggleImageModal = () => showImageModal.update((value) => !value);
 
-  // $: console.log($formData, $errors);
+  $: $formData.character = capitalizeFirstLetter($formData.character);
 </script>
 
 <Dialog.Root bind:open="{$isDialogOpen}">

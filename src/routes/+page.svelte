@@ -2,13 +2,18 @@
   import { goto } from '$app/navigation';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
+  import Carousel from '$lib/components/mainpage/carousel.svelte';
   import { Checkbox } from '$lib/components/ui/checkbox';
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
+
+  export let data;
 </script>
 
 <!-- Header -->
-<nav class="bg-secondary w-full h-fit py-5 grid grid-cols-3 justify-items-center">
+<nav
+  class="bg-secondary w-full h-fit py-5 grid grid-cols-3 justify-items-center"
+>
   <ul class="flex items-center">
     <img
       src="./icon.png"
@@ -20,7 +25,9 @@
     >
       DivineBot
       <!-- Darkened background overlay on hover -->
-      <span class="absolute inset-0 bg-primary  opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+      <span
+        class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+      ></span>
     </li>
   </ul>
   <div></div>
@@ -31,7 +38,9 @@
     >
       Chat
       <!-- Darkened background overlay on hover -->
-      <span class="absolute inset-0 bg-primary  opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+      <span
+        class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+      ></span>
     </button>
   </ul>
 </nav>
@@ -63,7 +72,9 @@
 <div
   class="grid bg-secondary text-center items-center justify-center p-8 sm:p-36"
 >
-  <div class="text-2xl sm:text-4xl font-bold mb-4 text-darkBlue">Meet DivineBot</div>
+  <div class="text-2xl sm:text-4xl font-bold mb-4 text-darkBlue">
+    Meet DivineBot
+  </div>
   <div
     class="w-full xl:w-11/12 2xl:w-1/2 mx-auto text-center text-lg sm:text-xl text-primary font-medium"
   >
@@ -78,79 +89,7 @@
 
 <!-- Agent -->
 
-<div
-  class="bg-primary flex flex-col h-fit justify-center items-center p-10 sm:p-20"
->
-  <div class="text-secondary font-light text-3xl sm:text-5xl text-center">
-    Agents
-  </div>
-  <div
-    class="text-mediumBlue font-light text-lg sm:text-xl text-center my-4 sm:my-5"
-  >
-    Create and speak with AI agents anywhere, anytime.
-  </div>
-
-  <div
-    class="flex flex-wrap justify-center items-center my-12 sm:my-24 gap-5 sm:gap-10"
-  >
-    <button
-      on:click="{() => {
-        goto('/chat?role=tutor');
-      }}"
-    >
-      <img
-        src="./duck.png"
-        alt="Tutor"
-        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
-      />
-      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
-        Tutor
-      </div>
-    </button>
-    <button
-      on:click="{() => {
-        goto('/chat?role=counselor');
-      }}"
-    >
-      <img
-        src="./bird.png"
-        alt="Counselor"
-        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
-      />
-      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
-        Counselor
-      </div>
-    </button>
-    <button
-      on:click="{() => {
-        goto('/chat?role=buddy');
-      }}"
-    >
-      <img
-        src="./chick.png"
-        alt="Buddy"
-        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
-      />
-      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
-        Buddy
-      </div>
-    </button>
-    <button
-      on:click="{() => {
-        goto('/chat?role=doctor');
-      }}"
-    >
-      <img
-        src="./doc.png"
-        alt="Doctor"
-        class="rounded-full w-40 h-40 sm:w-64 sm:h-64"
-      />
-      <div class="text-secondary font-medium text-xl sm:text-2xl text-center mt-4">
-        Doctor
-      </div>
-    </button>
-  </div>
-</div>
+<Carousel data="{data}" />
 
 <!-- Explore -->
 
@@ -165,7 +104,7 @@
   </div>
   <button
     on:click="{() => goto('/store')}"
-    class="bg-lightBlue text-primary font-normal hover:bg-mediumBlue  border-mediumBlue border-4 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-xl "
+    class="bg-lightBlue text-primary font-normal hover:bg-mediumBlue border-mediumBlue border-4 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-xl"
   >
     Visit the Agent store.
   </button>
@@ -185,26 +124,44 @@
       <div class="grid gap-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="grid gap-2">
-            <Label for="first-name"  >First Name</Label>
-            <Input class ="text-primary" id="first-name"  type="text" placeholder="Max" required />
+            <Label for="first-name">First Name</Label>
+            <Input
+              class="text-primary"
+              id="first-name"
+              type="text"
+              placeholder="Max"
+              required
+            />
           </div>
           <div class="grid gap-2">
             <Label for="last-name">Last Name</Label>
-            <Input class ="text-primary" id="last-name" type="text" placeholder="Robinson" required />
+            <Input
+              class="text-primary"
+              id="last-name"
+              type="text"
+              placeholder="Robinson"
+              required
+            />
           </div>
         </div>
         <div class="grid gap-2">
           <Label for="email">Email</Label>
-          <Input class ="text-primary" id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            class="text-primary"
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+          />
         </div>
         <div class="grid gap-2">
           <div class="flex items-center">
             <Label for="password">Password</Label>
           </div>
-          <Input class ="text-primary" id="password" type="password" required />
+          <Input class="text-primary" id="password" type="password" required />
         </div>
         <div class="flex items-center space-x-2">
-          <Checkbox class ="text-primary" id="include" checked="{false}" />
+          <Checkbox class="text-primary" id="include" checked="{false}" />
           <label
             for="include"
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -212,7 +169,8 @@
             Agree to the terms of service
           </label>
         </div>
-        <Button type="submit" class="w-full bg-lightBlue hover:bg-mediumBlue">Create Account</Button
+        <Button type="submit" class="w-full bg-lightBlue hover:bg-mediumBlue"
+          >Create Account</Button
         >
       </div>
     </div>
@@ -222,5 +180,5 @@
 <!-- Footer -->
 
 <div class="bg-secondary grid justify-center items-end py-12 sm:p-28">
-  <div class="text-primary ">info@divinebot.ai | DivineBot © 2024</div>
+  <div class="text-primary">info@divinebot.ai | DivineBot © 2024</div>
 </div>

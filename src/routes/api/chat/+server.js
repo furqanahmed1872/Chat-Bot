@@ -32,7 +32,7 @@ const characterDescription = [
     welcomeNote: 'You are a doctor responding to patient inquiries. ',
   },
   {
-    role: 'zerobot',
+    role: 'divinebot',
     content:
       'You are chatgpt, responding to a user question. Respond in bullet points and heading when need, keep your responses concise.',
     welcomeNote: 'Hi! I’m DivineBot. How can I assist you today?',
@@ -41,7 +41,7 @@ const characterDescription = [
 
 // Handle the POST request
 export async function POST({ request }) {
-  const { message, character } = await request.json();
+  const { message, character, voice } = await request.json();
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
   const openai = new OpenAI({ apiKey });
@@ -93,11 +93,12 @@ export async function POST({ request }) {
     if (data?.choices?.length > 0) {
       console.log(data.choices[0].message.content);
       const aiResponseText = data.choices[0].message.content;
+      console.log('----------------------:',data);
       const speechFile = path.resolve('./static/speech.mp3');
 
       const mp3 = await openai.audio.speech.create({
         model: 'tts-1',
-        voice: 'echo',
+        voice: voice,
         input: aiResponseText,
       });
 

@@ -25,7 +25,7 @@
   <div class="w-full flex justify-center items-center mt-4">
     <Carousel.Root
       plugins="{[plugin]}"
-      class="w-min"
+      class="w-3/4"
       on:mousenter="{plugin.stop}"
       on:mouseleave="{plugin.reset}"
     >
@@ -46,7 +46,7 @@
                     src="{character.image}"
                     alt=""
                   />
-                  <span class="text-xl group-hover:text-slate-500 text-white"
+                  <span class="text-2xl font-thin py-4 group-hover:text-slate-500 text-white"
                     >{character.character}</span
                   >
                 </Card.Content>

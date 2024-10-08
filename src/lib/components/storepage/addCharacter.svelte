@@ -29,7 +29,7 @@
   let selectedImage = writable('');
 
   function capitalizeFirstLetter(name: string | null) {
-    return name ? name.charAt(0).toUpperCase() + name.slice(1) : 'Zerobot';
+    if (name) return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
   function handleImageClick(imageUrl: string) {
@@ -58,10 +58,22 @@
       method="POST"
       class="grid border-t-2 border-slate-700"
       use:enhance
-      on:submit="{(event) => {
-        event.preventDefault(); // Prevent the default form submission
-        if (!Object.values($errors).some((error) => error)) {
-          isDialogOpen.set(false); // Close the dialog if no errors
+      on:submit="{async (event) => {
+        event.preventDefault(); 
+        const validationPromises = [
+          validate('character'),
+          validate('voice'),
+          validate('visibility'),
+          validate('description'),
+          validate('prompt'),
+        ];
+        const validationResults = await Promise.all(validationPromises);
+        const hasErrors = validationResults.some(
+          (result) => result && result.length > 0,
+        );
+
+        if (!hasErrors) {
+          isDialogOpen.set(false); 
         }
       }}"
     >

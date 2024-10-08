@@ -25,6 +25,7 @@
   $: showAnimation = false;
   let save = messages.find((m) => m.role === 'user');
   let greetingMessage = 'Hello! How can I assist you today?';
+  // let voice = 'alloy';
 
   type Message = {
     role: 'user' | 'assistant';
@@ -47,6 +48,9 @@
   $: greetingMessage =
     data.characterList?.find((c) => c.character === character)?.greeting_note ||
     'Hello! How can I assist you today?';
+  $: voice =
+    data.characterList?.find((c) => c.character === character)?.voice ||
+    'alloy';
 
   $: if (messages[0]?.content !== greetingMessage && !update) {
     messages = [{ role: 'assistant', content: greetingMessage }];
@@ -76,7 +80,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userMessage, character }),
+        body: JSON.stringify({ message: userMessage, character, voice }),
       });
 
       const data = await response.json();

@@ -23,7 +23,23 @@
     validate(field);
   }
 
-  const images = ['/p1.png', '/p2.png', '/p3.png', '/p1.png'];
+  const images = [
+    '/p1.png',
+    '/p2.png',
+    '/p4.png',
+    '/p3.png',
+    '/p5.png',
+    '/p6.jpg',
+    '/p7.jpg',
+    '/p8.jpg',
+    '/p9.jpg',
+    '/p10.jpg',
+    '/p11.jpg',
+    '/p12.jpg',
+    '/p14.jpg',
+    '/p13.jpg',
+    '/p15.jpg',
+  ];
 
   let showImageModal = writable(false);
   let selectedImage = writable('');
@@ -59,13 +75,14 @@
       class="grid border-t-2 border-slate-700"
       use:enhance
       on:submit="{async (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         const validationPromises = [
           validate('character'),
           validate('voice'),
           validate('visibility'),
           validate('description'),
           validate('prompt'),
+          validate('image'),
         ];
         const validationResults = await Promise.all(validationPromises);
         const hasErrors = validationResults.some(
@@ -73,7 +90,7 @@
         );
 
         if (!hasErrors) {
-          isDialogOpen.set(false); 
+          isDialogOpen.set(false);
         }
       }}"
     >
@@ -219,7 +236,7 @@
 <!-- Nested Image Selection Dialog -->
 <Dialog.Root bind:open="{$showImageModal}">
   <Dialog.Trigger />
-  <Dialog.Content class="bg-white sm:max-w-[425px]">
+  <Dialog.Content class="bg-white sm:max-w-[425px] h-1/2 overflow-y-scroll">
     <Dialog.Header>
       <Dialog.Title class="text-lg font-semibold">Select an Image</Dialog.Title>
     </Dialog.Header>

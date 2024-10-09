@@ -2,10 +2,57 @@
   import { goto } from '$app/navigation';
   import AddCharacter from '$lib/components/storepage/addCharacter.svelte';
   import { isDialogOpen } from '$lib/store/store';
-  let isSidebarOpen = false;
+  import { supabase } from '$lib/supabaseClient.js';
+  import { onMount } from 'svelte';
+  import { any } from 'zod';
 
   export let data;
-  $: characterList = data.characterList;
+  let characterList: any[] | null;
+  let allBots: any[];
+  let popularBots: any[];
+  let recentBots: any[];
+  let isSidebarOpen = false;
+  let catagory = 'All';
+  onMount(async () => {
+    const { data: allBots } = await supabase.from('characters').select('*');
+    characterList = allBots;
+    const { data: popularBots } = await supabase
+      .from('characters')
+      .select('*')
+      .gt('usage_count', 10)
+      .order('usage_count', { ascending: false })
+      .limit(10);
+    const { data: recentBots, error } = await supabase
+      .from('characters')
+      .select('*')
+      .gt('last_used', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
+      .order('last_used', { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error('Error fetching popular bots:', error);
+    }
+    console.log(
+      '---------------------',
+      allBots,
+      '-------------------',
+      popularBots,
+    );
+  });
+  $: {
+    characterList;
+  }
+  // $: console.log(popularBots);
+
+  async function incrementBotUsage(botId: any) {
+    const { error } = await supabase.from('bots').update({
+      usage_count: supabase.rpc('increment_usage_count', { id: botId }),
+    });
+
+    if (error) {
+      console.error('Error updating usage count:', error);
+    }
+  }
 </script>
 
 <div class="flex flex-row h-dvh bg-primary text-secondary">
@@ -38,6 +85,7 @@
     <ul class="space-y-4 overflow-auto">
       <li class="mb-4">
         <button
+          on:click="{() => ((characterList = allBots), (catagory = 'All'))}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -50,6 +98,9 @@
       </li>
       <li class="mb-4">
         <button
+          on:click="{() => (
+            (characterList = recentBots), (catagory = 'Recent')
+          )}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -62,6 +113,9 @@
       </li>
       <li class="mb-4">
         <button
+          on:click="{() => (
+            (characterList = popularBots), (catagory = 'Popular')
+          )}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -134,16 +188,17 @@
       </button>
     </div>
 
-    <h1 class="text-3xl font-bold mb-6">Featured Agents</h1>
+    <h1 class="text-3xl font-bold mb-6">{catagory} Bots</h1>
 
     {#if characterList}
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {#each characterList as character, i}
           <button
             on:click="{() => {
+              incrementBotUsage(character.id);
               goto(`/chat?role=${character.character}`);
             }}"
-            class="bg-darkBlue rounded-lg cursor-pointer p-4 flex flex-row hover:bg-lightBlue text-primary"
+            class="bg-darkBlue rounded-lg cursor-pointer p-4 flex flex-row items-center hover:bg-lightBlue text-primary"
           >
             <img
               src="{character.image}"
@@ -158,6 +213,12 @@
             </div>
           </button>
         {/each}
+      </div>
+    {:else}
+      <div
+        class="w-full h-full flex justify-center items-center text-3xl text-white"
+      >
+        Loading ...
       </div>
     {/if}
   </div>

@@ -23,9 +23,7 @@
   let selectedChat: string | null = null;
   let audioUrl: any;
   $: showAnimation = false;
-  let save = messages.find((m) => m.role === 'user');
-  let greetingMessage = 'Hello! How can I assist you today?';
-  // let voice = 'alloy';
+  $: save = messages.find((m) => m.role === 'user');
 
   type Message = {
     role: 'user' | 'assistant';
@@ -51,6 +49,9 @@
   $: voice =
     data.characterList?.find((c) => c.character === character)?.voice ||
     'alloy';
+  $: prompt =
+    data.characterList?.find((c) => c.character === character)?.prompt ||
+    'You are chatgpt, responding to a user question. Respond in bullet points and heading when need, keep your responses concise.';
 
   $: if (messages[0]?.content !== greetingMessage && !update) {
     messages = [{ role: 'assistant', content: greetingMessage }];
@@ -80,7 +81,12 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userMessage, character, voice }),
+        body: JSON.stringify({
+          message: userMessage,
+          character,
+          voice,
+          prompt,
+        }),
       });
 
       const data = await response.json();
@@ -149,7 +155,7 @@
     character = chat?.character || 'ME';
     console.log(messages);
   }
-  $: console.log(messages);
+  // $: console.log(messages);
 
   function selectCharacter(name: string) {
     update = false;

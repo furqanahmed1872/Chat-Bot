@@ -7,52 +7,79 @@
   import { any } from 'zod';
 
   export let data;
-  let characterList: any[] | null;
-  let allBots: any[];
-  let popularBots: any[];
-  let recentBots: any[];
+  let characterList: any[] | null = [];
+  let allBots: any[] = [];
+  let popularBots: any[] = [];
+  let recentBots: any[] = [];
   let isSidebarOpen = false;
-  let catagory = 'All';
+  let category = 'All';
+
   onMount(async () => {
-    const { data: allBots } = await supabase.from('characters').select('*');
-    characterList = allBots;
-    const { data: popularBots } = await supabase
+    // Fetch and assign all bots
+    const { data: fetchedAllBots } = await supabase
+      .from('characters')
+      .select('*');
+    allBots = fetchedAllBots || [];
+
+    // Fetch and assign popular bots
+    const { data: fetchedPopularBots } = await supabase
       .from('characters')
       .select('*')
       .gt('usage_count', 10)
       .order('usage_count', { ascending: false })
       .limit(10);
-    const { data: recentBots, error } = await supabase
+    popularBots = fetchedPopularBots || [];
+
+    // Fetch and assign recent bots
+    const { data: fetchedRecentBots } = await supabase
       .from('characters')
       .select('*')
-      .gt('last_used', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
+      .gt(
+        'last_used',
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      )
       .order('last_used', { ascending: false })
       .limit(10);
+    recentBots = fetchedRecentBots || [];
 
-    if (error) {
-      console.error('Error fetching popular bots:', error);
-    }
-    console.log(
-      '---------------------',
-      allBots,
-      '-------------------',
-      popularBots,
-      '-------------------',
-      recentBots,
-    );
+    characterList = [...allBots];
   });
-  $: {
-    characterList;
+
+  async function incrementBotUsage(botId: number) {
+    const { data: currentData, error: fetchError } = await supabase
+      .from('characters')
+      .select('usage_count')
+      .eq('id', botId)
+      .single();
+
+    if (fetchError) {
+      console.error('Error fetching usage count:', fetchError);
+      return;
+    }
+
+    const newUsageCount = currentData.usage_count + 1;
+
+    const { error: updateError } = await supabase
+      .from('characters')
+      .update({ usage_count: newUsageCount })
+      .eq('id', botId);
+
+    if (updateError) {
+      console.error('Error updating usage count:', updateError);
+    }
   }
-  // $: console.log(popularBots);
 
-  async function incrementBotUsage(botId: any) {
-    const { error } = await supabase.from('bots').update({
-      usage_count: supabase.rpc('increment_usage_count', { id: botId }),
-    });
+  function setCategory(type: string) {
+    category = type;
 
-    if (error) {
-      console.error('Error updating usage count:', error);
+    if (type === 'All') {
+      characterList = [...allBots];
+    } else if (type === 'Popular') {
+      characterList = [...popularBots];
+    } else if (type === 'Recent') {
+      characterList = [...recentBots];
+    } else {
+      characterList = [];
     }
   }
 </script>
@@ -87,7 +114,7 @@
     <ul class="space-y-4 overflow-auto">
       <li class="mb-4">
         <button
-          on:click="{() => ((characterList = allBots), (catagory = 'All'))}"
+          on:click="{() => setCategory('All')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -100,9 +127,7 @@
       </li>
       <li class="mb-4">
         <button
-          on:click="{() => (
-            (characterList = recentBots), (catagory = 'Recent')
-          )}"
+          on:click="{() => setCategory('Recent')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -115,9 +140,7 @@
       </li>
       <li class="mb-4">
         <button
-          on:click="{() => (
-            (characterList = popularBots), (catagory = 'Popular')
-          )}"
+          on:click="{() => setCategory('Popular')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -190,7 +213,7 @@
       </button>
     </div>
 
-    <h1 class="text-3xl font-bold mb-6">{catagory} Bots</h1>
+    <h1 class="text-3xl font-bold mb-6">{category} Bots</h1>
 
     {#if characterList}
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">

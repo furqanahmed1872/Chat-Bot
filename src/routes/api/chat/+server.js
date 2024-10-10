@@ -3,62 +3,17 @@ import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
 
-// Define the character descriptions
-const characterDescription = [
-  {
-    role: 'tutor',
-    content:
-      'You are a tutor helping students understand academic subjects. Respond in bullet points and heading when need, making your explanations concise and focused. if question is not related your field then ignore it and tell him reason.',
-    welcomeNote:
-      'Hello! I am your tutor. Let’s dive into your learning journey!',
-  },
-  {
-    role: 'buddy',
-    content:
-      'You are a friendly buddy who offers advice and suggestions. Respond in bullet points and heading when need, keeping your answers light and straightforward. if question is not related your field then ignore it and tell him reason.',
-    welcomeNote: 'Hey buddy! How’s it going? I’m here to chat and have fun!',
-  },
-  {
-    role: 'counselor',
-    content:
-      'You are a counselor providing support and guidance. Respond in bullet points and heading when need, ensuring your responses are clear and direct. if question is not related your field then ignore it and tell him reason.',
-    welcomeNote:
-      'Hi there! I’m your counselor, ready to listen and offer support.',
-  },
-  {
-    role: 'doctor',
-    content:
-      'You are a doctor responding to patient inquiries. Respond in bullet points and heading when need, keeping them concise and focused on the key information. if question is not related your field then ignore it and tell him reason.',
-    welcomeNote: 'You are a doctor responding to patient inquiries. ',
-  },
-  {
-    role: 'divinebot',
-    content:
-      'You are chatgpt, responding to a user question. Respond in bullet points and heading when need, keep your responses concise.',
-    welcomeNote: 'Hi! I’m DivineBot. How can I assist you today?',
-  },
-];
-
-// Handle the POST request
 export async function POST({ request }) {
-  const { message, character, voice } = await request.json();
+  const { message, character, voice, prompt } = await request.json();
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-
+  console.log(voice);
   const openai = new OpenAI({ apiKey });
-  // Find the corresponding character description
-  const filterCharacter = characterDescription.find(
-    (value) => value.role === character,
-  );
 
-  // Use the respective welcome note or a default one
-  const welcomeNote = filterCharacter
-    ? filterCharacter.welcomeNote
-    : 'Hello! I am your helpful assistant. How can I assist you today?';
-
-  const systemMessage = filterCharacter
+  // Construct system message based on the prompt
+  const systemMessage = prompt
     ? {
         role: 'system',
-        content: filterCharacter.content,
+        content: prompt,
       }
     : {
         role: 'system',
@@ -66,6 +21,7 @@ export async function POST({ request }) {
       };
 
   try {
+    // Generate the chat response using OpenAI API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -91,24 +47,28 @@ export async function POST({ request }) {
 
     const data = await response.json();
     if (data?.choices?.length > 0) {
-      console.log(data.choices[0].message.content);
       const aiResponseText = data.choices[0].message.content;
-      console.log('----------------------:',data);
+
+      // File path for the consistent speech file
       const speechFile = path.resolve('./static/speech.mp3');
 
+      // Create speech audio using OpenAI
       const mp3 = await openai.audio.speech.create({
         model: 'tts-1',
-        voice: voice,
+        voice: voice ? voice : 'alloy',
         input: aiResponseText,
       });
 
+      // Convert the response to buffer and save to the consistent file
       const buffer = Buffer.from(await mp3.arrayBuffer());
 
+      // Overwrite the existing file with the new audio content
       await fs.promises.writeFile(speechFile, buffer);
 
+      // Return the chat message and the path to the updated audio file
       return json({
         message: aiResponseText,
-        audio: '/speech.mp3',
+        audio: `/speech.mp3?t=${Date.now()}`, // Append timestamp to invalidate cache
       });
     } else {
       console.error('No choices found in the API response');

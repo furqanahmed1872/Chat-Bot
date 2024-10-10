@@ -104,7 +104,7 @@
   </div>
   <button
     on:click="{() => goto('/store')}"
-    class="bg-lightBlue text-primary font-normal hover:bg-mediumBlue border-mediumBlue border-4 w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-xl"
+    class="bg-lightBlue text-white font-normal hover:bg-primary w-fit mx-auto rounded-3xl px-6 sm:px-20 py-3 sm:py-4 text-xl"
   >
     Visit the Agent store.
   </button>
@@ -113,66 +113,32 @@
 <!-- Sign In -->
 
 <div class="w-full grid justify-items-center text-secondary bg-primary py-12">
-  <div class="flex items-center w-full px-4 justify-center">
-    <div class="mx-auto grid gap-6">
-      <div class="grid gap-2 text-center">
-        <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>
-        <p class="text-muted-foreground text-balance">
-          Enter your email below to create your account
-        </p>
-      </div>
-      <div class="grid gap-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="grid gap-2">
-            <Label for="first-name">First Name</Label>
-            <Input
-              class="text-primary"
-              id="first-name"
-              type="text"
-              placeholder="Max"
-              required
-            />
-          </div>
-          <div class="grid gap-2">
-            <Label for="last-name">Last Name</Label>
-            <Input
-              class="text-primary"
-              id="last-name"
-              type="text"
-              placeholder="Robinson"
-              required
-            />
-          </div>
-        </div>
-        <div class="grid gap-2">
-          <Label for="email">Email</Label>
-          <Input
-            class="text-primary"
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            required
-          />
-        </div>
-        <div class="grid gap-2">
-          <div class="flex items-center">
-            <Label for="password">Password</Label>
-          </div>
-          <Input class="text-primary" id="password" type="password" required />
-        </div>
-        <div class="flex items-center space-x-2">
-          <Checkbox class="text-primary" id="include" checked="{false}" />
-          <label
-            for="include"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Agree to the terms of service
-          </label>
-        </div>
-        <Button type="submit" class="w-full bg-lightBlue hover:bg-mediumBlue"
-          >Create Account</Button
-        >
-      </div>
+  <div class="flex flex-col items-center w-3/5 px-4 justify-center">
+    <h1 class="font-semibold text-xl sm:text-3xl lg:text-4xl text-gray-200">
+      Hey, Welcome Back!
+    </h1>
+    <p class="text-gray-300 text-center font-light text-lg sm:text-xl my-5">
+      We're excited to have you! Log in to dive into your personalized
+      dashboard, chat with your favorite AI characters, and discover tailored
+      solutions made just for you. Let’s pick up right where you left off and
+      make today even better!
+    </p>
+    <div class="grid grid-flow-row gap-2 grid-cols-2">
+      <Button
+        on:click="{() => {
+          goto('/signup');
+        }}"
+        type="button"
+        class="w-full bg-lightBlue hover:bg-slate-700 col-span-1">Log in</Button
+      >
+      <Button
+        on:click="{() => {
+          goto('/signin');
+        }}"
+        type="button"
+        class="w-full bg-lightBlue hover:bg-slate-700 col-span-1"
+        >Sign up</Button
+      >
     </div>
   </div>
 </div>

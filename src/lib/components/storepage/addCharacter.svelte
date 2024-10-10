@@ -126,12 +126,12 @@
               on:change="{() => validateInput('voice')}"
             >
               <option value="">Select voice</option>
-              <option value="Alloy">Alloy, female</option>
-              <option value="Echo">Echo, male</option>
-              <option value="Fable">Fable, female</option>
-              <option value="Onyx">Onyx, male</option>
-              <option value="Nova">Nova, female</option>
-              <option value="Shimmer">Shimmer, female</option>
+              <option value="alloy">Alloy, female</option>
+              <option value="echo">Echo, male</option>
+              <option value="fable">Fable, female</option>
+              <option value="onyx">Onyx, male</option>
+              <option value="nova">Nova, female</option>
+              <option value="shimmer">Shimmer, female</option>
             </select>
             {#if $errors.voice}
               <p class="text-red-500 col-span-4">{$errors.voice}</p>

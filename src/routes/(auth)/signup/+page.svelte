@@ -23,9 +23,10 @@
   // $: console.log($formData);
 </script>
 
-<div class="w-full grid justify-items-center text-white bg-black py-12">
+<div class="w-full h-svh grid justify-items-center text-white bg-black py-4">
   <div class="flex items-center w-full px-4 justify-center">
-    <div class="mx-auto grid gap-6">
+    <div class="mx-auto grid gap-6 justify-items-center">
+      <img src="/image.png" class="w-1/4" alt="">
       <!-- Title -->
       <div class="grid gap-2 text-center">
         <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>

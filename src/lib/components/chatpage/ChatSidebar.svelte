@@ -98,7 +98,7 @@
   function selectCharacter(index: any): void {
     selectedCharacter = index.character;
     dispatch('selectCharacter', index.character);
-    // goto(`/chat?role=${index.character}`);
+    goto(`/chat?role=${index.character}`);
   }
 
   function addChat() {

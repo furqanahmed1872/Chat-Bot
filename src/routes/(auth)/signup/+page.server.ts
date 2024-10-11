@@ -1,8 +1,8 @@
 import type { PageServerLoad, Actions } from './$types.js';
 import { fail } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { formSchema } from './schema.js';
+import { formSchema } from './schema';
 import { supabase } from '$lib/supabaseClient.js';
 
 export const load: PageServerLoad = async () => {
@@ -26,21 +26,27 @@ export const actions: Actions = {
         data: {
           display_name: `${form.data.firstname} ${form.data.lastname}`,
         },
-        emailRedirectTo: 'http://localhost:5173/', // Make sure this is your app URL
+        emailRedirectTo: 'http://localhost:5173/',
       },
     });
 
     if (signUpError) {
       if (signUpError.message.includes('email already exists')) {
-        return fail(400, {
-          form,
-          error: 'An account with this email already exists',
-        });
+        return (
+          fail(400, {
+            form,
+            error: 'An account with this email already exists',
+          }),
+          message(form, 'Email already exists')
+        );
       }
 
-      return fail(400, { form, error: signUpError.message });
+      return (
+        fail(400, { form, error: signUpError.message }),
+        message(form, signUpError.message)
+      );
     }
 
-    return { form };
+    return message(form, 'Form posted successfully!');
   },
 };

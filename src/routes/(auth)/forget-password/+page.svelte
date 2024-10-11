@@ -3,7 +3,7 @@
   import { Button } from '$lib/components/ui/button';
   import { Checkbox } from '$lib/components/ui/checkbox';
   import { Label } from '$lib/components/ui/label';
-  import { signinSchema } from './schema';
+  import { forgetSchema } from './schema';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
 
@@ -15,7 +15,7 @@
     validate,
     message,
   } = superForm(data.form, {
-    validators: zodClient(signinSchema),
+    validators: zodClient(forgetSchema),
   });
 
   function validateInput(field: any) {
@@ -34,7 +34,7 @@
       {#if $message}<h3 class="text-red-500">{$message}</h3>{/if}
 
       <div class="grid gap-2 text-center">
-        <h1 class="text-2xl sm:text-3xl font-bold">Sign In</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold">Forget Password</h1>
         <p class="text-muted-foreground text-balance">
           Enter your email and password
         </p>
@@ -56,23 +56,6 @@
           />
           {#if $errors.email}
             <p class="text-red-500">{$errors.email}</p>
-          {/if}
-        </div>
-
-        <!-- Password Field -->
-        <div class="grid gap-2">
-          <Label for="password">Password</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            bind:value="{$formData.password}"
-            on:input="{() => validateInput('password')}"
-            class="text-slate-700"
-          />
-          {#if $errors.password}
-            <p class="text-red-500">{$errors.password}</p>
           {/if}
         </div>
 

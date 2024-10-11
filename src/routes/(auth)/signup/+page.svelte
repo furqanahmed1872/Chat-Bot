@@ -6,6 +6,7 @@
   import { formSchema } from './schema';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
+  import { goto } from '$app/navigation';
 
   export let data;
 
@@ -13,6 +14,8 @@
     form: formData,
     errors,
     validate,
+    message,
+    enhance,
   } = superForm(data.form, {
     validators: zodClient(formSchema),
   });
@@ -20,13 +23,22 @@
   function validateInput(field: any) {
     validate(field);
   }
+
+  function capitalizeFirstLetter(name: string | null) {
+    if (name) return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  $: $formData.firstname = capitalizeFirstLetter($formData.firstname);
+  $: $formData.lastname = capitalizeFirstLetter($formData.lastname);
   // $: console.log($formData);
 </script>
 
 <div class="w-full h-svh grid justify-items-center text-white bg-black py-4">
   <div class="flex items-center w-full px-4 justify-center">
     <div class="mx-auto grid gap-6 justify-items-center">
-      <img src="/image.png" class="w-1/4" alt="">
+      <img src="/image.png" class="w-1/4" alt="" />
+
+      {#if $message}<h3 class="text-red-500">{$message}</h3>{/if}
       <!-- Title -->
       <div class="grid gap-2 text-center">
         <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>
@@ -46,6 +58,7 @@
               name="firstname"
               type="text"
               placeholder="Max"
+              class="text-slate-600 font-medium"
               bind:value="{$formData.firstname}"
               on:input="{() => validateInput('firstname')}"
             />
@@ -62,6 +75,7 @@
               name="lastname"
               type="text"
               placeholder="Robinson"
+              class="text-slate-600 font-medium"
               bind:value="{$formData.lastname}"
               on:input="{() => validateInput('lastname')}"
             />
@@ -79,6 +93,7 @@
             name="email"
             type="email"
             placeholder="m@example.com"
+            class="text-slate-600 font-medium"
             bind:value="{$formData.email}"
             on:input="{() => validateInput('email')}"
           />
@@ -99,6 +114,11 @@
             on:input="{() => validateInput('password')}"
             class="text-slate-700"
           />
+          <button
+            on:click="{() => goto('/forget-password')}"
+            class="justify-self-end cursor-pointer hover:underline text-sm text-slate-500"
+            >Forget password?</button
+          >
           {#if $errors.password}
             <p class="text-red-500">{$errors.password}</p>
           {/if}
@@ -110,7 +130,7 @@
             id="include"
             name="include"
             type="checkbox"
-            bind:group={$formData.include}
+            bind:group="{$formData.include}"
           />
           <Label for="include" class="text-sm font-medium leading-none">
             Agree to the terms of service

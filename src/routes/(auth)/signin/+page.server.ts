@@ -35,6 +35,6 @@ export const actions: Actions = {
     }
 
     // Redirect to dashboard or desired page on success
-    throw redirect(303, '/dashboard');
+    throw redirect(303, '/');
   },
 };

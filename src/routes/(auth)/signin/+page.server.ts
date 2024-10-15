@@ -1,11 +1,12 @@
 import type { PageServerLoad, Actions } from './$types.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { signinSchema } from './schema.js';
-import { supabase } from '$lib/supabaseClient.js';
+// import { supabase } from '$lib/supabaseClient.js';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+  const { supabase } = locals;
   return {
     form: await superValidate(zod(signinSchema)),
   };
@@ -14,27 +15,32 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
   default: async (event) => {
     const form = await superValidate(event, zod(signinSchema));
-
-    // Validate the form input
+    const { locals } = event;
+    const { supabase } = locals;
+    
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    // Attempt to sign in with Supabase
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: form.data.email,
-      password: form.data.password,
-    });
+    const { data, error: signInError } = await supabase.auth.signInWithPassword(
+      {
+        email: form.data.email,
+        password: form.data.password,
+      },
+    );
 
-    if (error) {
-      // Return form with error for UI to handle
-      return fail(400, {
-        form,
-        message: error.message,
-      });
+    if (signInError) {
+      console.error('Sign-in error:', signInError);
+
+      let errorMessage = 'Invalid email or password. Please try again.';
+      if (signInError.status === 500) {
+        errorMessage =
+          'There was an issue with authentication. Please try again later.';
+      }
+
+      return fail(400, { form, error: errorMessage });
     }
 
-    // Redirect to dashboard or desired page on success
-    throw redirect(303, '/');
+    return message(form, 'Logged in successfully!');
   },
 };

@@ -15,7 +15,6 @@
     errors,
     validate,
     message,
-    enhance,
   } = superForm(data.form, {
     validators: zodClient(formSchema),
   });
@@ -28,16 +27,15 @@
     showPassword.update((val) => !val);
   }
 
-  // $: console.log($formData);
+  $: console.log($formData);
 </script>
 
-<div class="w-full h-svh grid justify-items-center text-white bg-black py-4">
-  <div class="flex items-center w-full px-4 justify-center">
+<div class="w-full h-lvh grid justify-items-center text-white bg-black py-4">
+  <div class="flex items-center w-fit px-4 justify-center">
     <div class="mx-auto grid gap-6 justify-items-center">
       <img src="/image.png" class="w-1/4" alt="" />
 
       {#if $message}<h3 class="text-red-500">{$message}</h3>{/if}
-      <!-- Title -->
       <div class="grid gap-2 text-center">
         <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>
         <p class="text-muted-foreground text-balance">
@@ -45,10 +43,8 @@
         </p>
       </div>
 
-      <!-- Form -->
-      <form method="POST" class="grid gap-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- First Name Field -->
+      <form method="POST" class="grid gap-4 w-fit">
+        <div class="grid grid-cols-1 sm:grid-cols-2 w-fit gap-4">
           <div class="grid gap-2">
             <Label for="firstname">First Name</Label>
             <Input
@@ -65,7 +61,6 @@
             {/if}
           </div>
 
-          <!-- Last Name Field -->
           <div class="grid gap-2">
             <Label for="lastname">Last Name</Label>
             <Input
@@ -83,7 +78,6 @@
           </div>
         </div>
 
-        <!-- Email Field -->
         <div class="grid gap-2">
           <Label for="email">Email</Label>
           <Input
@@ -100,7 +94,6 @@
           {/if}
         </div>
 
-        <!-- Password Field -->
         <div class="grid gap-2">
           <Label for="password">Password</Label>
 
@@ -115,7 +108,6 @@
               class="text-slate-700"
             />
 
-            <!-- Toggle button to show/hide password -->
             <button
               type="button"
               class="absolute right-2 top-2 text-slate-500 text-sm"
@@ -142,23 +134,21 @@
           {/if}
         </div>
 
-        <!-- Terms and Conditions Checkbox -->
         <div class="flex items-center space-x-2">
           <input
             id="include"
             name="include"
             type="checkbox"
-            bind:group="{$formData.include}"
+            bind:checked="{$formData.include}"
           />
           <Label for="include" class="text-sm font-medium leading-none">
             Agree to the terms of service
           </Label>
-          {#if $errors.password}
+          {#if $errors.include}
             <p class="text-red-500">{$errors.include}</p>
           {/if}
         </div>
 
-        <!-- Submit Button -->
         <Button type="submit" class="w-full bg-slate-700">Create Account</Button
         >
       </form>

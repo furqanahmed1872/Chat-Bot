@@ -1,38 +1,41 @@
-// src/routes/+layout.ts
-import { supabase } from '$lib/supabaseClient';
+import {
+  createBrowserClient,
+  createServerClient,
+  isBrowser,
+} from '@supabase/ssr';
+import {
+  PUBLIC_SUPABASE_ANON_KEY,
+  PUBLIC_SUPABASE_URL,
+} from '$env/static/public';
 import type { LayoutLoad } from './$types';
 
-export const load: LayoutLoad = async ({ data }) => {
-  // Get session on the client side
-  const { data: session } = await supabase.auth.getSession();
+export const load: LayoutLoad = async ({ data, depends, fetch }) => {
+  depends('supabase:auth');
 
-  // Set up auth state change listener
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') {
-      console.log('User signed in:', session?.user);
-      window.location.href = '/dashboard'; // Redirect after login
-    }
+  const supabase = isBrowser()
+    ? createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+        global: {
+          fetch,
+        },
+      })
+    : createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+        global: {
+          fetch,
+        },
+        cookies: {
+          getAll() {
+            return data.cookies;
+          },
+        },
+      });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-    if (event === 'SIGNED_OUT') {
-      console.log('User signed out');
-      window.location.href = '/login'; // Redirect after logout
-    }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { chat, characterList } = data;
 
-    if (event === 'PASSWORD_RECOVERY') {
-      console.log('Password recovery requested');
-      // Implement password reset form logic here if needed
-    }
-
-    if (event === 'TOKEN_REFRESHED') {
-      console.log('Token refreshed:', session?.access_token);
-      // Optionally update the UI with new session information
-    }
-  });
-
-  // Return session along with chat and characterList from server-side load
-  return {
-    session,
-    chat: data.chat, // Available from +layout.server.ts
-    characterList: data.characterList, // Available from +layout.server.ts
-  };
+  return { session, supabase, user, chat, characterList };
 };

@@ -1,8 +1,11 @@
 // src/routes/+layout.server.ts
-import { supabase } from '$lib/supabaseClient';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async () => {
+export const load: LayoutServerLoad = async ({
+  locals: { safeGetSession, supabase },
+  cookies
+}) => {
+  const { session } = await safeGetSession();
   // Fetch chat records
   const { data: saveChatRecord, error } = await supabase
     .from('conversations')
@@ -14,7 +17,6 @@ export const load: LayoutServerLoad = async () => {
     .from('characters')
     .select('*')
     .order('created_at', { ascending: true });
-
   // Check for any errors
   if (error || characterListError) {
     console.error(
@@ -25,6 +27,7 @@ export const load: LayoutServerLoad = async () => {
       chat: [],
       characterList: [],
       error: 'Failed to load data',
+      cookies,
     };
   }
 
@@ -35,5 +38,7 @@ export const load: LayoutServerLoad = async () => {
       character: v.character,
     })),
     characterList,
+    cookies: cookies.getAll(),
+    session,
   };
 };

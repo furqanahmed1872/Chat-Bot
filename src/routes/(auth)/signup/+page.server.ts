@@ -40,9 +40,9 @@ export const actions: Actions = {
           message(form, 'Email already exists')
         );
       }
-
+      console.log(signUpError);
       return (
-        fail(400, { form, error: signUpError.message }),
+        // fail(400, { form, error: signUpError.message }),
         message(form, signUpError.message)
       );
     }

@@ -1,15 +1,15 @@
 <script lang="ts">
   import { Input } from '$lib/components/ui/input';
   import { Button } from '$lib/components/ui/button';
-  import { Checkbox } from '$lib/components/ui/checkbox';
   import { Label } from '$lib/components/ui/label';
   import { formSchema } from './schema';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { goto } from '$app/navigation';
+  import { writable } from 'svelte/store';
 
   export let data;
-
+  let showPassword = writable(false);
   const {
     form: formData,
     errors,
@@ -24,12 +24,10 @@
     validate(field);
   }
 
-  function capitalizeFirstLetter(name: string | null) {
-    if (name) return name.charAt(0).toUpperCase() + name.slice(1);
+  function togglePasswordVisibility() {
+    showPassword.update((val) => !val);
   }
 
-  $: $formData.firstname = capitalizeFirstLetter($formData.firstname);
-  $: $formData.lastname = capitalizeFirstLetter($formData.lastname);
   // $: console.log($formData);
 </script>
 
@@ -105,20 +103,40 @@
         <!-- Password Field -->
         <div class="grid gap-2">
           <Label for="password">Password</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            bind:value="{$formData.password}"
-            on:input="{() => validateInput('password')}"
-            class="text-slate-700"
-          />
+
+          <div class="relative">
+            <Input
+              id="password"
+              name="password"
+              type="{$showPassword ? 'text' : 'password'}"
+              placeholder="••••••••"
+              bind:value="{$formData.password}"
+              on:input="{() => validateInput('password')}"
+              class="text-slate-700"
+            />
+
+            <!-- Toggle button to show/hide password -->
+            <button
+              type="button"
+              class="absolute right-2 top-2 text-slate-500 text-sm"
+              on:click="{togglePasswordVisibility}"
+            >
+              {#if $showPassword}
+                Hide
+              {/if}
+              {#if !$showPassword}
+                Show
+              {/if}
+            </button>
+          </div>
+
           <button
             on:click="{() => goto('/forget-password')}"
             class="justify-self-end cursor-pointer hover:underline text-sm text-slate-500"
-            >Forget password?</button
           >
+            Forget password?
+          </button>
+
           {#if $errors.password}
             <p class="text-red-500">{$errors.password}</p>
           {/if}

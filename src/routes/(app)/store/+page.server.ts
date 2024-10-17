@@ -31,8 +31,14 @@ export const actions: Actions = {
     if (!form.valid) {
       return fail(400, { form });
     }
-    const { prompt:Prompt, character, image, description, visibility, voice } =
-      form.data;
+    const {
+      prompt: Prompt,
+      character,
+      image,
+      description,
+      visibility,
+      voice,
+    } = form.data;
     const messages = [
       `Hey!I’m ${character} I’m here to support you every step of the way—let’s get started!`,
       `Hello!I’m ${character}. Ready to make a difference today? I’m excited to be here for you!`,
@@ -44,13 +50,23 @@ export const actions: Actions = {
       `Hi! I’m ${character}. Count on me to be your go-to guide—supportive, reliable, and always here!`,
       `Hello! I’m ${character}. Whether you’re stuck or just want to chat, I’m here for you!`,
       `Hey! I’m ${character}, Let’s make today productive and fun—I'm excited to help!`,
-    ];  
+    ];
     const greeting_note = messages[Math.floor(Math.random() * 10)];
-    const prompt = `Your name or profession is ${character}. ${Prompt}. Respond in bullet points and heading when need, making your explanations concise and focused. if question is not related your field then ignore it and tell him reason.`
-    
+    const prompt = `Your name or profession is ${character}. ${Prompt}. Respond in bullet points and heading when need, making your explanations concise, focused and in 150 to 200 words. if question is not related your field then ignore it and tell him reason.`;
+
     const { data, error } = await supabase
       .from('characters')
-      .insert([{prompt, character, greeting_note, image, description, visibility, voice}])
+      .insert([
+        {
+          prompt,
+          character,
+          greeting_note,
+          image,
+          description,
+          visibility,
+          voice,
+        },
+      ])
       .select();
 
     if (error) {

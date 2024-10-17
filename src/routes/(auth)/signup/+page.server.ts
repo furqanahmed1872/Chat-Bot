@@ -26,7 +26,12 @@ export const actions: Actions = {
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: form.data.email,
       password: form.data.password,
+      options: {
+        emailRedirectTo: 'http://localhost:5173',
+      },
     });
+
+    console.log(signUpError);
 
     if (signUpError) {
       let errorMessage =

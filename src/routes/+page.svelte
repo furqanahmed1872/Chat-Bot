@@ -3,7 +3,7 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import Carousel from '$lib/components/mainpage/carousel.svelte';
 
-  let authentication = false;
+  let authentication = true;
 
   export let data;
 

@@ -2,28 +2,20 @@ import { createServerClient } from '@supabase/ssr';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
-import {
-  PUBLIC_SUPABASE_URL,
-  PUBLIC_SUPABASE_ANON_KEY,
-} from '$env/static/public';
-
+const supabase_url = import.meta.env.VITE_SUPABASE_URL;
+const supabase_key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase: Handle = async ({ event, resolve }) => {
+  event.locals.supabase = createServerClient(supabase_url, supabase_key, {
+    cookies: {
+      getAll: () => event.cookies.getAll(),
 
-  event.locals.supabase = createServerClient(
-    PUBLIC_SUPABASE_URL,
-    PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll: () => event.cookies.getAll(),
-
-        setAll: (cookiesToSet) => {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            event.cookies.set(name, value, { ...options, path: '/' });
-          });
-        },
+      setAll: (cookiesToSet) => {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          event.cookies.set(name, value, { ...options, path: '/' });
+        });
       },
     },
-  );
+  });
 
   event.locals.safeGetSession = async () => {
     const {
@@ -57,13 +49,13 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.session = session;
   event.locals.user = user;
 
-  if (!event.locals.session && event.url.pathname.startsWith('/chat')) {
-    redirect(303, '/auth');
-  }
+  // if (!event.locals.session && event.url.pathname.startsWith('/chat')) {
+  //   redirect(303, '/auth');
+  // }
 
-  if (event.locals.session && event.url.pathname === '/auth') {
-    redirect(303, '/chat');
-  }
+  // if (event.locals.session && event.url.pathname === '/auth') {
+  //   redirect(303, '/chat');
+  // }
 
   return resolve(event);
 };

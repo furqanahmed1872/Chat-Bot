@@ -7,6 +7,11 @@
   let recording = false;
   let mediaRecorder: any;
   let audioChunks: Blob[] = [];
+  let startTime: number | null = null;
+  let conversationTime = 0; // time in seconds
+  let processingStartTime: number | null = null;
+  let processingTime = 0; // time spent in processing
+  let responseAudioTime = 0; // time spent playing response audio
 
   async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -14,6 +19,7 @@
 
     mediaRecorder.start();
     recording = true;
+    startTime = Date.now(); // start the timer for conversation
 
     mediaRecorder.ondataavailable = (event: BlobEvent) => {
       audioChunks.push(event.data);
@@ -23,9 +29,15 @@
       const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
       sendToWhisper(audioBlob);
       audioChunks = [];
+      if (startTime) {
+        // Calculate conversation time in seconds
+        const endTime = Date.now();
+        conversationTime += Math.floor((endTime - startTime) / 1000);
+        startTime = null;
+        console.log(`Conversation time: ${conversationTime} seconds`);
+      }
     };
   }
-
   function stopRecording() {
     mediaRecorder.stop();
     recording = false;
@@ -46,6 +58,8 @@
     formData.append('model', 'whisper-1');
     formData.append('language', 'en');
 
+    processingStartTime = Date.now();
+
     const response = await fetch('/api/whisper', {
       method: 'POST',
       body: formData,
@@ -53,12 +67,39 @@
 
     const data = await response.json();
     userMessage = data.transcription;
+
+    // Stop processing timer
+    if (processingStartTime) {
+      const processingEndTime = Date.now();
+      processingTime += Math.floor(
+        (processingEndTime - processingStartTime) / 1000,
+      );
+      console.log(`Processing time: ${processingTime} seconds`);
+      processingStartTime = null;
+    }
+
     audioMessage();
     console.log(userMessage);
+
+    playResponseAudio();
   }
 
   function audioMessage() {
     dispatch('audioMessage', userMessage);
+  }
+
+  async function playResponseAudio() {
+    const audio = new Audio('/speech.mp3');
+
+    audio.onloadedmetadata = () => {
+      responseAudioTime += Math.floor(audio.duration);
+      getTotalTime();
+      console.log(`Response audio time: ${responseAudioTime} seconds`);
+    };
+  }
+  function getTotalTime() {
+    const totalTime = conversationTime + processingTime + responseAudioTime;
+    console.log(`Total time: ${totalTime} seconds`);
   }
 </script>
 
@@ -71,7 +112,7 @@
     class:focus:bg-red-700="{recording}"
     on:click="{toggleRecording}"
   >
-    {#if recording}
+    {#if !recording}
       <svg
         fill="#000000"
         height="40px"

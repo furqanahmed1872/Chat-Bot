@@ -3,22 +3,20 @@ import {
   createServerClient,
   isBrowser,
 } from '@supabase/ssr';
-import {
-  PUBLIC_SUPABASE_ANON_KEY,
-  PUBLIC_SUPABASE_URL,
-} from '$env/static/public';
+const supabase_url = import.meta.env.VITE_SUPABASE_URL;
+const supabase_key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {
   depends('supabase:auth');
 
   const supabase = isBrowser()
-    ? createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+    ? createBrowserClient(supabase_url, supabase_key, {
         global: {
           fetch,
         },
       })
-    : createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+    : createServerClient(supabase_url, supabase_key, {
         global: {
           fetch,
         },

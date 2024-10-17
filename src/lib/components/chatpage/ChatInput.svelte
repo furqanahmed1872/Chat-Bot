@@ -15,7 +15,7 @@
   }
 
   function medium() {
-    dispatch('addChat');
+    dispatch('medium');
   }
 </script>
 

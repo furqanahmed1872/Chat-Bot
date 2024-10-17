@@ -1,12 +1,12 @@
 // src/routes/+page.server.ts
-import { supabase } from '$lib/supabaseClient';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';
 import { characterSchema } from '$lib/schema/characterSchema.js';
 import type { PageServerLoad, Actions } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+  const { supabase } = locals;
   const { data: characterList, error: characterListError } = await supabase
     .from('characters')
     .select('*')
@@ -27,7 +27,8 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
   default: async (event) => {
     const form = await superValidate(event, zod(characterSchema));
-
+    const { locals } = event;
+    const { supabase } = locals;
     if (!form.valid) {
       return fail(400, { form });
     }

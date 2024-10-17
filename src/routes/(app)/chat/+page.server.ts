@@ -1,8 +1,9 @@
 // src/routes/+page.server.ts
-import { supabase } from '$lib/supabaseClient';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+  
+  const { supabase } = locals
   const { data: saveChatRecord, error } = await supabase
     .from('conversations')
     .select('*')

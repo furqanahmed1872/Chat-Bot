@@ -2,10 +2,86 @@
   import { goto } from '$app/navigation';
   import AddCharacter from '$lib/components/storepage/addCharacter.svelte';
   import { isDialogOpen } from '$lib/store/store';
-  let isSidebarOpen = false;
+  import { supabase } from '$lib/supabaseClient.js';
+  import { onMount } from 'svelte';
+  import { any } from 'zod';
 
   export let data;
-  $: characterList = data.characterList;
+  let characterList: any[] | null = [];
+  let allBots: any[] = [];
+  let popularBots: any[] = [];
+  let recentBots: any[] = [];
+  let isSidebarOpen = false;
+  let category = 'All';
+
+  onMount(async () => {
+    // Fetch and assign all bots
+    const { data: fetchedAllBots } = await supabase
+      .from('characters')
+      .select('*');
+    allBots = fetchedAllBots || [];
+
+    // Fetch and assign popular bots
+    const { data: fetchedPopularBots } = await supabase
+      .from('characters')
+      .select('*')
+      .gt('usage_count', 10)
+      .order('usage_count', { ascending: false })
+      .limit(10);
+    popularBots = fetchedPopularBots || [];
+
+    // Fetch and assign recent bots
+    const { data: fetchedRecentBots } = await supabase
+      .from('characters')
+      .select('*')
+      .gt(
+        'last_used',
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      )
+      .order('last_used', { ascending: false })
+      .limit(10);
+    recentBots = fetchedRecentBots || [];
+
+    characterList = [...allBots];
+  });
+
+  async function incrementBotUsage(botId: number) {
+    const { data: currentData, error: fetchError } = await supabase
+      .from('characters')
+      .select('usage_count')
+      .eq('id', botId)
+      .single();
+
+    if (fetchError) {
+      console.error('Error fetching usage count:', fetchError);
+      return;
+    }
+
+    const newUsageCount = currentData.usage_count + 1;
+
+    const { error: updateError } = await supabase
+      .from('characters')
+      .update({ usage_count: newUsageCount })
+      .eq('id', botId);
+
+    if (updateError) {
+      console.error('Error updating usage count:', updateError);
+    }
+  }
+
+  function setCategory(type: string) {
+    category = type;
+
+    if (type === 'All') {
+      characterList = [...allBots];
+    } else if (type === 'Popular') {
+      characterList = [...popularBots];
+    } else if (type === 'Recent') {
+      characterList = [...recentBots];
+    } else {
+      characterList = [];
+    }
+  }
 </script>
 
 <div class="flex flex-row h-dvh bg-primary text-secondary">
@@ -38,6 +114,7 @@
     <ul class="space-y-4 overflow-auto">
       <li class="mb-4">
         <button
+          on:click="{() => setCategory('All')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -50,6 +127,7 @@
       </li>
       <li class="mb-4">
         <button
+          on:click="{() => setCategory('Recent')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -62,6 +140,7 @@
       </li>
       <li class="mb-4">
         <button
+          on:click="{() => setCategory('Popular')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -134,16 +213,17 @@
       </button>
     </div>
 
-    <h1 class="text-3xl font-bold mb-6">Featured Agents</h1>
+    <h1 class="text-3xl font-bold mb-6">{category} Bots</h1>
 
     {#if characterList}
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {#each characterList as character, i}
           <button
             on:click="{() => {
+              incrementBotUsage(character.id);
               goto(`/chat?role=${character.character}`);
             }}"
-            class="bg-darkBlue rounded-lg cursor-pointer p-4 flex flex-row hover:bg-lightBlue text-primary"
+            class="bg-darkBlue rounded-lg cursor-pointer p-4 flex flex-row items-center hover:bg-lightBlue text-primary"
           >
             <img
               src="{character.image}"
@@ -158,6 +238,12 @@
             </div>
           </button>
         {/each}
+      </div>
+    {:else}
+      <div
+        class="w-full h-full flex justify-center items-center text-3xl text-white"
+      >
+        Loading ...
       </div>
     {/if}
   </div>

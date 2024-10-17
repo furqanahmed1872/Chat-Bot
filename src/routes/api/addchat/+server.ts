@@ -1,7 +1,7 @@
-import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
+  const {supabase} = locals
   try {
     const { messages, character, chatId } = await request.json();
     console.log(chatId);

@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ request }) => {
       body: formData,
     },
   );
-  
+
   if (!whisperResponse.ok) {
     const errorData = await whisperResponse.json();
     return new Response(JSON.stringify({ error: errorData }), {
@@ -37,3 +37,5 @@ export const POST: RequestHandler = async ({ request }) => {
     status: 200,
   });
 };
+
+

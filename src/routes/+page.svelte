@@ -45,6 +45,16 @@
   <div></div>
   <ul class="flex items-center space-x-4">
     <button
+      on:click="{()=> goto('/price')}"
+      class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-primary font-semibold cursor-pointer pullRightLeft relative group"
+    >
+      Price
+      <!-- Darkened background overlay on hover -->
+      <span
+        class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+      ></span>
+    </button>
+    <button
       on:click="{handleChatClick}"
       class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-primary font-semibold cursor-pointer pullRightLeft relative group"
     >

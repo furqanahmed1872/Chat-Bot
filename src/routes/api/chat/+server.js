@@ -9,7 +9,6 @@ export async function POST({ request }) {
   console.log(voice);
   const openai = new OpenAI({ apiKey });
 
-  // Construct system message based on the prompt
   const systemMessage = prompt
     ? {
         role: 'system',
@@ -21,8 +20,8 @@ export async function POST({ request }) {
       };
 
   try {
-    // Generate the chat response using OpenAI API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -48,26 +47,21 @@ export async function POST({ request }) {
     if (data?.choices?.length > 0) {
       const aiResponseText = data.choices[0].message.content;
 
-      // File path for the consistent speech file
       const speechFile = path.resolve('./static/speech.mp3');
 
-      // Create speech audio using OpenAI
       const mp3 = await openai.audio.speech.create({
         model: 'tts-1',
         voice: voice ? voice : 'alloy',
         input: aiResponseText,
       });
 
-      // Convert the response to buffer and save to the consistent file
       const buffer = Buffer.from(await mp3.arrayBuffer());
 
-      // Overwrite the existing file with the new audio content
       await fs.promises.writeFile(speechFile, buffer);
 
-      // Return the chat message and the path to the updated audio file
       return json({
         message: aiResponseText,
-        audio: `/speech.mp3?t=${Date.now()}`, // Append timestamp to invalidate cache
+        audio: `/speech.mp3?t=${Date.now()}`,
       });
     } else {
       console.error('No choices found in the API response');

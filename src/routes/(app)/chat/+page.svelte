@@ -229,7 +229,7 @@
 </script>
 
 <div class="flex h-dvh relative bg-slate-300">
-  <!-- <ChatSidebar
+  <ChatSidebar
     chats="{chats}"
     characterList="{characterList}"
     bind:isSidebarOpen="{isSidebarOpen}"
@@ -237,68 +237,69 @@
     on:selectChat="{(e) => selectChat(e.detail)}"
     on:selectCharacter="{(e) => selectCharacter(e.detail)}"
     on:deleteChat="{(e) => handleDeleteChat(e.detail)}"
-  /> -->
+  />
 
   <!-- Chat Area -->
   <div
     class="flex flex-col w-full bg-black lg:{isSidebarOpen ? 'ml-64' : 'm-0'} "
-  ><div class="hidden lg:flex justify-center flex-row bg-black m-2">
-        <div class="flex flex-row justify-center">
-          <button
-            on:click="{conversationMedium}"
-            class=" bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-l-3xl text-black p-2 pl-4 hover:text-slate-300"
+  >
+    <div class="hidden lg:flex justify-center flex-row bg-black m-2">
+      <div class="flex flex-row justify-center">
+        <button
+          on:click="{conversationMedium}"
+          class=" bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-l-3xl text-black p-2 pl-4 hover:text-slate-300"
+        >
+          <svg
+            fill="currentColor"
+            height="24px"
+            width="24px"
+            version="1.1"
+            id="Capa_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 60 60"
+            xml:space="preserve"
           >
-            <svg
-              fill="currentColor"
-              height="24px"
-              width="24px"
-              version="1.1"
-              id="Capa_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              viewBox="0 0 60 60"
-              xml:space="preserve"
-            >
-              <g>
-                <path
-                  d="M26,9.586C11.664,9.586,0,20.09,0,33c0,4.499,1.418,8.856,4.106,12.627c-0.51,5.578-1.86,9.712-3.813,11.666
+            <g>
+              <path
+                d="M26,9.586C11.664,9.586,0,20.09,0,33c0,4.499,1.418,8.856,4.106,12.627c-0.51,5.578-1.86,9.712-3.813,11.666
       c-0.304,0.304-0.38,0.768-0.188,1.153C0.276,58.789,0.625,59,1,59c0.046,0,0.093-0.003,0.14-0.01
       c0.349-0.049,8.432-1.213,14.317-4.585c3.33,1.333,6.874,2.009,10.544,2.009c14.336,0,26-10.503,26-23.414S40.337,9.586,26,9.586z"
-                ></path>
-                <path
-                  d="M55.894,37.042C58.582,33.27,60,28.912,60,24.414C60,11.503,48.337,1,34,1c-8.246,0-15.968,3.592-20.824,9.42
+              ></path>
+              <path
+                d="M55.894,37.042C58.582,33.27,60,28.912,60,24.414C60,11.503,48.337,1,34,1c-8.246,0-15.968,3.592-20.824,9.42
       C17.021,8.614,21.38,7.586,26,7.586c15.439,0,28,11.4,28,25.414c0,5.506-1.945,10.604-5.236,14.77
       c4.946,1.887,9.853,2.6,10.096,2.634c0.047,0.006,0.094,0.01,0.14,0.01c0.375,0,0.724-0.211,0.895-0.554
       c0.192-0.385,0.116-0.849-0.188-1.153C57.753,46.753,56.403,42.619,55.894,37.042z"
-                ></path>
-              </g>
-            </svg>
-          </button>
-          <div class="bg-black h-0.5 w-0.5"></div>
-          <button
-            on:click="{conversationMedium}"
-            class="bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-r-3xl text-black hover:text-slate-300 p-2 pr-4"
-          >
-            <svg
-              width="30px"
-              height="30px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM13.2631 11.7368C13.2631 12.6105 12.5578 13.3158 11.6842 13.3158C10.8105 13.3158 10.1052 12.6105 10.1052 11.7368V8.57895C10.1052 7.70526 10.8105 7 11.6842 7C12.5578 7 13.2631 7.70526 13.2631 8.57895V11.7368ZM11.6842 8.05265C11.3947 8.05265 11.1579 8.28949 11.1579 8.57897V11.7369C11.1579 12.0263 11.3947 12.2632 11.6842 12.2632C11.9789 12.2632 12.2105 12.0316 12.2105 11.7369V8.57897C12.2105 8.28949 11.9736 8.05265 11.6842 8.05265ZM15.3684 11.7368H14.4737C14.4737 13.3158 13.1368 14.421 11.6842 14.421C10.2316 14.421 8.89474 13.3158 8.89474 11.7368H8C8 13.5316 9.43158 15.0158 11.1579 15.2737V17H12.2105V15.2737C13.9368 15.0158 15.3684 13.5316 15.3684 11.7368Z"
-                fill="currentColor"
               ></path>
-            </svg>
-          </button>
-        </div>
+            </g>
+          </svg>
+        </button>
+        <div class="bg-black h-0.5 w-0.5"></div>
+        <button
+          on:click="{conversationMedium}"
+          class="bg-slate-300 hover:bg-neutral-700 focus:bg-neutral-700 rounded-r-3xl text-black hover:text-slate-300 p-2 pr-4"
+        >
+          <svg
+            width="30px"
+            height="30px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM13.2631 11.7368C13.2631 12.6105 12.5578 13.3158 11.6842 13.3158C10.8105 13.3158 10.1052 12.6105 10.1052 11.7368V8.57895C10.1052 7.70526 10.8105 7 11.6842 7C12.5578 7 13.2631 7.70526 13.2631 8.57895V11.7368ZM11.6842 8.05265C11.3947 8.05265 11.1579 8.28949 11.1579 8.57897V11.7369C11.1579 12.0263 11.3947 12.2632 11.6842 12.2632C11.9789 12.2632 12.2105 12.0316 12.2105 11.7369V8.57897C12.2105 8.28949 11.9736 8.05265 11.6842 8.05265ZM15.3684 11.7368H14.4737C14.4737 13.3158 13.1368 14.421 11.6842 14.421C10.2316 14.421 8.89474 13.3158 8.89474 11.7368H8C8 13.5316 9.43158 15.0158 11.1579 15.2737V17H12.2105V15.2737C13.9368 15.0158 15.3684 13.5316 15.3684 11.7368Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </button>
       </div>
-    <!-- <div class="w-full grid grid-cols-3 content-center p-2 px-2">
+    </div>
+    <div class="w-full grid grid-cols-3 content-center p-2 px-2">
       <div class="col-span-1"></div>
-      
+
       <div class="relative inline-block justify-self-end">
         <button
           class:hidden="{!showVoice}"
@@ -315,7 +316,7 @@
           <p class="font-semibold">Remaining Time: 45 mins</p>
         </div>
       </div>
-    </div> -->
+    </div>
 
     {#if showchat}
       <div

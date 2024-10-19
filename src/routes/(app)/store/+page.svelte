@@ -2,7 +2,6 @@
   import { goto } from '$app/navigation';
   import AddCharacter from '$lib/components/storepage/addCharacter.svelte';
   import { isDialogOpen } from '$lib/store/store';
-  import { supabase } from '$lib/supabaseClient.js';
   import { onMount } from 'svelte';
   import { any } from 'zod';
 
@@ -14,7 +13,8 @@
   let isSidebarOpen = false;
   let category = 'All';
 
-  onMount(async () => {
+  onMount(async (locals) => {
+    const {supabase} =locals
     // Fetch and assign all bots
     const { data: fetchedAllBots } = await supabase
       .from('characters')

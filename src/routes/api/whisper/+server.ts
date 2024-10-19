@@ -3,7 +3,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request }) => {
   const formData = await request.formData();
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  const apiKey = import.meta.env.OPENAI_API_KEY;
   const audioFile = formData.get('file');
 
   if (!(audioFile instanceof Blob)) {

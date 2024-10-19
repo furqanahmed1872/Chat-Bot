@@ -1,31 +1,52 @@
 import { json } from '@sveltejs/kit';
 import Stripe from 'stripe';
-const stripesecretKey = import.meta.env.VITE_stripe_secret_key;
-const stripe = new Stripe(stripesecretKey);
+import { STRIPE_SECRET_KEY } from '$env/static/private';
+// Initialize Stripe
+const stripe = new Stripe('sk_test_YOUR_SECRET_KEY');
+
+// Secret key for verifying Stripe webhook signatures
+const endpointSecret = STRIPE_SECRET_KEY;
 
 export async function POST({ request }) {
-  const body = await request.text();
-  const sig = request.headers.get('Stripe-Signature');
+  const sig = request.headers.get('stripe-signature');
+  const body = await request.text(); // Fetch raw body for signature validation
 
-  let event;
+  // If the signature header is missing, return an error
+  if (!sig) {
+    return json({ error: 'Missing stripe-signature header' }, { status: 400 });
+  }
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, 'YOUR_WEBHOOK_SECRET');
+    const event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+
+    // Handle the events you want here
+    switch (event.type) {
+      case 'checkout.session.completed':
+        console.log('Payment successful!');
+        // Mark user subscription active in the database
+        break;
+      case 'invoice.payment_succeeded':
+        console.log('Invoice payment succeeded');
+        // Update subscription info in the database
+        break;
+      case 'invoice.payment_failed':
+        console.log('Invoice payment failed');
+        // Notify the user about payment failure
+        break;
+      // Add more event types as necessary
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+
+    return json({ received: true });
   } catch (err) {
-    console.error('Webhook signature verification failed.', err);
-    return json({ error: 'Webhook Error' }, { status: 400 });
+    // Type guard to ensure err is an instance of Error
+    if (err instanceof Error) {
+      console.log(`Webhook Error: ${err.message}`);
+      return json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+    } else {
+      console.log('Unknown error occurred');
+      return json({ error: 'Unknown error occurred' }, { status: 400 });
+    }
   }
-
-  // Handle the event (e.g., update Supabase or notify users)
-  switch (event.type) {
-    case 'checkout.session.completed':
-      // Handle successful payment here
-      break;
-    case 'invoice.payment_failed':
-      // Handle failed payment here
-      break;
-    // Add more cases as needed
-  }
-
-  return json({ received: true });
 }

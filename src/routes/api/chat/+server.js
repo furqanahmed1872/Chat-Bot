@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 
 export async function POST({ request }) {
   const { message, character, voice, prompt } = await request.json();
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  const apiKey = import.meta.env.OPENAI_API_KEY;
   console.log(voice);
   const openai = new OpenAI({ apiKey });
 
@@ -21,7 +21,6 @@ export async function POST({ request }) {
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,

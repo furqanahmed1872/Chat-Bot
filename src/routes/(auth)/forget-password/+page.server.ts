@@ -3,7 +3,6 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { forgetSchema } from './schema';
 import { fail, redirect } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
 
 export const load: PageServerLoad = async () => {
   return {
@@ -14,7 +13,8 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
   default: async (event) => {
     const form = await superValidate(event, zod(forgetSchema));
-
+    const { locals } = event
+    const [supabase] =locals
     if (!form.valid) {
       return fail(400, { form });
     }

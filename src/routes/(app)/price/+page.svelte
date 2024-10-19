@@ -1,7 +1,9 @@
 <!-- Free Plan card -->
 <div class="w-full h-dvh bg-[#dddddf] grid place-content-center">
   <div class="grid grid-cols-3 w-4/5 place-content-center">
-    <div class="bg-[#dddddf] grow-0 w-[300px] h-fit p-6 mt-11 overflow-hidden col-span-1">
+    <div
+      class="bg-[#dddddf] grow-0 w-[300px] h-fit p-6 mt-11 overflow-hidden col-span-1"
+    >
       <h2 class="text-xl font-medium text-gray-800">Free Plan</h2>
       <div class="flex flex-row items-center gap-1 mt-11">
         <div class="text-4xl font-bold">US$0</div>

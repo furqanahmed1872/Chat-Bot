@@ -11,8 +11,12 @@
     "moduleResolution": "node",
     "target": "ES2020",
     "module": "ESNext",
+    "baseUrl": ".", // Add this line
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "svelte"]
+    "types": ["node"],
+    "paths": {
+      "$env/static/private": ["./.svelte-kit/ambient"] // Change this line to be relative
+    }
   },
   "exclude": [
     "postcss.config.js",
@@ -22,7 +26,6 @@
     "src/routes/api/chat/+server.js",
     "svelte.config.js",
     "tailwind.config.js",
-    "postcss.config.js", // Add any other config files that shouldn't be compiled
-    "**/*.config.js"
+    "postcss.config.js",
   ]
 }

@@ -1,25 +1,33 @@
 import { json } from '@sveltejs/kit';
 import Stripe from 'stripe';
-import { STRIPE_SECRET_KEY } from '$env/static/private';
-// Initialize Stripe
-const stripe = new Stripe('sk_test_YOUR_SECRET_KEY');
+import {
+  PRIVATE_STRIPE_SECRET_KEY,
+  PRIVATE_STRIPE_WEBHOOK_SECRET,
+} from '$env/static/private';
 
-// Secret key for verifying Stripe webhook signatures
-const endpointSecret = STRIPE_SECRET_KEY;
+// Initialize Stripe
+const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
+const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
 
 export async function POST({ request }) {
   const sig = request.headers.get('stripe-signature');
-  const body = await request.text(); // Fetch raw body for signature validation
 
-  // If the signature header is missing, return an error
+  // Fetch raw body for signature validation
+  const body = await request.text();
+
+  // Log the body and signature for debugging
+  console.log('Incoming Request Body:', body);
+  console.log('Stripe Signature:', sig);
+
   if (!sig) {
     return json({ error: 'Missing stripe-signature header' }, { status: 400 });
   }
 
   try {
+    // Construct the event using the raw body
     const event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
 
-    // Handle the events you want here
+    // Handle the event as before
     switch (event.type) {
       case 'checkout.session.completed':
         console.log('Payment successful!');
@@ -33,14 +41,13 @@ export async function POST({ request }) {
         console.log('Invoice payment failed');
         // Notify the user about payment failure
         break;
-      // Add more event types as necessary
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
 
-    return json({ received: true });
+    return json({ received: true }, { status: 200 });
   } catch (err) {
-    // Type guard to ensure err is an instance of Error
+    // Handle errors
     if (err instanceof Error) {
       console.log(`Webhook Error: ${err.message}`);
       return json({ error: `Webhook Error: ${err.message}` }, { status: 400 });

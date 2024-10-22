@@ -154,7 +154,7 @@
           goto('/signup');
         }}"
         type="button"
-        class="w-full bg-lightBlue hover:bg-slate-700 col-span-1">Log in</Button
+        class="w-full bg-lightBlue hover:bg-slate-700 col-span-1">Sign up</Button
       >
       <Button
         on:click="{() => {
@@ -162,7 +162,7 @@
         }}"
         type="button"
         class="w-full bg-lightBlue hover:bg-slate-700 col-span-1"
-        >Sign up</Button
+        >Sign in</Button
       >
     </div>
   </div>

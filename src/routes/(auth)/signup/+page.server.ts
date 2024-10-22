@@ -26,9 +26,6 @@ export const actions: Actions = {
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: form.data.email,
       password: form.data.password,
-      options: {
-        emailRedirectTo: 'http://localhost:5173',
-      },
     });
 
     console.log(signUpError);
@@ -36,12 +33,16 @@ export const actions: Actions = {
     if (signUpError) {
       let errorMessage =
         'An error occurred during sign-up. Please try again later.';
+
       if (signUpError.message.includes('email already exists')) {
         errorMessage = 'An account with this email already exists.';
+      } else if (signUpError.code === 'email_address_not_authorized') {
+        errorMessage = 'This email address is not authorized for sign-up.';
       }
+
       return fail(400, { form, error: errorMessage });
     }
 
-    return message(form, 'Account created successfully! Please log in.');
+    return message(form, 'Account created successfully');
   },
 };

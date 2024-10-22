@@ -7,6 +7,7 @@
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { goto } from '$app/navigation';
   import { writable } from 'svelte/store';
+  import { onMount } from 'svelte';
 
   export let data;
   let showPassword = writable(false);
@@ -26,16 +27,31 @@
   function togglePasswordVisibility() {
     showPassword.update((val) => !val);
   }
-
-  $: console.log($formData);
+  $: if ($message) {
+    if ($message.includes('successfully')) {
+      onMount(() => {
+        setTimeout(() => {
+          window.location.href = '/'; // Redirect to the homepage
+        }, 2000); // 2-second delay
+      });
+    }
+  }
 </script>
 
 <div class="w-full h-lvh grid justify-items-center text-white bg-black py-4">
   <div class="flex items-center w-fit px-4 justify-center">
     <div class="mx-auto grid gap-6 justify-items-center">
       <img src="/image.png" class="w-1/4" alt="" />
+      {#if $message}
+        {#if $message?.includes('successfully')}
+          <h3 class="text-green-500">
+            {$message}
+          </h3>
+        {:else}
+          <h3 class="text-red-500">{$message}</h3>
+        {/if}
+      {/if}
 
-      {#if $message}<h3 class="text-red-500">{$message}</h3>{/if}
       <div class="grid gap-2 text-center">
         <h1 class="text-2xl sm:text-3xl font-bold">Create Account</h1>
         <p class="text-muted-foreground text-balance">

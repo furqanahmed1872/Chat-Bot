@@ -7,33 +7,31 @@ import {
 } from '$env/static/private';
 import {
   PUBLIC_SUPABASE_URL,
-  PUBLIC_SUPABASE_ANON_KEY,
+  PUBLIC_SUPABASE_ANON_KEY, 
 } from '$env/static/public';
-import { cookies } from 'svelte-kit';
 
-// Initialize Stripe
-const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
-const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
+export async function POST({ request, cookies }) {
+  const supabase = createServerClient(
+    PUBLIC_SUPABASE_URL, 
+    PUBLIC_SUPABASE_ANON_KEY,
+    { request, cookies }, // Use cookies and request from the arguments
+  );
 
-export const POST: RequestHandler = async ({ request, locals }) => {
-  const sig = request.headers.get('stripe-signature');
-  const supabase = createServerClient(supabaseUrl, supabaseKey, {
-    cookies: {
-      getAll: () => event.cookies.getAll(),
-      setAll: (cookiesToSet) => {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          event.cookies.set(name, value, { ...options, path: '/' });
-        });
-      },
-    },
-  });
-  
+  const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
+  const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
+
+  const sig = request.headers.get('stripe-signature');  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   console.log(user); // Get the logged-in user
   const body = await request.text();
 
   if (user) {
     console.log('Incoming Request Body:', body);
-    console.log('Stripe Signature:', sig);
+    console.log('Stripe Signature:', sig); 
 
     if (!sig) {
       return json(
@@ -166,4 +164,4 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     console.log('No user found. Unable to process webhook.');
     return json({ error: 'User not authenticated' }, { status: 403 });
   }
-};
+}

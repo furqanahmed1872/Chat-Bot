@@ -21,14 +21,32 @@ export const actions: Actions = {
     if (!form.valid) {
       return fail(400, { form });
     }
-    console.log(form.data);
-    // Supabase signUp method (without email confirmation)
+
+    // Check if email already exists
+    const { data: userData, error: fetchError } = await supabase
+      .from('auth.users')
+      .select('*')
+      .eq('email', form.data.email);
+
+    if (fetchError) {
+      return fail(400, { form, error: 'Failed to check existing users.' });
+    }
+
+    if (userData.length > 0) {
+      return fail(400, {
+        form,
+        error: 'An account with this email already exists.',
+      });
+    }
+
+    // Supabase signUp method
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: form.data.email,
       password: form.data.password,
     });
 
-    console.log(signUpError);
+    console.error('Sign-up error:', signUpError);
+    console.log('Supabase response:', data);
 
     if (signUpError) {
       let errorMessage =
@@ -46,3 +64,4 @@ export const actions: Actions = {
     return message(form, 'Account created successfully');
   },
 };
+

@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { json, redirect } from '@sveltejs/kit'; // Import redirect
 import Stripe from 'stripe';
 import {
@@ -7,20 +7,16 @@ import {
 } from '$env/static/private';
 import {
   PUBLIC_SUPABASE_URL,
-  PUBLIC_SUPABASE_ANON_KEY, 
+  PUBLIC_SUPABASE_ANON_KEY,
 } from '$env/static/public';
 
-export async function POST({ request, cookies }) {
-  const supabase = createServerClient(
-    PUBLIC_SUPABASE_URL, 
-    PUBLIC_SUPABASE_ANON_KEY,
-    { request, cookies }, // Use cookies and request from the arguments
-  );
+export async function POST({ request }) {
+  const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
   const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
   const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
 
-  const sig = request.headers.get('stripe-signature');  
+  const sig = request.headers.get('stripe-signature');
   const {
     data: { user },
     error,
@@ -31,7 +27,7 @@ export async function POST({ request, cookies }) {
 
   if (user) {
     console.log('Incoming Request Body:', body);
-    console.log('Stripe Signature:', sig); 
+    console.log('Stripe Signature:', sig);
 
     if (!sig) {
       return json(

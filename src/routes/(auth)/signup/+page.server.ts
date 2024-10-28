@@ -13,31 +13,36 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-  default: async (event) => {
+  default: async (event: any) => {
     const form = await superValidate(event, zod(formSchema));
     const { locals } = event;
     const { supabase } = locals;
 
+    console.log('Form data:', form.data); // Check data structure
+    console.log('Form validation result:', form.valid, form.errors);
+
     if (!form.valid) {
+      console.log('Form validation failed:', form.errors);
       return fail(400, { form });
     }
 
+    console.log('///////////', form.data);
     // Check if email already exists
-    const { data: userData, error: fetchError } = await supabase
-      .from('auth.users')
-      .select('*')
-      .eq('email', form.data.email);
+    // const { data: userData, error: fetchError } = await supabase
+    //   .from('auth.users')
+    //   .select('*')
+    //   .eq('email', form.data.email);
+    // console.log('fetchError >>> ', fetchError);
+    // if (fetchError) {
+    //   return fail(400, { form, error: 'Failed to check existing users.' });
+    // }
 
-    if (fetchError) {
-      return fail(400, { form, error: 'Failed to check existing users.' });
-    }
-
-    if (userData.length > 0) {
-      return fail(400, {
-        form,
-        error: 'An account with this email already exists.',
-      });
-    }
+    // if (userData.length > 0) {
+    //   return fail(400, {
+    //     form,
+    //     error: 'An account with this email already exists.',
+    //   });
+    // }
 
     // Supabase signUp method
     const { data, error: signUpError } = await supabase.auth.signUp({
@@ -45,8 +50,9 @@ export const actions: Actions = {
       password: form.data.password,
     });
 
-    console.error('Sign-up error:', signUpError);
+    // console.error('Sign-up error:', signUpError);
     console.log('Supabase response:', data);
+    console.log('signUpError >>> ', signUpError);
 
     if (signUpError) {
       let errorMessage =
@@ -57,11 +63,10 @@ export const actions: Actions = {
       } else if (signUpError.code === 'email_address_not_authorized') {
         errorMessage = 'This email address is not authorized for sign-up.';
       }
-
+      console.log('signUpError >>> ', signUpError);
       return fail(400, { form, error: errorMessage });
     }
 
     return message(form, 'Account created successfully');
   },
 };
-

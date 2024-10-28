@@ -36,6 +36,8 @@
       });
     }
   }
+
+  // $: console.log($formData)
 </script>
 
 <div class="w-full h-lvh grid justify-items-center text-white bg-black py-4">

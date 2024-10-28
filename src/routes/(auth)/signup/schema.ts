@@ -14,7 +14,7 @@ export const formSchema = z.object({
     .regex(/^[A-Za-z\s'-]+$/, 'Last name must only contain letters'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
-  include: z.boolean().refine((value) => value === true, {
-    message: 'You must agree to the terms of service.',
-  }),
+  // include: z.boolean().refine((value) => value === true, {
+  //   message: 'You must agree to the terms of service.',
+  // }),
 });

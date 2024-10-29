@@ -57,7 +57,6 @@ export const actions: Actions = {
     if (signUpError) {
       let errorMessage =
         'An error occurred during sign-up. Please try again later.';
-
       if (signUpError.message.includes('email already exists')) {
         errorMessage = 'An account with this email already exists.';
       } else if (signUpError.code === 'email_address_not_authorized') {

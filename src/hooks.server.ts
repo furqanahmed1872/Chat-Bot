@@ -11,7 +11,6 @@ const supabase: Handle = async ({ event, resolve }) => {
   const supabaseUrl = PUBLIC_SUPABASE_URL;
   const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
 
-  // Use the Supabase client in a way that is compatible with Edge Functions
   event.locals.supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
       getAll: () => event.cookies.getAll(),
@@ -56,12 +55,15 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.session = session;
   event.locals.user = user;
 
-  // if (!event.locals.session && event.url.pathname.startsWith('/chat')) {
-  //   redirect(303, '/signup');
-  // }
+  if (!event.locals.session && event.url.pathname.startsWith('/chat')) {
+    redirect(303, '/signup');
+  }
 
-  // if (event.locals.session && event.url.pathname === '/signup') {
-  //   redirect(303, '/chat');
+  if (event.locals.session && event.url.pathname === '/signup') {
+    redirect(303, '/');
+  }
+  // if (event.locals.session && event.url.pathname === '/signin') {
+  //   redirect(303, '/');
   // }
 
   return resolve(event);

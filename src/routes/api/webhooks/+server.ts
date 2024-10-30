@@ -10,17 +10,19 @@ import {
   PUBLIC_SUPABASE_ANON_KEY,
 } from '$env/static/public';
 
-export async function POST({ request }) {
+export async function POST({ request, event }) {
   const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
   const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
   const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
 
   const sig = request.headers.get('stripe-signature');
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const customerId = event.data.object.customer;
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('stripe_customer_id', customerId)
+    .single();
 
   console.log(user); // Get the logged-in user
   const body = await request.text();

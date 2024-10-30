@@ -5,7 +5,10 @@
   import { Label } from '$lib/components/ui/label';
   import { signinSchema } from './schema';
   import { superForm } from 'sveltekit-superforms';
+  import { goto } from '$app/navigation';
   import { zodClient } from 'sveltekit-superforms/adapters';
+  import { authentication } from '$lib/store/store';
+  import { onMount } from 'svelte';
 
   export let data;
 
@@ -21,6 +24,23 @@
   function validateInput(field: any) {
     validate(field);
   }
+
+  $: if ($message) {
+    if ($message.includes('successfully')) {
+      onMount(() => {
+        setTimeout(() => {
+          authentication.set(true)
+          goto('/subscription');
+        }, 2000);
+      });
+    } else {
+      onMount(() => {
+        setTimeout(() => {
+          $message = null;
+        }, 2000);
+      });
+    }
+  }
   // $: console.log($formData);
 </script>
 
@@ -31,7 +51,15 @@
     <div class="mx-auto grid gap-6 justify-items-center">
       <img src="/image.png" class="w-1/4" alt="" />
 
-      {#if $message}<h3 class="text-red-500">{$message}</h3>{/if}
+      {#if $message}
+        {#if $message?.includes('successfully')}
+          <h3 class="text-green-500">
+            {$message}
+          </h3>
+        {:else}
+          <h3 class="text-red-500">{$message}</h3>
+        {/if}
+      {/if}
 
       <div class="grid gap-2 text-center">
         <h1 class="text-2xl sm:text-3xl font-bold">Sign In</h1>

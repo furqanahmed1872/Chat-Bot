@@ -12,9 +12,9 @@
   <p>{message}</p>
 
   {#if success}
-    <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+    <a href="/" class="btn btn-primary">Go to Dashboard</a>
   {:else}
-    <a href="/contact-support" class="btn btn-secondary">Contact Support</a>
+    <a href="/subscription" class="btn btn-secondary">Contact Support</a>
   {/if}
 </section>
 

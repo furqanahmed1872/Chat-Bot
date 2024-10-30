@@ -7,6 +7,7 @@
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { goto } from '$app/navigation';
   import { writable } from 'svelte/store';
+  import { authentication } from '$lib/store/store';
   import { onMount } from 'svelte';
 
   export let data;
@@ -31,13 +32,19 @@
     if ($message.includes('successfully')) {
       onMount(() => {
         setTimeout(() => {
-          window.location.href = '/'; // Redirect to the homepage
-        }, 2000); // 2-second delay
+          authentication.set(true)
+          goto('/subscription');
+        }, 2000);
+      });
+    }else{
+      onMount(() => {
+        setTimeout(() => {
+         $message = null
+        }, 2000);
       });
     }
   }
 
-  // $: console.log($formData)
 </script>
 
 <div class="w-full h-lvh grid justify-items-center text-white bg-black py-4">

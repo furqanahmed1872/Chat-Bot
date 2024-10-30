@@ -1,8 +1,7 @@
 // @ts-nocheck
 import Stripe from 'stripe';
-const stripe = new Stripe(
-  'sk_test_51Q8cOH09ae66bEMAxYyXoSWDt45TLuSGZYjYy6UAVTIEDYJne8ZjKbLdLPxPhWfXl8ET4xka7HC1UbtlCtu9bcqQ00eWNLztP1',
-);
+import { PRIVATE_STRIPE_SECRET_KEY } from '$env/static/private';
+const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
 
 export const load = async ({ url }) => {
   const sessionId = url.searchParams.get('session_id');

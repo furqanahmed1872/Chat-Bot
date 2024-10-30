@@ -1,17 +1,40 @@
 <script lang="ts">
+  import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$env/static/public';
+  import { loadStripe } from '@stripe/stripe-js';
   import { goto } from '$app/navigation';
+
   export let data;
 
-  async function handleSelectPlan(priceId) {
-    const response = await fetch('/api/checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ price_id: priceId, user_id: data.userID }), // Replace with actual user and price details
-    });
-    const { sessionId } = await response.json();
+  async function handleSelectPlan(priceId: string) {
+    try {
+      const response = await fetch('/api/checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price_id: priceId, user_id: data.userID }), // Replace with actual user and price details
+      });
 
-    const stripe = Stripe('your-publishable-key');
-    stripe.redirectToCheckout({ sessionId });
+      if (!response.ok) {
+        const errorDetail = await response.json();
+        console.error('Error creating checkout session:', errorDetail);
+        return;
+      }
+
+      const detail = await response.json();
+      const { sessionId } = detail;
+
+      // Initialize Stripe client
+      const stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+      if (!stripe) {
+        console.error('Stripe failed to initialize');
+        return;
+      }
+
+      // Redirect to the checkout page using the session ID from the response
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (error) {
+      console.error('Error handling the plan selection:', error);
+    }
   }
 </script>
 
@@ -109,7 +132,7 @@
         <p class="leading-snug text-xs opacity-50">per<br />month</p>
       </div>
       <button
-        on:click="{() => handleSelectPlan('price_1ABC23XYZ')}"
+        on:click="{() => handleSelectPlan('price_1QBDs909ae66bEMAxEIR1TD4')}"
         id="subscribe-free"
         class="mt-5 w-full px-1 bg-[#7a8690] text-white font-medium py-2.5 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >
@@ -180,7 +203,7 @@
         <p class="leading-snug text-xs opacity-50">per<br />month</p>
       </div>
       <button
-        on:click="{() => handleSelectPlan('price_1XYZABC456')}"
+        on:click="{() => handleSelectPlan('price_1QBE1O09ae66bEMALmnMxPTq')}"
         id="subscribe-free"
         class="mt-5 w-full px-1 bg-[#7a8690] text-white font-medium py-2.5 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >

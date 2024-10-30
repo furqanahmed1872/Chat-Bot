@@ -5,19 +5,18 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { signinSchema } from './schema.js';
 // import { supabase } from '$lib/supabaseClient.js';
 
-export const load: PageServerLoad = async ({ locals }) => {
-  const { supabase } = locals;
+export const load: PageServerLoad = async () => {
   return {
     form: await superValidate(zod(signinSchema)),
   };
 };
 
 export const actions: Actions = {
-  default: async (event) => {
+  default: async (event: any) => {
     const form = await superValidate(event, zod(signinSchema));
     const { locals } = event;
     const { supabase } = locals;
-    
+
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -38,9 +37,8 @@ export const actions: Actions = {
           'There was an issue with authentication. Please try again later.';
       }
 
-      return fail(400, { form, error: errorMessage });
+      return message(form, errorMessage);
     }
-
     return message(form, 'Logged in successfully!');
   },
 };

@@ -2,9 +2,16 @@
   import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$env/static/public';
   import { loadStripe } from '@stripe/stripe-js';
   import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
 
   export let data;
-
+  let stripe = null;
+  onMount(async () => {
+    stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
+    if (!stripe) {
+      console.error('Stripe failed to initialize');
+    }
+  });
   async function handleSelectPlan(priceId: string) {
     try {
       const response = await fetch('/api/checkout-session', {
@@ -22,15 +29,6 @@
       const detail = await response.json();
       const { sessionId } = detail;
 
-      // Initialize Stripe client
-      const stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
-
-      if (!stripe) {
-        console.error('Stripe failed to initialize');
-        return;
-      }
-
-      // Redirect to the checkout page using the session ID from the response
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
       console.error('Error handling the plan selection:', error);

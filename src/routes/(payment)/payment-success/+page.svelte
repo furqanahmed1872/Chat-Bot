@@ -1,21 +1,26 @@
 <script lang="ts">
-  export let success: boolean;
+  export let data;
+  let { success } = data;
+  $: console.log(success);
+  let message = '';
+  let buttonLabel = '';
 
-  // Display thank you message when payment is successful
-  let message = success
+  // Reactive statement for message
+  $: message = success
     ? 'Thank you for your purchase! Your voice chat time has been added.'
     : "We couldn't verify your payment. Please contact support.";
+
+  // Reactive statement for buttonLabel
+  $: buttonLabel = success ? 'Go to Dashboard' : 'Contact Support';
 </script>
 
 <section class="payment-success">
   <h1>{success ? 'Payment Successful!' : 'Payment Issue'}</h1>
   <p>{message}</p>
 
-  {#if success}
-    <a href="/" class="btn btn-primary">Go to Dashboard</a>
-  {:else}
-    <a href="/subscription" class="btn btn-secondary">Contact Support</a>
-  {/if}
+  <a href="{success ? '/' : '/subscription'}" class="btn btn-primary"
+    >{buttonLabel}</a
+  >
 </section>
 
 <style>
@@ -31,13 +36,7 @@
     padding: 1rem;
     text-decoration: none;
     border-radius: 4px;
-  }
-  .btn-primary {
-    background-color: #28a745;
-    color: white;
-  }
-  .btn-secondary {
-    background-color: #ffcc00;
+    background-color: #28a745; /* Default for primary button */
     color: white;
   }
 </style>

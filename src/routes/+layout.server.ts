@@ -6,22 +6,29 @@ export const load: LayoutServerLoad = async ({
   cookies
 }) => {
   const { session } = await safeGetSession();
-  // Fetch chat records
+  const { user } = session
+
   const { data: saveChatRecord, error } = await supabase
     .from('conversations')
     .select('*')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: true });
-
   // Fetch character list
   const { data: characterList, error: characterListError } = await supabase
     .from('characters')
     .select('*')
     .order('created_at', { ascending: true });
-  // Check for any errors
-  if (error || characterListError) {
+  
+  const { data: myCharacter, error: myCharacterError } = await supabase
+    .from('characters')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true });
+
+  if (error || characterListError || myCharacterError) {
     console.error(
       'Error loading messages or character list:',
-      error || characterListError,
+      error || characterListError || myCharacterError,
     );
     return {
       chat: [],
@@ -38,6 +45,7 @@ export const load: LayoutServerLoad = async ({
       character: v.character,
     })),
     characterList,
+    myCharacter,
     cookies: cookies.getAll(),
     session,
   };

@@ -5,30 +5,44 @@ import { fail } from '@sveltejs/kit';
 import { characterSchema } from '$lib/schema/characterSchema.js';
 import type { PageServerLoad, Actions } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, parent }) => {
   const { supabase } = locals;
-  const { data: characterList, error: characterListError } = await supabase
+  const { myCharacter } = await parent()
+  const { data: allBots } = await supabase.from('characters').select('*');
+  const { data: popularBots } = await supabase
     .from('characters')
     .select('*')
-    .order('created_at', { ascending: true });
-
-  if (characterListError) {
-    console.error('Error loading messages:', characterListError);
-    return {
-      messages: [],
-      error: 'Failed to load messages',
-    };
-  }
+    .gt('usage_count', 10)
+    .order('usage_count', { ascending: false })
+    .limit(10);
+  const { data: recentBots } = await supabase
+    .from('characters')
+    .select('*')
+    .gt(
+      'last_used',
+      new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    )
+    .order('last_used', { ascending: false })
+    .limit(10);
+  
+  console.log(myCharacter);
   return {
     form: await superValidate(zod(characterSchema)),
-    characterList,
+    allBots: allBots || [],
+    popularBots: popularBots || [],
+    recentBots: recentBots || [],
+    privateBots: myCharacter || [],
   };
 };
+
 export const actions: Actions = {
   default: async (event) => {
     const form = await superValidate(event, zod(characterSchema));
     const { locals } = event;
-    const { supabase } = locals;
+    const { supabase, safeGetSession } = locals;
+    const { session } = await safeGetSession();
+    const { user } = session;
+
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -66,6 +80,7 @@ export const actions: Actions = {
           description,
           visibility,
           voice,
+          user_id: user.id,
         },
       ])
       .select();

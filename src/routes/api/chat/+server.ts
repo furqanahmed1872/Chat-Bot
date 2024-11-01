@@ -2,12 +2,11 @@ import { json } from '@sveltejs/kit';
 import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
-
+import { PRIVATE_OPENAI_API_KEY } from '$env/static/private';
+console.log(PRIVATE_OPENAI_API_KEY);
 export async function POST({ request }) {
-  const { message, character, voice, prompt } = await request.json();
-  const apiKey = import.meta.env.OPENAI_API_KEY;
-  console.log(voice);
-  const openai = new OpenAI({ apiKey });
+  const { message, voice, prompt } = await request.json();
+  const openai = new OpenAI({ apiKey: PRIVATE_OPENAI_API_KEY });
 
   const systemMessage = prompt
     ? {
@@ -23,7 +22,7 @@ export async function POST({ request }) {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${PRIVATE_OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

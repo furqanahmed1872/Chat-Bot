@@ -23,7 +23,7 @@
     "src/lib/loginschema.js",
     "src/lib/store/store.js",
     "src/routes/(payment)/payment-success/+page.server.js",
-    "src/routes/api/chat/+server.js",
+    "src/routes/api/chat/+server.ts",
     "svelte.config.js",
     "tailwind.config.js",
     "postcss.config.js",

@@ -46,7 +46,7 @@
 
   $: greetingMessage =
     data.characterList?.find((c) => c.character === character)?.greeting_note ||
-    'Hello! How can I assist you today?';
+    'Hi! How can I assist you today?';
   $: voice =
     data.characterList?.find((c) => c.character === character)?.voice ||
     'alloy';

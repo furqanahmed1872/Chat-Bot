@@ -18,8 +18,7 @@ export async function POST({ request, event }) {
   const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
 
   const sig = request.headers.get('stripe-signature');
-  const rawBody = await request.text(); // Move this up here to access the raw body before processing
-  // console.log('sig>>>>>>>', sig, 'rawbody>>>>>>>>>>>>>>', rawBody);
+  const rawBody = await request.text(); 
   if (!sig) {
     return json({ error: 'Missing stripe-signature header' }, { status: 400 });
   }

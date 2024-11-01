@@ -1,7 +1,6 @@
 <script lang="ts">
   export let data;
   let { success } = data;
-  $: console.log(success);
   let message = '';
   let buttonLabel = '';
 

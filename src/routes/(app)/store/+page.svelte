@@ -6,44 +6,10 @@
   import { any } from 'zod';
 
   export let data;
-  let characterList: any[] | null = [];
-  let allBots: any[] = [];
-  let popularBots: any[] = [];
-  let recentBots: any[] = [];
+  let { allBots, popularBots, recentBots, privateBots } = data;
+  let characterList = allBots;
   let isSidebarOpen = false;
   let category = 'All';
-
-  onMount(async (locals) => {
-    const {supabase} =locals
-    // Fetch and assign all bots
-    const { data: fetchedAllBots } = await supabase
-      .from('characters')
-      .select('*');
-    allBots = fetchedAllBots || [];
-
-    // Fetch and assign popular bots
-    const { data: fetchedPopularBots } = await supabase
-      .from('characters')
-      .select('*')
-      .gt('usage_count', 10)
-      .order('usage_count', { ascending: false })
-      .limit(10);
-    popularBots = fetchedPopularBots || [];
-
-    // Fetch and assign recent bots
-    const { data: fetchedRecentBots } = await supabase
-      .from('characters')
-      .select('*')
-      .gt(
-        'last_used',
-        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      )
-      .order('last_used', { ascending: false })
-      .limit(10);
-    recentBots = fetchedRecentBots || [];
-
-    characterList = [...allBots];
-  });
 
   async function incrementBotUsage(botId: number) {
     const { data: currentData, error: fetchError } = await supabase
@@ -71,20 +37,23 @@
 
   function setCategory(type: string) {
     category = type;
-
-    if (type === 'All') {
-      characterList = [...allBots];
-    } else if (type === 'Popular') {
-      characterList = [...popularBots];
-    } else if (type === 'Recent') {
-      characterList = [...recentBots];
-    } else {
-      characterList = [];
-    }
+    characterList =
+      type === 'All'
+        ? [...allBots]
+        : type === 'Popular'
+          ? [...popularBots]
+          : type === 'Recent'
+            ? [...recentBots]
+            : type === 'Personal'
+              ? [...privateBots]
+              : [];
   }
 </script>
 
-<div class="flex flex-row h-dvh bg-primary text-secondary">
+<div
+  class="flex flex-row h-full bg-primary text-secondary"
+  style="min-height: 100vh;"
+>
   <!-- Sidebar -->
   <nav
     class="{`fixed top-0 left-0 h-full bg-secondary p-4 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-64`}"
@@ -153,6 +122,7 @@
       </li>
       <li class="mb-4">
         <button
+          on:click="{() => setCategory('Personal')}"
           class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
         >
           <img
@@ -160,19 +130,7 @@
             src="./heart-beat.png"
             class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
           />
-          Health
-        </button>
-      </li>
-      <li>
-        <button
-          class="group flex items-center py-2 px-4 text-primary text-lg font-medium hover:text-secondary hover:bg-primary rounded w-full transition duration-300"
-        >
-          <img
-            alt=""
-            src="./cap.png"
-            class="w-6 h-6 mx-3 my-auto transition duration-300 group-hover:filter group-hover:brightness-0 invert"
-          />
-          Education
+          Personal
         </button>
       </li>
     </ul>

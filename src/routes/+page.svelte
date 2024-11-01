@@ -2,7 +2,6 @@
   import { goto } from '$app/navigation';
   import { Button } from '$lib/components/ui/button/index.js';
   import Carousel from '$lib/components/mainpage/carousel.svelte';
-  import { authentication } from '$lib/store/store';
 
   export let data;
 
@@ -12,11 +11,7 @@
     signInSection.scrollIntoView({ behavior: 'smooth' });
   };
   const handleChatClick = () => {
-    if ($authentication) {
-      goto('/chat');
-    } else {
-      scrollToSignIn();
-    }
+    goto('/chat');
   };
 </script>
 
@@ -43,7 +38,7 @@
   <div></div>
   <ul class="flex items-center space-x-4">
     <button
-      on:click="{()=> goto('/subscription')}"
+      on:click="{() => goto('/subscription')}"
       class="text-xl sm:text-2xl lg:text-3xl px-2 py-2 text-primary font-semibold cursor-pointer pullRightLeft relative group"
     >
       Price
@@ -152,7 +147,8 @@
           goto('/signup');
         }}"
         type="button"
-        class="w-full bg-lightBlue hover:bg-slate-700 col-span-1">Sign up</Button
+        class="w-full bg-lightBlue hover:bg-slate-700 col-span-1"
+        >Sign up</Button
       >
       <Button
         on:click="{() => {

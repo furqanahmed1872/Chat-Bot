@@ -1,7 +1,10 @@
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-  const {supabase} = locals
+  const { supabase, safeGetSession } = locals;
+  const { session } = await safeGetSession();
+  const { user } = session;
+
   try {
     const { messages, character, chatId } = await request.json();
     console.log(chatId);
@@ -42,7 +45,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     } else {
       const { data, error: insertError } = await supabase
         .from('conversations')
-        .insert([{ chat_id: chatId, character, chat: messages }])
+        .insert([{ chat_id: chatId, character, chat: messages, user_id: user.id }])
         .select();
 
       if (insertError) {

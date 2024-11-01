@@ -37,10 +37,7 @@
     }));
   };
   $: {
-    console.log(showAnimation);
-
     if (showAnimation) {
-      console.log(showAnimation);
       startAnimation();
     } else {
       stopAnimation();

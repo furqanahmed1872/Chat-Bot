@@ -300,7 +300,7 @@
     <div class="w-full grid grid-cols-3 content-center p-2 px-2">
       <div class="col-span-1"></div>
 
-      <div class="relative inline-block justify-self-end">
+      <!-- <div class="relative inline-block justify-self-end">
         <button
           class:hidden="{!showVoice}"
           class="col-span-1 bg-slate-300 w-fit hover:bg-neutral-700 focus:bg-neutral-700 rounded-xl text-black p-2 hover:text-slate-300"
@@ -315,7 +315,7 @@
         >
           <p class="font-semibold">Remaining Time: 45 mins</p>
         </div>
-      </div>
+      </div> -->
     </div>
 
     {#if showchat}

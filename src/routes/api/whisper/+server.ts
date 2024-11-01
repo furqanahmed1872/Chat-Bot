@@ -1,9 +1,9 @@
 // src/routes/api/whisper/+server.ts
 import type { RequestHandler } from '@sveltejs/kit';
+import { PRIVATE_OPENAI_API_KEY } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request }) => {
   const formData = await request.formData();
-  const apiKey = import.meta.env.OPENAI_API_KEY;
   const audioFile = formData.get('file');
 
   if (!(audioFile instanceof Blob)) {
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request }) => {
     {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${PRIVATE_OPENAI_API_KEY}`,
       },
       body: formData,
     },

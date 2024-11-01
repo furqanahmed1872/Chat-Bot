@@ -8,10 +8,10 @@
   let mediaRecorder: any;
   let audioChunks: Blob[] = [];
   let startTime: number | null = null;
-  let conversationTime = 0; // time in seconds
+  let conversationTime = 0;
   let processingStartTime: number | null = null;
-  let processingTime = 0; // time spent in processing
-  let responseAudioTime = 0; // time spent playing response audio
+  let processingTime = 0;
+  let responseAudioTime = 0;
 
   async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -79,7 +79,7 @@
     }
 
     audioMessage();
-    console.log(userMessage);
+    // console.log(userMessage);
 
     playResponseAudio();
   }
@@ -93,8 +93,8 @@
 
     audio.onloadedmetadata = () => {
       responseAudioTime += Math.floor(audio.duration);
-      getTotalTime();
       console.log(`Response audio time: ${responseAudioTime} seconds`);
+      getTotalTime();
     };
   }
   function getTotalTime() {

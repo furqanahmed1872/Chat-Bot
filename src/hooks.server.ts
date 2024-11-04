@@ -7,7 +7,6 @@ import {
 } from '$env/static/public';
 
 const supabase: Handle = async ({ event, resolve }) => {
-
   const supabaseUrl = PUBLIC_SUPABASE_URL;
   const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
 
@@ -22,25 +21,31 @@ const supabase: Handle = async ({ event, resolve }) => {
     },
   });
 
+  // Initialize safeGetSession function
+  let Profile = await event.locals.supabase.auth.getSession();
+  let User = await event.locals.supabase.auth.getUser();
+  //  console.log(Profile.data.session, User.data.user);
   event.locals.safeGetSession = async () => {
-    const {
-      data: { session },
-    } = await event.locals.supabase.auth.getSession();
-    if (!session) {
+    if (Profile.data.session === null && User.data.user === null) {
+      const {
+        data: { session },
+      } = await event.locals.supabase.auth.getSession();
+      if (!session) {
+        return { session: null, user: null };
+      }
+
+      const {
+        data: { user },
+        error,
+      } = await event.locals.supabase.auth.getUser();
+      if (error) {
+        return { session: null, user: null };
+      }
+
+      return { session, user };
+    } else {
       return { session: null, user: null };
     }
-
-    const {
-      data: { user },
-      error,
-    } = await event.locals.supabase.auth.getUser();
-    // console.log(user);
-    if (error) {
-      // JWT validation has failed
-      return { session: null, user: null };
-    }
-
-    return { session, user };
   };
 
   return resolve(event, {
@@ -51,19 +56,25 @@ const supabase: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  const { session, user } = await event.locals.safeGetSession();
-  event.locals.session = session;
-  event.locals.user = user;
+  let Profile = await event.locals.supabase.auth.getSession();
+  let User = await event.locals.supabase.auth.getUser();
+  if (Profile.data.session === null && User.data.user === null) {
+    const { session, user } = await event.locals.safeGetSession();
+    event.locals.session = session;
+    event.locals.user = user;
 
-  if (!event.locals.session && event.url.pathname === '/chat') {
-    redirect(303, '/signup');
-  }
+    // Use safe destructuring in the redirect conditions
+    if (!session && event.url.pathname === '/chat') {
+      throw redirect(303, '/signup');
+    }
 
-  if (event.locals.session && event.url.pathname === '/signup') {
-    redirect(303, '/');
-  }
-  if (event.locals.session && event.url.pathname === '/signin') {
-    redirect(303, '/');
+    if (session && event.url.pathname === '/signup') {
+      throw redirect(303, '/');
+    }
+
+    if (session && event.url.pathname === '/signin') {
+      throw redirect(303, '/');
+    }
   }
 
   return resolve(event);

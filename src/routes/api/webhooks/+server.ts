@@ -89,12 +89,12 @@ export async function POST({ request, event }) {
             subscription.current_period_start * 1000,
           ),
           current_period_end: new Date(subscription.current_period_end * 1000),
-          plan_amount: subscription.items.data[0].price.unit_amount,
+          plan_amount: subscription.items.data[0].price.unit_amount/100,
           currency: subscription.items.data[0].price.currency,
           interval: subscription.items.data[0].price.recurring?.interval,
           updated_at: new Date(),
         };
-
+        console.log(subscriptionData);
         if (existingSubscription) {
           // Update the existing subscription
           const { error: updateError } = await supabase

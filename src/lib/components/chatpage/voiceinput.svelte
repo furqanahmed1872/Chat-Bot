@@ -2,8 +2,9 @@
   import { createEventDispatcher } from 'svelte';
   export let userMessage = '';
   export let showAnimation: boolean;
-  const dispatch = createEventDispatcher();
+  export let Voicetime: undefined | 5 | 12;
 
+  const dispatch = createEventDispatcher();
   let recording = false;
   let mediaRecorder: any;
   let audioChunks: Blob[] = [];
@@ -12,14 +13,32 @@
   let processingStartTime: number | null = null;
   let processingTime = 0;
   let responseAudioTime = 0;
+  let remainingTime = 0;
+
+  switch (Voicetime) {
+    case undefined:
+      remainingTime = 5 * 60; // 5 minutes in seconds
+      break;
+    case 5:
+      remainingTime = 60 * 60; // 1 hour in seconds
+      break;
+    case 12:
+      remainingTime =  60; // 2.5 hours in seconds
+      break;
+  }
 
   async function startRecording() {
+    if (remainingTime <= 0) {
+      alert("Your recording time has expired. Please upgrade your subscription for more time.");
+      return;
+    }
+
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
 
     mediaRecorder.start();
     recording = true;
-    startTime = Date.now(); // start the timer for conversation
+    startTime = Date.now(); // Start the timer for conversation
 
     mediaRecorder.ondataavailable = (event: BlobEvent) => {
       audioChunks.push(event.data);
@@ -29,15 +48,17 @@
       const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
       sendToWhisper(audioBlob);
       audioChunks = [];
+
       if (startTime) {
-        // Calculate conversation time in seconds
         const endTime = Date.now();
-        conversationTime += Math.floor((endTime - startTime) / 1000);
+        const duration = Math.floor((endTime - startTime) / 1000);
+        conversationTime += duration;
         startTime = null;
-        console.log(`Conversation time: ${conversationTime} seconds`);
+        updateRemainingTime();
       }
     };
   }
+
   function stopRecording() {
     mediaRecorder.stop();
     recording = false;
@@ -68,19 +89,16 @@
     const data = await response.json();
     userMessage = data.transcription;
 
-    // Stop processing timer
     if (processingStartTime) {
       const processingEndTime = Date.now();
       processingTime += Math.floor(
         (processingEndTime - processingStartTime) / 1000,
       );
-      console.log(`Processing time: ${processingTime} seconds`);
       processingStartTime = null;
+      updateRemainingTime();
     }
 
     audioMessage();
-    // console.log(userMessage);
-
     playResponseAudio();
   }
 
@@ -90,18 +108,25 @@
 
   async function playResponseAudio() {
     const audio = new Audio('/speech.mp3');
-
     audio.onloadedmetadata = () => {
       responseAudioTime += Math.floor(audio.duration);
-      console.log(`Response audio time: ${responseAudioTime} seconds`);
-      getTotalTime();
+      updateRemainingTime();
     };
   }
-  function getTotalTime() {
+
+  function updateRemainingTime() {
     const totalTime = conversationTime + processingTime + responseAudioTime;
-    console.log(`Total time: ${totalTime} seconds`);
+    remainingTime -= totalTime;
+
+    if (remainingTime <= 0) {
+      alert("Your recording time has expired. Please upgrade your subscription for more time.");
+      remainingTime = 0; // Prevent negative time
+    }
+
+    console.log(`Remaining time: ${remainingTime} seconds`);
   }
 </script>
+
 
 <div class="flex flex-row justify-center gap-2 w-full">
   <button

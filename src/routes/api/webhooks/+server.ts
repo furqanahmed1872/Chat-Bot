@@ -41,12 +41,7 @@ export async function POST({ request, event }) {
     .eq('stripe_customer_id', customerId)
     .single();
 
-  console.log(user); // Get the logged-in user
-
   if (user) {
-    // console.log('Incoming Request Body:', rawBody);
-    // console.log('Stripe Signature:', sig);
-
     // Handle the Stripe event
     switch (stripeEvent.type) {
       // 1. Checkout session completed
@@ -65,19 +60,8 @@ export async function POST({ request, event }) {
           .from('subscriptions')
           .select('*')
           .eq('user_id', user.id)
-          // .eq('subscription_id', subscriptionId)
           .single();
-
-        if (fetchError) {
-          console.log(
-            'Error fetching existing subscription:',
-            fetchError.message,
-          );
-          return json(
-            { error: 'Error fetching existing subscription' },
-            { status: 500 },
-          );
-        }
+        console.log(existingSubscription);
 
         // Prepare subscription data to save
         const subscriptionData = {
@@ -113,7 +97,7 @@ export async function POST({ request, event }) {
             .from('subscriptions')
             .insert({
               ...subscriptionData,
-              created_at: new Date(), // Only set created_at on insert
+              created_at: new Date(),
             });
 
           if (insertError) {
@@ -123,8 +107,6 @@ export async function POST({ request, event }) {
           }
         }
 
-        // Redirect to success page
-        // throw redirect(302, '/payment-success?session_id=' + session.id);
       }
 
       // 2. Invoice payment succeeded

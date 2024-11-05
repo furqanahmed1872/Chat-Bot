@@ -36,15 +36,15 @@
       console.error('Error updating usage count:', updateError);
     }
   }
-console.log('>>>>>>>>>>>>>>>>>',characterCreated, privateBots.length);
+//  console.log('>>>>>>>>>>>>>>>>>',characterCreated, privateBots.length);
   if (characterCreated === undefined && privateBots.length === 0) {
     console.log('first');
     isDisabled = false;
-  }else if(characterCreated === 5 && privateBots.length < 5){
+  }else if(characterCreated === 5 && privateBots.length <= 5){
         console.log('second');
 
     isDisabled = false
-  }else if(characterCreated === 12 && privateBots.length < 12){
+  }else if(characterCreated === 12 && privateBots.length <= 12){
         console.log('third');
 
     isDisabled = false

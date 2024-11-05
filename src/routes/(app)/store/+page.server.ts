@@ -8,7 +8,7 @@ import type { PageServerLoad, Actions } from './$types';
 export const load: PageServerLoad = async ({ locals, parent }) => {
   const { supabase } = locals;
   const { myCharacter, plan } = await parent()
-  console.log(plan);
+
   const { data: allBots } = await supabase.from('characters').select('*');
   const { data: popularBots } = await supabase
     .from('characters')
@@ -16,6 +16,7 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
     .gt('usage_count', 10)
     .order('usage_count', { ascending: false })
     .limit(10);
+ 
   const { data: recentBots } = await supabase
     .from('characters')
     .select('*')

@@ -9,11 +9,9 @@
   import Bot from '$lib/components/anime/bot.svelte';
 
   export let data;
+  let {characterList, plan, chat} = data
   let character = 'doctor';
-
   $: character = $page.url.searchParams.get('role') || 'divinebot';
-
-  let characterList = data.characterList;
   let chatContainer: HTMLDivElement;
   let update: boolean = false;
   let messages: Message[] = [];
@@ -22,6 +20,7 @@
   let selectedChat: string | null = null;
   let audioUrl: any;
   let hovering = false;
+  let Voicetime: undefined | 5 | 12
   $: isSidebarOpen = false;
   $: showAnimation = false;
   $: save = messages.find((m) => m.role === 'user');
@@ -36,7 +35,7 @@
     character: string;
   };
 
-  let chats: Chat[] | undefined = data.chat
+  let chats: Chat[] | undefined = chat
     ?.filter((item) => item.chatId)
     .map((item) => ({
       character: item.character as string,
@@ -158,8 +157,6 @@
     character = chat?.character || 'ME';
     console.log(messages);
   }
-  // $: console.log(messages);
-
   function selectCharacter(name: string) {
     update = false;
     character = name;
@@ -438,6 +435,7 @@
           </div>
         {/if}
         <Voiceinput
+          Voicetime = {plan.plan_amount}
           showAnimation="{showAnimation}"
           bind:userMessage="{userMessage}"
           on:audioMessage="{sendMessage}"

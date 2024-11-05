@@ -6,9 +6,11 @@
   import { any } from 'zod';
 
   export let data;
-  let { allBots, popularBots, recentBots, privateBots } = data;
+  let { allBots, popularBots, recentBots, privateBots, characterCreated } =
+    data;
   let characterList = allBots;
   let isSidebarOpen = false;
+  let isDisabled = true;
   let category = 'All';
 
   async function incrementBotUsage(botId: number) {
@@ -34,6 +36,20 @@
       console.error('Error updating usage count:', updateError);
     }
   }
+console.log('>>>>>>>>>>>>>>>>>',characterCreated, privateBots.length);
+  if (characterCreated === undefined && privateBots.length === 0) {
+    console.log('first');
+    isDisabled = false;
+  }else if(characterCreated === 5 && privateBots.length < 5){
+        console.log('second');
+
+    isDisabled = false
+  }else if(characterCreated === 12 && privateBots.length < 12){
+        console.log('third');
+
+    isDisabled = false
+  }
+
 
   function setCategory(type: string) {
     category = type;
@@ -164,8 +180,9 @@
         class="bg-mediumBlue rounded p-2 w-full placeholder-primary text-darkBlue"
       />
       <button
+        disabled="{isDisabled}"
         on:click="{() => isDialogOpen.set(true)}"
-        class="bg-secondary text-primary px-4 py-2 rounded min-w-max hover:bg-lightBlue"
+        class="bg-secondary text-primary px-4 py-2 rounded min-w-max hover:text-white cursor-pointer hover:bg-lightBlue"
       >
         Create Agent
       </button>

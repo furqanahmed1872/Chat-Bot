@@ -7,7 +7,8 @@ import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
   const { supabase } = locals;
-  const { myCharacter } = await parent()
+  const { myCharacter, plan } = await parent()
+  console.log(plan);
   const { data: allBots } = await supabase.from('characters').select('*');
   const { data: popularBots } = await supabase
     .from('characters')
@@ -25,13 +26,14 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
     .order('last_used', { ascending: false })
     .limit(10);
   
-  console.log(myCharacter);
+
   return {
     form: await superValidate(zod(characterSchema)),
     allBots: allBots || [],
     popularBots: popularBots || [],
     recentBots: recentBots || [],
     privateBots: myCharacter || [],
+    characterCreated: plan.plan_amount
   };
 };
 

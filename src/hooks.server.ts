@@ -22,30 +22,25 @@ const supabase: Handle = async ({ event, resolve }) => {
   });
 
   // Initialize safeGetSession function
-  let Profile = await event.locals.supabase.auth.getSession();
-  let User = await event.locals.supabase.auth.getUser();
-  //  console.log(Profile.data.session, User.data.user);
   event.locals.safeGetSession = async () => {
-    if (Profile.data.session === null && User.data.user === null) {
-      const {
-        data: { session },
-      } = await event.locals.supabase.auth.getSession();
-      if (!session) {
-        return { session: null, user: null };
-      }
-
-      const {
-        data: { user },
-        error,
-      } = await event.locals.supabase.auth.getUser();
-      if (error) {
-        return { session: null, user: null };
-      }
-
-      return { session, user };
-    } else {
+    const {
+      data: { session },
+    } = await event.locals.supabase.auth.getSession();
+    if (!session) {
       return { session: null, user: null };
     }
+    
+    const {
+      data: { user },
+      error,
+    } = await event.locals.supabase.auth.getUser();
+    
+    // console.log(user);
+    if (error) {
+      return { session: null, user: null };
+    }
+
+    return { session, user };
   };
 
   return resolve(event, {
@@ -56,25 +51,24 @@ const supabase: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  let Profile = await event.locals.supabase.auth.getSession();
-  let User = await event.locals.supabase.auth.getUser();
-  if (Profile.data.session === null && User.data.user === null) {
-    const { session, user } = await event.locals.safeGetSession();
-    event.locals.session = session;
-    event.locals.user = user;
+  const { session, user } = await event.locals.safeGetSession();
+  event.locals.session = session;
+  event.locals.user = user;
 
-    // Use safe destructuring in the redirect conditions
-    if (!session && event.url.pathname === '/chat') {
-      throw redirect(303, '/signup');
-    }
+  // Use safe destructuring in the redirect conditions
+  if (!session && event.url.pathname === '/chat') {
+    throw redirect(303, '/signup');
+  }
+  if (!session && event.url.pathname === '/store') {
+    throw redirect(303, '/signup');
+  }
 
-    if (session && event.url.pathname === '/signup') {
-      throw redirect(303, '/');
-    }
+  if (session && event.url.pathname === '/signup') {
+    throw redirect(303, '/');
+  }
 
-    if (session && event.url.pathname === '/signin') {
-      throw redirect(303, '/');
-    }
+  if (session && event.url.pathname === '/signin') {
+    throw redirect(303, '/');
   }
 
   return resolve(event);

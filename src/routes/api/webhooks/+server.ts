@@ -18,7 +18,7 @@ export async function POST({ request, event }) {
   const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
 
   const sig = request.headers.get('stripe-signature');
-  const rawBody = await request.text(); 
+  const rawBody = await request.text();
   if (!sig) {
     return json({ error: 'Missing stripe-signature header' }, { status: 400 });
   }
@@ -73,10 +73,16 @@ export async function POST({ request, event }) {
             subscription.current_period_start * 1000,
           ),
           current_period_end: new Date(subscription.current_period_end * 1000),
-          plan_amount: subscription.items.data[0].price.unit_amount/100,
+          plan_amount: subscription.items.data[0].price.unit_amount / 100,
           currency: subscription.items.data[0].price.currency,
           interval: subscription.items.data[0].price.recurring?.interval,
           updated_at: new Date(),
+          user_voice_time:
+            (subscription.items.data[0].price.unit_amount / 100) === 12
+              ? 9000
+              : (subscription.items.data[0].price.unit_amount / 100) === 5
+                ? 3600
+                : 300,
         };
         console.log(subscriptionData);
         if (existingSubscription) {
@@ -106,7 +112,6 @@ export async function POST({ request, event }) {
             console.log('Subscription saved to database');
           }
         }
-
       }
 
       // 2. Invoice payment succeeded

@@ -1,8 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { slide } from 'svelte/transition';
+
   export let userMessage = '';
   export let showAnimation: boolean;
-  export let Voicetime: undefined | 5 | 12;
+  export let Voicetime: {};
 
   const dispatch = createEventDispatcher();
   let recording = false;
@@ -13,50 +15,69 @@
   let processingStartTime: number | null = null;
   let processingTime = 0;
   let responseAudioTime = 0;
-  let remainingTime = 0;
+  let remainingTime = Voicetime.user_voice_time;
 
-  switch (Voicetime) {
-    case undefined:
-      remainingTime = 5 * 60; // 5 minutes in seconds
-      break;
-    case 5:
-      remainingTime = 60 * 60; // 1 hour in seconds
-      break;
-    case 12:
-      remainingTime =  60; // 2.5 hours in seconds
-      break;
+  let toastMessage = '';
+  let showWarningToast = false;
+  let showDangerToast = false;
+
+  function showToast(type: 'warning' | 'danger', message: string) {
+    toastMessage = message;
+    if (type === 'warning') {
+      showWarningToast = true;
+    } else {
+      showDangerToast = true;
+    }
+    setTimeout(() => hideToast(type), 3000);
+  }
+
+  function hideToast(type: 'warning' | 'danger') {
+    if (type === 'warning') {
+      showWarningToast = false;
+    } else {
+      showDangerToast = false;
+    }
   }
 
   async function startRecording() {
     if (remainingTime <= 0) {
-      alert("Your recording time has expired. Please upgrade your subscription for more time.");
-      return;
+      showToast(
+        'danger',
+        'Your recording time has expired. Please upgrade your subscription for more time.',
+      );
+      remainingTime = 0;
+    } else if (remainingTime <= 60) {
+      showToast(
+        'warning',
+        'Your recording time left less then 1 minute. Please upgrade your subscription for more time.',
+      );
+    } 
+    if (remainingTime > 0) {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.start();
+      recording = true;
+      startTime = Date.now();
+
+      mediaRecorder.ondataavailable = (event: BlobEvent) => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        sendToWhisper(audioBlob);
+        audioChunks = [];
+
+        if (startTime) {
+          const endTime = Date.now();
+          const duration = Math.floor((endTime - startTime) / 1000);
+          conversationTime += duration;
+          startTime = null;
+          updateRemainingTime();
+        }
+      };
     }
-
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-
-    mediaRecorder.start();
-    recording = true;
-    startTime = Date.now(); // Start the timer for conversation
-
-    mediaRecorder.ondataavailable = (event: BlobEvent) => {
-      audioChunks.push(event.data);
-    };
-
-    mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-      sendToWhisper(audioBlob);
-      audioChunks = [];
-
-      if (startTime) {
-        const endTime = Date.now();
-        const duration = Math.floor((endTime - startTime) / 1000);
-        conversationTime += duration;
-        startTime = null;
-        updateRemainingTime();
-      }
-    };
   }
 
   function stopRecording() {
@@ -114,19 +135,38 @@
     };
   }
 
-  function updateRemainingTime() {
+  async function updateRemainingTime() {
     const totalTime = conversationTime + processingTime + responseAudioTime;
     remainingTime -= totalTime;
 
     if (remainingTime <= 0) {
-      alert("Your recording time has expired. Please upgrade your subscription for more time.");
+      showToast(
+        'danger',
+        'Your recording time has expired. Please upgrade your subscription for more time.',
+      );
       remainingTime = 0; // Prevent negative time
+    } else if (remainingTime <= 60) {
+      showToast(
+        'warning',
+        'Your recording time left less then 1 minute. Please upgrade your subscription for more time.',
+      );
     }
 
     console.log(`Remaining time: ${remainingTime} seconds`);
+
+    // Save updated remainingTime to database
+    await fetch('/api/save-time', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: Voicetime.user_id,
+        remainingTime,
+      }),
+    });
   }
 </script>
-
 
 <div class="flex flex-row justify-center gap-2 w-full">
   <button
@@ -213,3 +253,37 @@
     {/if}
   </button>
 </div>
+
+{#if showWarningToast}
+  <div
+    id="toast-warning"
+    class="flex items-center p-4 bg-yellow-500 text-white rounded-sm shadow-lg fixed top-4"
+    transition:slide="{{ duration: 300 }}"
+  >
+    <i class="fas fa-exclamation-circle text-xl mr-3"></i>
+    <span>{toastMessage}</span>
+    <button
+      on:click="{() => hideToast('warning')}"
+      class="ml-auto text-white text-2xl font-bold"
+    >
+      &times;
+    </button>
+  </div>
+{/if}
+
+{#if showDangerToast}
+  <div
+    id="toast-danger"
+    class="flex items-center p-4 bg-red-500 text-white rounded-sm shadow-lg fixed top-4"
+    transition:slide="{{ duration: 300 }}"
+  >
+    <i class="fas fa-times-circle text-xl mr-3"></i>
+    <span>{toastMessage}</span>
+    <button
+      on:click="{() => hideToast('danger')}"
+      class="ml-auto text-white text-2xl font-bold"
+    >
+      &times;
+    </button>
+  </div>
+{/if}

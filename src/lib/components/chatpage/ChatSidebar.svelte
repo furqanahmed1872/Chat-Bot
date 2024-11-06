@@ -121,6 +121,12 @@
 <div
   class="{`fixed top-0 left-0 h-full bg-slate-300 p-4 transition-transform lg:${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}  w-64`}"
 >
+  <button
+    on:click="{() => goto('/')}"
+    class="hidden lg:flex items-center justify-center w-full mb-6"
+  >
+    <img src="./largeicon.png" alt="Logo" class="w-16 h-16" />
+  </button>
   <div class="flex flex-row justify-between items-center my-2">
     <button
       on:click="{() => (isSidebarOpen = !isSidebarOpen)}"

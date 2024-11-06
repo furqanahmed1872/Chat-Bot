@@ -1,7 +1,7 @@
 // src/routes/+page.server.ts
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { characterSchema } from '$lib/schema/characterSchema.js';
 import type { PageServerLoad, Actions } from './$types';
 
@@ -95,6 +95,6 @@ export const actions: Actions = {
         error: 'Failed to load messages',
       };
     }
-    return { form };
+    return redirect(300, '/store');
   },
 };

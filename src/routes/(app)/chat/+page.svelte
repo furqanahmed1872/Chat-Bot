@@ -435,7 +435,7 @@
           </div>
         {/if}
         <Voiceinput
-          Voicetime = {plan.plan_amount}
+          Voicetime = {plan}
           showAnimation="{showAnimation}"
           bind:userMessage="{userMessage}"
           on:audioMessage="{sendMessage}"

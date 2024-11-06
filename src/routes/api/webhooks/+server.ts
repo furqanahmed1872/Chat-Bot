@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import {
   PRIVATE_STRIPE_SECRET_KEY,
   PRIVATE_STRIPE_WEBHOOK_SECRET,
+  PRIVATE_SUPABASE_SERVICE_ROLE_KEY,
 } from '$env/static/private';
 import {
   PUBLIC_SUPABASE_URL,
@@ -11,8 +12,11 @@ import {
 } from '$env/static/public';
 
 export async function POST({ request, event }) {
-  console.log('hit me >>>>>>>>>>>>>>>>>>');
-  const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+  const supabase = createClient(
+    PUBLIC_SUPABASE_URL,
+    PRIVATE_SUPABASE_SERVICE_ROLE_KEY,
+  );
+
 
   const stripe = new Stripe(PRIVATE_STRIPE_SECRET_KEY);
   const endpointSecret = PRIVATE_STRIPE_WEBHOOK_SECRET;
@@ -78,9 +82,9 @@ export async function POST({ request, event }) {
           interval: subscription.items.data[0].price.recurring?.interval,
           updated_at: new Date(),
           user_voice_time:
-            (subscription.items.data[0].price.unit_amount / 100) === 12
+            subscription.items.data[0].price.unit_amount / 100 === 12
               ? 9000
-              : (subscription.items.data[0].price.unit_amount / 100) === 5
+              : subscription.items.data[0].price.unit_amount / 100 === 5
                 ? 3600
                 : 300,
         };

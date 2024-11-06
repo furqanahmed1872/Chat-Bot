@@ -14,7 +14,7 @@ export const actions: Actions = {
   default: async (event) => {
     const form = await superValidate(event, zod(resetSchema));
     const { locals } = event;
-    const [supabase] = locals;
+    const { supabase } = locals;
     if (!form.valid) {
       return fail(400, { form });
     }

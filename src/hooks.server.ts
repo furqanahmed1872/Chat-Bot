@@ -62,6 +62,9 @@ const authGuard: Handle = async ({ event, resolve }) => {
   if (!session && event.url.pathname === '/store') {
     throw redirect(303, '/signup');
   }
+  if (!session && event.url.pathname === '/subscription') {
+    throw redirect(303, '/signup');
+  }
 
   if (session && event.url.pathname === '/signup') {
     throw redirect(303, '/');

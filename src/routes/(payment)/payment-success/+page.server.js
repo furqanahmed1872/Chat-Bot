@@ -14,7 +14,6 @@ export const load = async ({ url }) => {
     console.log('Payment Status:', session.payment_status);
 
     if (session && session.payment_status === 'paid') {
-      console.log('Setting success to true');
       success = true;
 
       // Update your database to add voice chat time to the user's account

@@ -95,6 +95,6 @@ export const actions: Actions = {
         error: 'Failed to load messages',
       };
     }
-    return redirect(300, '/store');
+    return { newCharacter: data[0] };
   },
 };

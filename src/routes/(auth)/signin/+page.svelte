@@ -29,7 +29,7 @@
     if ($message.includes('successfully')) {
       onMount(() => {
         setTimeout(() => {
-          authentication.set(true)
+          authentication.set(true);
           goto('/subscription');
         }, 2000);
       });
@@ -99,6 +99,13 @@
             on:input="{() => validateInput('password')}"
             class="text-slate-700"
           />
+          <button
+            type="button"
+            on:click="{() => goto('/forget-password')}"
+            class="justify-self-end cursor-pointer hover:underline text-sm text-slate-500"
+          >
+            Forget password?
+          </button>
           {#if $errors.password}
             <p class="text-red-500">{$errors.password}</p>
           {/if}

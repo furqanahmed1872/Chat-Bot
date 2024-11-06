@@ -8,7 +8,9 @@
   export let data;
   let { allBots, popularBots, recentBots, privateBots, characterCreated } =
     data;
-  let characterList = allBots;
+
+  let characterList;
+  $: characterList = allBots;
   let isSidebarOpen = false;
   let isDisabled = true;
   let category = 'All';
@@ -24,7 +26,7 @@
       console.error('Error fetching usage count:', fetchError);
       return;
     }
-
+``
     const newUsageCount = currentData.usage_count + 1;
 
     const { error: updateError } = await supabase
@@ -36,20 +38,19 @@
       console.error('Error updating usage count:', updateError);
     }
   }
-//  console.log('>>>>>>>>>>>>>>>>>',characterCreated, privateBots.length);
+  //  console.log('>>>>>>>>>>>>>>>>>',characterCreated, privateBots.length);
   if (characterCreated === undefined && privateBots.length === 0) {
     console.log('first');
     isDisabled = false;
-  }else if(characterCreated === 5 && privateBots.length <= 5){
-        console.log('second');
+  } else if (characterCreated === 5 && privateBots.length <= 5) {
+    console.log('second');
 
-    isDisabled = false
-  }else if(characterCreated === 12 && privateBots.length <= 12){
-        console.log('third');
+    isDisabled = false;
+  } else if (characterCreated === 12 && privateBots.length <= 12) {
+    console.log('third');
 
-    isDisabled = false
+    isDisabled = false;
   }
-
 
   function setCategory(type: string) {
     category = type;

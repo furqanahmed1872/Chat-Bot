@@ -146,14 +146,6 @@
               {/if}
             </button>
           </div>
-
-          <button
-            on:click="{() => goto('/forget-password')}"
-            class="justify-self-end cursor-pointer hover:underline text-sm text-slate-500"
-          >
-            Forget password?
-          </button>
-
           {#if $errors.password}
             <p class="text-red-500">{$errors.password}</p>
           {/if}

@@ -100,7 +100,7 @@
         console.error('Error:', data.error);
       }
       if (audioUrl && showVoice) {
-        const audioresponse = new Audio(`${audioUrl}?t=${Date.now()}`); // Cache-busting
+        const audioresponse = new Audio(`${audioUrl}?t=${Date.now()}`)
         audioresponse.play().catch((err) => {
           console.error('Error playing audio:', err);
         });

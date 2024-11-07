@@ -40,7 +40,7 @@ export async function POST({ request }) {
         presence_penalty: 0,
       }),
     });
-
+// for voice chat relay
     const data = await response.json();
     if (data?.choices?.length > 0) {
       const aiResponseText = data.choices[0].message.content;

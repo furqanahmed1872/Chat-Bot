@@ -45,8 +45,8 @@ export const POST = async ({ request }) => {
       },
     ],
     // success_url:'http://localhost:3000',
-    success_url: `http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `http://localhost:3000/payment-failure`,
+    success_url: `https://chat-bot-iota-eight.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `https://chat-bot-iota-eight.vercel.app/payment-failure`,
   });
 
   // console.log('testid >>>>>>>>>>>>>>', session);

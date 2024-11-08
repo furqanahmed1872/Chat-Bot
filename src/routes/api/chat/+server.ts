@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
 import { PRIVATE_OPENAI_API_KEY } from '$env/static/private';
-
 export async function POST({ request }) {
+  console.log(PRIVATE_OPENAI_API_KEY);
   const { message, voice, prompt } = await request.json();
   const openai = new OpenAI({ apiKey: PRIVATE_OPENAI_API_KEY });
 
@@ -40,7 +40,7 @@ export async function POST({ request }) {
         presence_penalty: 0,
       }),
     });
-    // for voice chat relay
+    // for voice chat reply
     const data = await response.json();
     console.log(data);
     if (data?.choices?.length > 0) {

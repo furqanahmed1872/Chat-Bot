@@ -24,7 +24,7 @@ export const actions: Actions = {
 
     // Password recovery logic here (using Supabase password reset email)
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://chat-bot-iota-eight.vercel.app/reset-password',
+      redirectTo: 'https://chat-bot-kappa-ruby.vercel.app/reset-password',
     });
 
     if (error) {

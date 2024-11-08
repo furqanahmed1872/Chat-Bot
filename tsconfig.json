@@ -1,4 +1,5 @@
 {
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
@@ -11,12 +12,8 @@
     "moduleResolution": "node",
     "target": "ES2020",
     "module": "ESNext",
-    "baseUrl": ".", // Add this line
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"],
-    "paths": {
-      "$env/static/private": ["./.svelte-kit/ambient"] // Change this line to be relative
-    }
+    "types": ["svelte"]
   },
   "exclude": [
     "postcss.config.js",
@@ -26,6 +23,6 @@
     "src/routes/api/chat/+server.ts",
     "svelte.config.js",
     "tailwind.config.js",
-    "postcss.config.js",
+    "postcss.config.js"
   ]
 }

@@ -20,4 +20,10 @@ declare global {
   }
 }
 
+declare module '$env/static/private' {
+  export const MY_PRIVATE_API_KEY: string;
+  // export const ANOTHER_PRIVATE_VARIABLE: string;
+  // Add other environment variables as needed
+}
+
 export {};

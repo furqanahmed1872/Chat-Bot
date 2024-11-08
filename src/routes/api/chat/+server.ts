@@ -1,10 +1,8 @@
 import { json } from '@sveltejs/kit';
-import fs from 'fs';
-import path from 'path';
-import OpenAI from 'openai';
 import { PRIVATE_OPENAI_API_KEY } from '$env/static/private';
+import OpenAI from 'openai';
+
 export async function POST({ request }) {
-  console.log(PRIVATE_OPENAI_API_KEY);
   const { message, voice, prompt } = await request.json();
   const openai = new OpenAI({ apiKey: PRIVATE_OPENAI_API_KEY });
 
@@ -40,14 +38,12 @@ export async function POST({ request }) {
         presence_penalty: 0,
       }),
     });
-    // for voice chat reply
+
     const data = await response.json();
-    console.log(data);
     if (data?.choices?.length > 0) {
       const aiResponseText = data.choices[0].message.content;
 
-      const speechFile = path.resolve('./static/speech.mp3');
-
+      // Request the speech synthesis directly
       const mp3 = await openai.audio.speech.create({
         model: 'tts-1',
         voice: voice ? voice : 'alloy',
@@ -56,12 +52,7 @@ export async function POST({ request }) {
 
       const buffer = Buffer.from(await mp3.arrayBuffer());
 
-      // await fs.promises.writeFile(speechFile, buffer);
-
-      // return json({
-      //   message: aiResponseText,
-      //   audio: `/speech.mp3?t=${Date.now()}`,
-      // });
+      // Return the audio buffer directly in the response
       return new Response(buffer, {
         status: 200,
         headers: {

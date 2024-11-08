@@ -56,11 +56,18 @@ export async function POST({ request }) {
 
       const buffer = Buffer.from(await mp3.arrayBuffer());
 
-      await fs.promises.writeFile(speechFile, buffer);
+      // await fs.promises.writeFile(speechFile, buffer);
 
-      return json({
-        message: aiResponseText,
-        audio: `/speech.mp3?t=${Date.now()}`,
+      // return json({
+      //   message: aiResponseText,
+      //   audio: `/speech.mp3?t=${Date.now()}`,
+      // });
+      return new Response(buffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'audio/mp3',
+          'Content-Disposition': 'inline; filename="speech.mp3"',
+        },
       });
     } else {
       console.error('No choices found in the API response');

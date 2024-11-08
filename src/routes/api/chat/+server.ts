@@ -1,8 +1,10 @@
 import { json } from '@sveltejs/kit';
-import { PRIVATE_OPENAI_API_KEY } from '$env/static/private';
+import fs from 'fs';
+import path from 'path';
 import OpenAI from 'openai';
-
+import { PRIVATE_OPENAI_API_KEY } from '$env/static/private';
 export async function POST({ request }) {
+  console.log(PRIVATE_OPENAI_API_KEY);
   const { message, voice, prompt } = await request.json();
   const openai = new OpenAI({ apiKey: PRIVATE_OPENAI_API_KEY });
 
@@ -38,35 +40,34 @@ export async function POST({ request }) {
         presence_penalty: 0,
       }),
     });
+    // for voice chat reply
+    // const data = await response.json();
+    // if (data?.choices?.length > 0) {
+    //   const aiResponseText = data.choices[0].message.content;
 
-    const data = await response.json();
-    if (data?.choices?.length > 0) {
-      const aiResponseText = data.choices[0].message.content;
+    //   const speechFile = path.resolve('./static/speech.mp3');
 
-      // Request the speech synthesis directly
-      const mp3 = await openai.audio.speech.create({
-        model: 'tts-1',
-        voice: voice ? voice : 'alloy',
-        input: aiResponseText,
-      });
+    //   const mp3 = await openai.audio.speech.create({
+    //     model: 'tts-1',
+    //     voice: voice ? voice : 'alloy',
+    //     input: aiResponseText,
+    //   });
 
-      const buffer = Buffer.from(await mp3.arrayBuffer());
+    //   const buffer = Buffer.from(await mp3.arrayBuffer());
 
-      // Return the audio buffer directly in the response
-      return new Response(buffer, {
-        status: 200,
-        headers: {
-          'Content-Type': 'audio/mp3',
-          'Content-Disposition': 'inline; filename="speech.mp3"',
-        },
-      });
-    } else {
-      console.error('No choices found in the API response');
-      return json(
-        { message: 'Error: No response from the AI' },
-        { status: 500 },
-      );
-    }
+    //   await fs.promises.writeFile(speechFile, buffer);
+
+    //   return json({
+    //     message: aiResponseText,
+    //     audio: `/speech.mp3?t=${Date.now()}`,
+    //   });
+    // } else {
+    //   console.error('No choices found in the API response');
+    //   return json(
+    //     { message: 'Error: No response from the AI' },
+    //     { status: 500 },
+    //   );
+    // }
   } catch (error) {
     console.error('Error fetching from OpenAI:', error);
     return json({ message: 'Error fetching from AI' }, { status: 500 });

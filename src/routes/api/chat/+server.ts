@@ -51,7 +51,7 @@ export async function POST({ request }) {
     const data = await response.json();
     if (data?.choices?.length > 0) {
       const aiResponseText = data.choices[0].message.content;
-
+      console.log(aiResponseText);
       const mp3 = await openai.audio.speech.create({
         model: 'tts-1',
         voice: voice ? voice : 'alloy',
